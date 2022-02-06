@@ -1,34 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MENU-GO
 
-## Getting Started
+# Welcome to MENU-GO!
 
-First, run the development server:
+[🚜 Building .....]
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+# Table of Contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Installation and Deployment](#installation-and-deployment)
+  - [Development](#development)
+  - [GitHub - Set-Up an OAuth Application](#github---set-up-an-oauth-application)
+- [Talk with us or Report an Issue](#talk-with-us-or-report-an-issue)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+# Installation and Documentation
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Development
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. Install the project with `npm install`
+2. Initialize the `@prisma/client` with `npm prisma generate` or `npx prisma generate`
+3. Set-up your environment variables following the `.env.example` file. NOTE: The environment file must be named like: `.env`
+   - You can get the `GITHUB_ID` and `GITHUB_SECRET` following [GitHub - Set-Up an OAuth Application](#github-set-up-an-oauth-application)
+   - You can set in `SECRET` whatever you want or a strong character string like a base64, sha1, etc...
+   - You need to uncomment `NEXTAUTH_URL` to remove the warning alert in localhost.
+4. Migrate the prisma generated database to the PostgreSQL on Railway with `npm run migrate:dev`
+5. You can now start developing for vota.dev
 
-## Learn More
+## GitHub - Set-Up an OAuth Application
 
-To learn more about Next.js, take a look at the following resources:
+1. Login to [Login - GitHub](http://github.com/login)
+2. Enter your applications in developer settings [Apps - GitHub](https://github.com/settings/apps)
+3. Inside `OAuth Apps` click on `New OAuth App` and fill the fields.
+   - You can set the 'Homepage URL' to `http://vota.dev` and the 'Callback URL' to `http://localhost:3000/api/auth/`
+4. You can retrieve the Client ID and the Client Secret there
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Talk with us or Report an Issue
