@@ -1,93 +1,32 @@
-// import Link from 'next/link'
-
-import { Dropdown, Col, Avatar, Divider, Row, Typography } from 'antd'
+import { Col, Avatar, Row, Typography, Button } from 'antd'
 import { signOut } from 'next-auth/react'
-const { Link: LinkText } = Typography
-const avatarImg =
-  'https://avataaars.io/?avatarStyle=Circle&topType=ShortHairSides&accessoriesType=Round&hairColor=Blonde&facialHairType=Blank&clotheType=Overall&clotheColor=Gray01&eyeType=Side&eyebrowType=SadConcerned&mouthType=Vomit&skinColor=Light'
+import Link from 'next/link'
+import randomAvatar from '../../lib/randomAvatar'
+import type { Session } from 'next-auth'
 
-interface props {
-  user: {
-    name: string
-    email: string
-  }
-}
-
-export default function HeaderUser({ user }: props) {
+export default function HeaderUser({ user }: Session) {
+  const avatarImg = randomAvatar()
   const { Text } = Typography
-  const menu = (
-    <div
-      className="hp-border-radius hp-border-1 hp-border-color-black-40 hp-bg-black-0 hp-bg-dark-100 hp-border-color-dark-80 hp-p-24 hp-mt-12"
-      style={{ width: 260 }}
+  const logOutButton = (
+    <Button
+      type="text"
+      className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-8 hp-text-color-black-80 hp-text-color-dark-30"
+      onClick={() => signOut()}
     >
-      <span className="hp-d-block h5 hp-text-color-black-100 hp-text-color-dark-0 hp-mb-8">
-        Profile Settings
-      </span>
-
-      <LinkText
-        href="/pages/profile/personel-information"
-        className="hp-p1-body hp-text-color-primary-1 hp-text-color-dark-primary-2 hp-hover-text-color-primary-2"
-      >
-        View Profile
-      </LinkText>
-
-      <Divider className="hp-mt-16 hp-mb-6" />
-
-      <Row>
-        <Col span={24}>
-          <LinkText
-            href="/apps/contact"
-            className="hp-d-flex-center hp-p1-body hp-py-8 hp-px-10 hp-d-block hp-transition hp-hover-bg-primary-4 hp-hover-bg-dark-80 hp-border-radius"
-            style={{ marginLeft: -10, marginRight: -10 }}
-          >
-            {/* <People set="curved" size={16} /> */}
-
-            <span className="hp-ml-8">Explore Creators</span>
-          </LinkText>
-        </Col>
-
-        <Col span={24}>
-          <LinkText
-            href="/apps/calendar"
-            className="hp-d-flex-center hp-p1-body hp-py-8 hp-px-10 hp-d-block hp-transition hp-hover-bg-primary-4 hp-hover-bg-dark-80 hp-border-radius"
-            style={{ marginTop: -7, marginLeft: -10, marginRight: -10 }}
-          >
-            {/* <Calendar set="curved" size={16} /> */}
-
-            <span className="hp-ml-8">Calendar Application</span>
-          </LinkText>
-        </Col>
-
-        <Col span={24}>
-          <LinkText
-            href="/pages/knowledge-base/knowledge-base-1"
-            className="hp-d-flex-center hp-p1-body hp-py-8 hp-px-10 hp-d-block hp-transition hp-hover-bg-primary-4 hp-hover-bg-dark-80 hp-border-radius"
-            style={{ marginTop: -7, marginLeft: -10, marginRight: -10 }}
-          >
-            {/* <Game set="curved" size={16} /> */}
-
-            <span className="hp-ml-8">Help Desk</span>
-          </LinkText>
-        </Col>
-      </Row>
-
-      <Divider className="hp-mb-16 hp-mt-6" />
-
-      <button onClick={() => signOut()} className="hp-p1-body">
-        Logout
-      </button>
-    </div>
+      <Link href="/auth/register" passHref>
+        Log Out
+      </Link>
+    </Button>
   )
 
   return (
-    <Row justify="center">
+    <Row justify="center" align="middle">
       <Col>
+        {logOutButton}
         <Text>{user && user.name}</Text>
       </Col>
-      <Col>
-        <Dropdown overlay={menu} placement="bottomLeft">
-          <Avatar src={avatarImg} size={40} className="hp-cursor-pointer" />
-        </Dropdown>
+      <Col style={{ marginLeft: '8px' }}>
+        <Avatar src={avatarImg} size={40} className="hp-cursor-pointer" />
       </Col>
     </Row>
   )
