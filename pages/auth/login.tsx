@@ -105,8 +105,11 @@ export default function login() {
                 Dont you have an account?
               </span>
 
-              <Link href="/auth/signup" passHref>
-                <Text className="hp-text-color-primary-1 hp-text-color-dark-primary-2 hp-caption">
+              <Link href="/auth/register" passHref>
+                <Text
+                  className="hp-text-color-primary-1 hp-text-color-dark-primary-2 hp-caption"
+                  style={{ cursor: 'pointer' }}
+                >
                   Create an account
                 </Text>
               </Link>
