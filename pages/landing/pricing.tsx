@@ -6,7 +6,7 @@ export default function LandingPricing() {
   const [billedValue, setBilledValue] = useState(true)
   const billedText = `Billed ${billedValue ? 'yearly' : 'monthly'}`
 
-  function onChange(checked) {
+  function onChange(checked: Boolean) {
     if (checked) {
       setBilledValue(true)
     } else {

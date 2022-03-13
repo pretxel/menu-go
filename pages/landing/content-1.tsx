@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Avatar, Col, Row } from 'antd'
-import { Heart, Activity, TickSquare } from 'react-iconly'
 
 import content1Image from '../../src/assets/images/pages/landing/content-1.png'
 

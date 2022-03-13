@@ -4,17 +4,18 @@ import { Skeleton } from 'antd'
 import { useSession } from 'next-auth/react'
 // import { useRouter } from 'next/router'
 import HeaderUser from './Header/HeaderUser'
-import type { Session } from 'next-auth'
+import { Session } from 'next-auth'
 
-interface propss {
-  data: {
-    session: Session
-  }
+interface ContextSession {
+  data: Session | null
   status: string
 }
 
 export default function HeaderStatusLogin() {
-  const { data: session, status }: propss = useSession()
+  // const { data: session, status }: propss = useSession()
+
+  const { data: session, status }: ContextSession = useSession()
+
   const loginButton = (
     <Button
       type="primary"
@@ -48,8 +49,9 @@ export default function HeaderStatusLogin() {
         {loginButton}
       </>
     )
-  if (status === 'authenticated') return <HeaderUser user={session.user} />
-  // if (session.user != null)
+  if (status === 'authenticated' && session) {
+    return <HeaderUser session={session} />
+  }
 
   return null
 }

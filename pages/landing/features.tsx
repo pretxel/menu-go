@@ -1,64 +1,62 @@
-import Slider from 'react-slick'
-import { Avatar, Button, Col, Row } from 'antd'
-import { Message, Star, Setting, Category, Graph } from 'react-iconly'
+import { Button, Col, Row } from 'antd'
 
 export default function LandingFeatures() {
-  const featuresCard = [
-    {
-      icon: 'icon',
-      title: 'Find Leads',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
-    },
-    {
-      icon: 'icon',
-      title: 'Design And Block.',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
-    },
-    {
-      icon: 'icon',
-      title: 'Easy Customizable',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
-    },
-    {
-      icon: 'icon',
-      title: 'Fully Responsive',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
-    },
-    {
-      icon: 'icon',
-      title: 'Dedicated Storage',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
-    },
-  ]
+  // const featuresCard = [
+  //   {
+  //     icon: 'icon',
+  //     title: 'Find Leads',
+  //     subTitle:
+  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
+  //   },
+  //   {
+  //     icon: 'icon',
+  //     title: 'Design And Block.',
+  //     subTitle:
+  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
+  //   },
+  //   {
+  //     icon: 'icon',
+  //     title: 'Easy Customizable',
+  //     subTitle:
+  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
+  //   },
+  //   {
+  //     icon: 'icon',
+  //     title: 'Fully Responsive',
+  //     subTitle:
+  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
+  //   },
+  //   {
+  //     icon: 'icon',
+  //     title: 'Dedicated Storage',
+  //     subTitle:
+  //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit pellentesque eu eget.',
+  //   },
+  // ]
 
-  const featuresCardMap = featuresCard.map((value, index) => (
-    <div key={index} className="hp-px-sm-8 hp-px-16">
-      <div className="hp-border-radius hp-bg-black-10 hp-bg-dark-100 hp-p-18">
-        <Row gutter={[20]}>
-          <Col>
-            <Avatar
-              className="hp-bg-black-0 hp-bg-dark-90"
-              size={55}
-              icon={value.icon}
-            />
-          </Col>
+  // const featuresCardMap = featuresCard.map((value, index) => (
+  //   <div key={index} className="hp-px-sm-8 hp-px-16">
+  //     <div className="hp-border-radius hp-bg-black-10 hp-bg-dark-100 hp-p-18">
+  //       <Row gutter={20}>
+  //         <Col>
+  //           <Avatar
+  //             className="hp-bg-black-0 hp-bg-dark-90"
+  //             size={55}
+  //             icon={value.icon}
+  //           />
+  //         </Col>
 
-          <Col flex="1 0 0">
-            <h4 className="hp-font-weight-500 hp-mb-8">Easy Customizable</h4>
-            <p className="h5 hp-font-weight-500 hp-text-color-black-80 hp-text-color-dark-30 hp-mb-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit
-              pellentesque eu eget.
-            </p>
-          </Col>
-        </Row>
-      </div>
-    </div>
-  ))
+  //         <Col flex="1 0 0">
+  //           <h4 className="hp-font-weight-500 hp-mb-8">Easy Customizable</h4>
+  //           <p className="h5 hp-font-weight-500 hp-text-color-black-80 hp-text-color-dark-30 hp-mb-0">
+  //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Blandit
+  //             pellentesque eu eget.
+  //           </p>
+  //         </Col>
+  //       </Row>
+  //     </div>
+  //   </div>
+  // ))
 
   return (
     <section className="hp-landing-features hp-pt-24">
@@ -76,45 +74,6 @@ export default function LandingFeatures() {
             These companies release their own versions of the operating systems
             with minor changes, and yet always.
           </p>
-        </Col>
-
-        <Col span={24}>
-          <Slider
-            dots={false}
-            infinite={true}
-            slidesToShow={3}
-            slidesToScroll={1}
-            arrows={false}
-            speed={800}
-            autoplay={true}
-            autoplaySpeed={4000}
-            centerMode={true}
-            centerPadding={230}
-            responsive={[
-              {
-                breakpoint: 1370,
-                settings: {
-                  centerPadding: 150,
-                },
-              },
-              {
-                breakpoint: 1199,
-                settings: {
-                  centerPadding: 80,
-                  slidesToShow: 2,
-                },
-              },
-              {
-                breakpoint: 767,
-                settings: {
-                  centerPadding: 24,
-                  slidesToShow: 1,
-                },
-              },
-            ]}
-          >
-            {featuresCardMap}
-          </Slider>
         </Col>
 
         <Col span={24} className="hp-px-16 hp-text-center hp-mt-sm-32 hp-mt-64">

@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 import { Col, Row } from 'antd'
 
@@ -72,11 +73,7 @@ export default function LandingPeople() {
 
         <Row align="middle">
           <Col>
-            <img
-              src={item.avatar}
-              alt={item.name}
-              className="hp-landing-people-item-img"
-            />
+            <Image src={item.avatar} alt={item.name} width={100} height={100} />
           </Col>
 
           <Col className="hp-landing-people-item-title">

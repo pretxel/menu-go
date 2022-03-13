@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Avatar, Col, Row } from 'antd'
-import { Document, TicketStar } from 'react-iconly'
 
 import content2Image from '../../src/assets/images/pages/landing/content-2.svg'
 

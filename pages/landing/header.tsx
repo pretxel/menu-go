@@ -1,29 +1,28 @@
-import Link from 'next/link'
 import { Button, Col, Menu, Row, Dropdown } from 'antd'
 import { RiMenuFill } from 'react-icons/ri'
 import HeaderStatusLogin from '../../components/HeaderStatusLogin'
 export default function LandingHeader() {
-  const loginButton = (
-    <Button
-      type="primary"
-      className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-0 hp-ml-8"
-    >
-      <Link href="/auth/login" passHref>
-        Login
-      </Link>
-    </Button>
-  )
+  // const loginButton = (
+  //   <Button
+  //     type="primary"
+  //     className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-0 hp-ml-8"
+  //   >
+  //     <Link href="/auth/login" passHref>
+  //       Login
+  //     </Link>
+  //   </Button>
+  // )
 
-  const signUpButton = (
-    <Button
-      type="text"
-      className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-8 hp-text-color-black-80 hp-text-color-dark-30"
-    >
-      <Link href="/auth/register" passHref>
-        Sign Up
-      </Link>
-    </Button>
-  )
+  // const signUpButton = (
+  //   <Button
+  //     type="text"
+  //     className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-8 hp-text-color-black-80 hp-text-color-dark-30"
+  //   >
+  //     <Link href="/auth/register" passHref>
+  //       Sign Up
+  //     </Link>
+  //   </Button>
+  // )
 
   const menuItems = (
     <>
@@ -53,7 +52,6 @@ export default function LandingHeader() {
           <Col className="hp-landing-header-mobile-button">
             <Dropdown
               placement="bottomRight"
-              trigger="click"
               overlay={
                 <Menu mode="vertical" className="hp-bg-dark-90">
                   {menuItems}
