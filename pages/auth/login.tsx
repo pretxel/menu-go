@@ -1,14 +1,14 @@
-import Link from 'next/link'
-import { Col, Row, Form, Input, Button, Checkbox, Typography } from 'antd'
+//import React, { useState } from 'react'
+import { Col, Row, Button } from 'antd'
 import { RiFacebookFill } from 'react-icons/ri'
 import { signIn } from 'next-auth/react'
 
-const { Text } = Typography
-
 export default function login() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  //const [username, setUsername] = useState('')
   const handleClick = () => signIn('facebook')
   const handleClickGmail = () => signIn('google')
-  const handleClickMail = () => signIn('email')
+  //const handleClickMail = () => signIn('credentials', { username })
   return (
     <Row gutter={[32, 0]} className="hp-authentication-page">
       <Col
@@ -60,17 +60,20 @@ export default function login() {
               Welcome back, please login to your account.
             </p>
 
-            <Form
+            {/* <Form
               layout="vertical"
               name="basic"
               initialValues={{ remember: true }}
               className="hp-mt-sm-16 hp-mt-32"
             >
-              <Form.Item label="Username :" className="hp-mb-16">
-                <Input id="error" />
+              <Form.Item label="Username" className="hp-mb-16">
+                <Input
+                  id="error"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
               </Form.Item>
 
-              <Form.Item label="Password :" className="hp-mb-8">
+              <Form.Item label="Password" className="hp-mb-8">
                 <Input.Password id="warning2" />
               </Form.Item>
 
@@ -98,9 +101,9 @@ export default function login() {
                   </Button>
                 </Link>
               </Form.Item>
-            </Form>
+            </Form> */}
 
-            <Col className="hp-form-info">
+            {/* <Col className="hp-form-info">
               <span className="hp-text-color-black-80 hp-text-color-dark-40 hp-caption hp-mr-4">
                 Dont you have an account?
               </span>
@@ -113,13 +116,13 @@ export default function login() {
                   Create an account
                 </Text>
               </Link>
-            </Col>
+            </Col> */}
 
-            <Col className="hp-or-line hp-text-center hp-mt-32">
+            {/* <Col className="hp-or-line hp-text-center hp-mt-32">
               <span className="hp-caption hp-text-color-black-80 hp-text-color-dark-30 hp-px-16 hp-bg-color-black-0 hp-bg-color-dark-100">
                 Or
               </span>
-            </Col>
+            </Col> */}
 
             <Col className="hp-account-buttons hp-mt-32">
               <Button

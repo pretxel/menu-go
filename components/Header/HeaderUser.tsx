@@ -2,9 +2,15 @@ import { Col, Avatar, Row, Typography, Button } from 'antd'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import randomAvatar from '../../lib/randomAvatar'
+import { Session } from 'next-auth'
 
-export default function HeaderUser(session: any) {
+interface ContextSession {
+  session: Session | null
+}
+
+export default function HeaderUser({ session }: ContextSession) {
   const avatarImg = randomAvatar()
+
   const { Text } = Typography
   const logOutButton = (
     <Button
@@ -22,7 +28,7 @@ export default function HeaderUser(session: any) {
     <Row justify="center" align="middle">
       <Col>
         {logOutButton}
-        <Text>{session.user && session.user.name}</Text>
+        <Text>{session?.user?.name}</Text>
       </Col>
       <Col style={{ marginLeft: '8px' }}>
         <Avatar src={avatarImg} size={40} className="hp-cursor-pointer" />

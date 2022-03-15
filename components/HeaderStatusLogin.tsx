@@ -12,8 +12,6 @@ interface ContextSession {
 }
 
 export default function HeaderStatusLogin() {
-  // const { data: session, status }: propss = useSession()
-
   const { data: session, status }: ContextSession = useSession()
 
   const loginButton = (
