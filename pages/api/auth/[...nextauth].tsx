@@ -55,7 +55,7 @@ export default NextAuth({
   secret: process.env.SECRET,
   callbacks: {
     async redirect({ baseUrl }) {
-      return baseUrl
+      return `${baseUrl}/panel`
     },
   },
 })
