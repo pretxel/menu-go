@@ -3,7 +3,7 @@
   "private": true,
   "description": "MENU-GO project to show restaurants menus most pretty",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

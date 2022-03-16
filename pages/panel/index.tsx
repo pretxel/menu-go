@@ -1,7 +1,7 @@
 // import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useTranslation } from 'react-i18next'
-import LandingHeader from '../landing/header'
+import PanelHeader from '../../components/Header/header'
 import { getSession } from 'next-auth/react'
 
 function Panel() {
@@ -14,7 +14,8 @@ function Panel() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="hp-landing hp-bg-black-0 hp-bg-dark-90">
-        <LandingHeader />
+        <PanelHeader />
+        <h1>Welcome</h1>
       </div>
     </>
   )
