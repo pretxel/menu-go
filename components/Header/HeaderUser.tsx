@@ -1,8 +1,9 @@
-import { Col, Avatar, Row, Typography, Button } from 'antd'
 import { signOut } from 'next-auth/react'
-import Link from 'next/link'
+
 import randomAvatar from '../../lib/randomAvatar'
+import Link from 'next/link'
 import { Session } from 'next-auth'
+import { Dropdown, Col, Avatar, Divider } from 'antd'
 
 interface ContextSession {
   session: Session | null
@@ -10,29 +11,32 @@ interface ContextSession {
 
 export default function HeaderUser({ session }: ContextSession) {
   const avatarImg = randomAvatar()
-
-  const { Text } = Typography
-  const logOutButton = (
-    <Button
-      type="text"
-      className="hp-px-sm-16 hp-py-sm-8 hp-px-32 hp-py-16 hp-ml-sm-8 hp-text-color-black-80 hp-text-color-dark-30"
-      onClick={() => signOut()}
+  const menu = (
+    <div
+      className="hp-border-radius hp-border-1 hp-border-color-black-40 hp-bg-black-0 hp-bg-dark-100 hp-border-color-dark-80 hp-p-24 hp-mt-12"
+      style={{ width: 260 }}
     >
-      <Link href="/auth/register" passHref>
-        Log Out
+      <span className="hp-d-block h5 hp-text-color-black-100 hp-text-color-dark-0 hp-mb-8">
+        {session?.user?.name}
+      </span>
+
+      <Link href={`/pages/profile/personel-information`}>View Profile</Link>
+
+      <Divider className="hp-mb-16 hp-mt-6" />
+
+      <Link href="/" passHref>
+        <a className="hp-p1-body" onClick={() => signOut()}>
+          Log Out
+        </a>
       </Link>
-    </Button>
+    </div>
   )
 
   return (
-    <Row justify="center" align="middle">
-      <Col>
-        {logOutButton}
-        <Text>{session?.user?.name}</Text>
-      </Col>
-      <Col style={{ marginLeft: '8px' }}>
+    <Col>
+      <Dropdown overlay={menu} placement="bottomLeft">
         <Avatar src={avatarImg} size={40} className="hp-cursor-pointer" />
-      </Col>
-    </Row>
+      </Dropdown>
+    </Col>
   )
 }
