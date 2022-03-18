@@ -7,7 +7,7 @@ import navigation from './navigation'
 const { SubMenu } = Menu
 
 interface ItemProps {
-  onClose: Function
+  onClose: any
 }
 
 export default function MenuItem(props: ItemProps) {
@@ -89,9 +89,10 @@ export default function MenuItem(props: ItemProps) {
           })}
         </SubMenu>
       )
-    } else {
-      const itemNavLink = item.navLink.split('/')
+    }
 
+    if (item.navLink) {
+      const itemNavLink = item?.navLink.split('/')
       return (
         // Level 1
         <Menu.Item
@@ -115,15 +116,15 @@ export default function MenuItem(props: ItemProps) {
     }
   })
 
+  console.log('splitLocationUrl', splitLocationUrl)
+
+  console.log('splitLocation', splitLocation.length === 5)
+  const firstOpenKey =
+    splitLocation.length === 5 ? splitLocation[splitLocation.length - 3] : ''
   return (
     <Menu
       mode="inline"
-      defaultOpenKeys={[
-        splitLocation.length === 5
-          ? splitLocation[splitLocation.length - 3]
-          : null,
-        splitLocation[splitLocation.length - 2],
-      ]}
+      defaultOpenKeys={[firstOpenKey, splitLocation[splitLocation.length - 2]]}
       theme={'light'}
     >
       {menuItem}

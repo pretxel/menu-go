@@ -7,12 +7,13 @@ import { Session } from 'next-auth'
 
 interface FooterProps {
   collapsed: Boolean
-  onClose: Function
-  session?: Session
+  onClose: any
+  session?: Session | null
 }
 
 export default function MenuFooter(props: FooterProps) {
   const avatarImg = randomAvatar()
+  const { session } = props
   return props.collapsed === false ? (
     <Row
       className="hp-sidebar-footer hp-pb-24 hp-px-24 hp-bg-color-dark-100"
@@ -27,7 +28,7 @@ export default function MenuFooter(props: FooterProps) {
 
           <div>
             <span className="hp-d-block hp-text-color-black-100 hp-text-color-dark-0 hp-p1-body">
-              {props.session.user?.name}
+              {session?.user?.name}
             </span>
 
             <Link href="/pages/profile/personel-information">
@@ -43,7 +44,7 @@ export default function MenuFooter(props: FooterProps) {
       </Col>
 
       <Col>
-        <Link href="/pages/profile/security">
+        <Link href="/pages/profile/security" passHref>
           <RiSettings3Line
             className="remix-icon hp-text-color-black-100 hp-text-color-dark-0"
             size={24}
@@ -59,7 +60,7 @@ export default function MenuFooter(props: FooterProps) {
       justify="center"
     >
       <Col>
-        <Link to="/pages/profile/personel-information">
+        <Link href="/pages/profile/personel-information">
           <a onClick={props.onClose}>
             <Avatar size={36} src={avatarImg} />
           </a>
