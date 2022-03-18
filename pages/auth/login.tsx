@@ -2,6 +2,7 @@
 import { Col, Row, Button } from 'antd'
 import { RiFacebookFill } from 'react-icons/ri'
 import { signIn } from 'next-auth/react'
+import Image from 'next/image'
 
 export default function login() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -24,9 +25,9 @@ export default function login() {
                 span={24}
                 className="hp-bg-item hp-text-center hp-mb-md-32"
               >
-                <img
+                <Image
                   src="https://cdn-1.motorsport.com/images/mgl/YMdnmR32/s1200/max-verstappen-red-bull-racing-1.webp"
-                  alt="Background Image"
+                  alt="Landscape picture"
                 />
               </Col>
 

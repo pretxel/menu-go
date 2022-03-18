@@ -1,7 +1,6 @@
 import React from 'react'
-
+import Image from 'next/image'
 import { Avatar, Col, Row } from 'antd'
-
 import content2Image from '../../src/assets/images/pages/landing/content-2.svg'
 
 export default function LandingContent2() {
@@ -11,7 +10,7 @@ export default function LandingContent2() {
         <Row align="middle" justify="space-between">
           <Col lg={14} span={24}>
             <div className="hp-landing-content-2-circle hp-position-relative hp-bg-info-1">
-              <img
+              <Image
                 src={content2Image.src}
                 alt="Work anywhere, with any device"
                 className="hp-position-absolute-center"

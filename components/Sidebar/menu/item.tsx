@@ -14,10 +14,6 @@ export default function MenuItem(props: ItemProps) {
   const { onClose } = props
   const [pathname, setPathname] = useState('')
 
-  //   // Location
-  //   const location = useLocation()
-  //   const { pathname } = location
-
   useEffect(() => {
     setPathname(window.location.href)
   }, [])
@@ -115,10 +111,6 @@ export default function MenuItem(props: ItemProps) {
       )
     }
   })
-
-  console.log('splitLocationUrl', splitLocationUrl)
-
-  console.log('splitLocation', splitLocation.length === 5)
   const firstOpenKey =
     splitLocation.length === 5 ? splitLocation[splitLocation.length - 3] : ''
   return (

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-
+import Image from 'next/image'
 import { Row, Col, Form, Input, Button, Typography } from 'antd'
 
 const { Text } = Typography
@@ -20,7 +20,7 @@ export default function SignUp() {
                 span={24}
                 className="hp-bg-item hp-text-center hp-mb-md-32"
               >
-                <img
+                <Image
                   src="https://cdn-1.motorsport.com/images/mgl/YMdnmR32/s1200/max-verstappen-red-bull-racing-1.webp"
                   alt="Background Image"
                 />
