@@ -101,6 +101,7 @@ export default function LandingContent1() {
 
             <div className="hp-landing-content-1-img">
               <Image
+                layout="fill"
                 src={content1Image.src}
                 alt="Perfect Solution For Small Business"
               />

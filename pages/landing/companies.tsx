@@ -12,23 +12,23 @@ export default function LandingCompanies() {
       <div className="hp-landing-container">
         <Row gutter={[50, 24]} align="middle" justify="center">
           <Col>
-            <Image src={geekWire.src} alt="GeekWire" />
+            <Image layout="fill" src={geekWire.src} alt="GeekWire" />
           </Col>
 
           <Col>
-            <Image src={slack.src} alt="Slack" />
+            <Image layout="fill" src={slack.src} alt="Slack" />
           </Col>
 
           <Col>
-            <Image src={envato.src} alt="Envato" />
+            <Image layout="fill" src={envato.src} alt="Envato" />
           </Col>
 
           <Col>
-            <Image src={usaToday.src} alt="USA Today" />
+            <Image layout="fill" src={usaToday.src} alt="USA Today" />
           </Col>
 
           <Col>
-            <Image src={forbes.src} alt="Forbes" />
+            <Image layout="fill" src={forbes.src} alt="Forbes" />
           </Col>
         </Row>
       </div>

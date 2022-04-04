@@ -11,6 +11,7 @@ export default function LandingContent2() {
           <Col lg={14} span={24}>
             <div className="hp-landing-content-2-circle hp-position-relative hp-bg-info-1">
               <Image
+                layout="fill"
                 src={content2Image.src}
                 alt="Work anywhere, with any device"
                 className="hp-position-absolute-center"

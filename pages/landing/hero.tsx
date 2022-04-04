@@ -33,13 +33,13 @@ export default function LandingHero() {
         <div className="hp-landing-hero-img-emoji">🖖</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji1.src} alt="Emoji1" />
+          <Image layout="fill" src={emoji1.src} alt="Emoji1" />
         </div>
 
         <div className="hp-landing-hero-img-emoji">😎</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji2.src} alt="Emoji2" />
+          <Image layout="fill" src={emoji2.src} alt="Emoji2" />
         </div>
       </div>
 
@@ -49,11 +49,11 @@ export default function LandingHero() {
         <div className="hp-landing-hero-img-emoji">😇</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji3.src} alt="Emoji3" />
+          <Image layout="fill" src={emoji3.src} alt="Emoji3" />
         </div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji4.src} alt="Emoji4" />
+          <Image layout="fill" src={emoji4.src} alt="Emoji4" />
         </div>
       </div>
     </section>
