@@ -26,7 +26,7 @@ export default function login() {
                 className="hp-bg-item hp-text-center hp-mb-md-32"
               >
                 <img
-                  src="https://cdn-1.motorsport.com/images/mgl/YMdnmR32/s1200/max-verstappen-red-bull-racing-1.webp"
+                  src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/amr21-12-1614785530.jpg"
                   alt="Landscape picture"
                 />
               </Col>
