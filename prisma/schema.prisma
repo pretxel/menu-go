@@ -55,3 +55,12 @@ model VerificationToken {
   expires    DateTime
   @@unique([identifier, token])
 }
+
+model ConfigRestaurant {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  address       String?
+  phone         String?
+  image         String?
+
+}
