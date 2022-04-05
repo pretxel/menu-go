@@ -20,8 +20,14 @@ export default function SignUp() {
                 span={24}
                 className="hp-bg-item hp-text-center hp-mb-md-32"
               >
+<<<<<<< HEAD
                 <img
                   src="https://cdn-1.motorsport.com/images/mgl/YMdnmR32/s1200/max-verstappen-red-bull-racing-1.webp"
+=======
+                <Image
+                  layout="fill"
+                  src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/amr21-12-1614785530.jpg"
+>>>>>>> e08f5f8abaf429871d8d744dae20128c2885e14d
                   alt="Background Image"
                 />
               </Col>

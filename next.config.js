@@ -6,18 +6,17 @@ const pathToLessFileWithVariables = path.resolve(
   './src/assets/less/yoda-theme.less'
 )
 const nextConfig = {
-  reactStrictMode: true,
-  withLess: withLess({
-    lessLoaderOptions: {
-      additionalData: (content) =>
-        `${content}\n\n@import '${pathToLessFileWithVariables}';`,
-    },
-  }),
-}
-
-module.exports = withLess({
+  experimental: {
+    externalDir: false,
+    runtime: 'nodejs',
+  },
+  images: {
+    domains: ['hips.hearstapps.com', 'toppng.com'],
+  },
   lessLoaderOptions: {
     additionalData: (content) =>
       `${content}\n\n@import '${pathToLessFileWithVariables}';`,
   },
-})
+}
+
+module.exports = withLess(nextConfig)
