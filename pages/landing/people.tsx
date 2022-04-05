@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react'
-import Image from 'next/image'
 
 import { Col, Row } from 'antd'
 
@@ -73,7 +73,7 @@ export default function LandingPeople() {
 
         <Row align="middle">
           <Col>
-            <Image src={item.avatar} alt={item.name} width={100} height={100} />
+            <img src={item.avatar} alt={item.name} />
           </Col>
 
           <Col className="hp-landing-people-item-title">

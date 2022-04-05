@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { Col, Row } from 'antd'
-import Image from 'next/image'
 import geekWire from '../../src/assets/images/pages/landing/geekWire.png'
 import slack from '../../src/assets/images/pages/landing/slack.png'
 import envato from '../../src/assets/images/pages/landing/envato.png'
@@ -12,23 +12,23 @@ export default function LandingCompanies() {
       <div className="hp-landing-container">
         <Row gutter={[50, 24]} align="middle" justify="center">
           <Col>
-            <Image src={geekWire.src} alt="GeekWire" />
+            <img src={geekWire.src} alt="GeekWire" />
           </Col>
 
           <Col>
-            <Image src={slack.src} alt="Slack" />
+            <img src={slack.src} alt="Slack" />
           </Col>
 
           <Col>
-            <Image src={envato.src} alt="Envato" />
+            <img src={envato.src} alt="Envato" />
           </Col>
 
           <Col>
-            <Image src={usaToday.src} alt="USA Today" />
+            <img src={usaToday.src} alt="USA Today" />
           </Col>
 
           <Col>
-            <Image src={forbes.src} alt="Forbes" />
+            <img src={forbes.src} alt="Forbes" />
           </Col>
         </Row>
       </div>

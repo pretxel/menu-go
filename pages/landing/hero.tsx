@@ -1,4 +1,4 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import heroImage from '../../src/assets/images/pages/landing/hero-image.svg'
 import emoji1 from '../../src/assets/images/pages/landing/emoji-1.png'
 import emoji2 from '../../src/assets/images/pages/landing/emoji-2.png'
@@ -33,13 +33,13 @@ export default function LandingHero() {
         <div className="hp-landing-hero-img-emoji">🖖</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji1.src} alt="Emoji1" />
+          <img src={emoji1.src} alt="Emoji1" />
         </div>
 
         <div className="hp-landing-hero-img-emoji">😎</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji2.src} alt="Emoji2" />
+          <img src={emoji2.src} alt="Emoji2" />
         </div>
       </div>
 
@@ -49,11 +49,11 @@ export default function LandingHero() {
         <div className="hp-landing-hero-img-emoji">😇</div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji3.src} alt="Emoji3" />
+          <img src={emoji3.src} alt="Emoji3" />
         </div>
 
         <div className="hp-landing-hero-img-emoji">
-          <Image src={emoji4.src} alt="Emoji4" />
+          <img src={emoji4.src} alt="Emoji4" />
         </div>
       </div>
     </section>

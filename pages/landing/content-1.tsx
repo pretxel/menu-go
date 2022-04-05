@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react'
-import Image from 'next/image'
 import { Avatar, Col, Row } from 'antd'
 import content1Image from '../../src/assets/images/pages/landing/content-1.png'
 
@@ -100,7 +100,7 @@ export default function LandingContent1() {
             <div className="hp-landing-content-1-circle hp-bg-success-1"></div>
 
             <div className="hp-landing-content-1-img">
-              <Image
+              <img
                 src={content1Image.src}
                 alt="Perfect Solution For Small Business"
               />

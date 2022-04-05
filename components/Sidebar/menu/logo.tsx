@@ -1,11 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function MenuLogo() {
   return (
     <Link href="/" passHref>
       <>
-        <Image
+        <img
           className="hp-logo"
           src={
             'https://toppng.com/uploads/preview/hamburger-png-vector-picture-11547059710uuexgsn6ph.png'
