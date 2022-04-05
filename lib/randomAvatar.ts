@@ -3,8 +3,11 @@ export default function randomAvatar() {
   const avatarStyleRandom = Math.floor(
     Math.random() * (Object.keys(avatarStyles).length - 1 + 1) + 1
   )
-  const avatarStyle = `avatarStyle=${avatarStyles[avatarStyleRandom]}`
-
+  const avatarStyle = `avatarStyle=${
+    avatarStyles[avatarStyleRandom] !== undefined
+      ? avatarStyles[avatarStyleRandom]
+      : 'Transparent'
+  }`
   const topObject = [
     'NoHair',
     'Eyepatch',
@@ -47,7 +50,9 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(topObject).length - 1 + 1) + 1
   )
 
-  const top = `topType=${topObject[topRandom]}`
+  const top = `topType=${
+    topObject[topRandom] !== undefined ? topObject[topRandom] : 'NoHair'
+  }`
 
   const accesoriesObject = [
     'Blank',
@@ -63,7 +68,11 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(accesoriesObject).length - 1 + 1) + 1
   )
 
-  const accesories = `accessoriesType=${accesoriesObject[accesoriesRandom]}`
+  const accesories = `accessoriesType=${
+    accesoriesObject[accesoriesRandom] !== undefined
+      ? accesoriesObject[accesoriesRandom]
+      : 'Blank'
+  }`
 
   const hairColorObject = [
     'Auburn',
@@ -83,7 +92,11 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(hairColorObject).length - 1 + 1) + 1
   )
 
-  const hairColor = `hairColor=${hairColorObject[hairColorRandom]}`
+  const hairColor = `hairColor=${
+    hairColorObject[hairColorRandom] !== undefined
+      ? hairColorObject[hairColorRandom]
+      : 'Auburn'
+  }`
 
   const facialHairObject = [
     'Blank',
@@ -98,7 +111,11 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(facialHairObject).length - 1 + 1) + 1
   )
 
-  const facialHair = `facialHairType=${facialHairObject[facialHairRandom]}`
+  const facialHair = `facialHairType=${
+    facialHairObject[facialHairRandom] !== undefined
+      ? facialHairObject[facialHairRandom]
+      : 'Blank'
+  }`
 
   const clothesObject = [
     'BlazerShirt',
@@ -116,7 +133,11 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(clothesObject).length - 1 + 1) + 1
   )
 
-  const clothes = `clotheType=${clothesObject[clothesRandom]}`
+  const clothes = `clotheType=${
+    clothesObject[clothesRandom] !== undefined
+      ? clothesObject[clothesRandom]
+      : 'BlazerShirt'
+  }`
 
   const colorFabricObjects = [
     'Black',
@@ -140,7 +161,11 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(colorFabricObjects).length - 1 + 1) + 1
   )
 
-  const colorFabric = `clotheColor=${colorFabricObjects[colorFabricRandom]}`
+  const colorFabric = `clotheColor=${
+    colorFabricObjects[colorFabricRandom] !== undefined
+      ? colorFabricObjects[colorFabricRandom]
+      : 'Black'
+  }`
 
   const eyesObjects = [
     'Close',
@@ -161,7 +186,9 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(eyesObjects).length - 1 + 1) + 1
   )
 
-  const eyes = `eyeType=${eyesObjects[eyesRandom]}`
+  const eyes = `eyeType=${
+    eyesObjects[eyesRandom] !== undefined ? eyesObjects[eyesRandom] : 'Close'
+  }`
 
   const eyeBrowObjects = [
     'Angry',
@@ -197,9 +224,17 @@ export default function randomAvatar() {
   const mouthRandom = Math.floor(
     Math.random() * (Object.keys(mouthObjects).length - 1 + 1) + 1
   )
-  const eyeBrow = `eyebrowType=${eyeBrowObjects[mouthRandom]}`
+  const eyeBrow = `eyebrowType=${
+    eyeBrowObjects[mouthRandom] !== undefined
+      ? eyeBrowObjects[mouthRandom]
+      : 'Angry'
+  }`
 
-  const mouth = `mouthType=${mouthObjects[mouthRandom]}`
+  const mouth = `mouthType=${
+    mouthObjects[mouthRandom] !== undefined
+      ? mouthObjects[mouthRandom]
+      : 'Concerned'
+  }`
 
   const skinObjects = [
     'Tanned',
@@ -215,7 +250,9 @@ export default function randomAvatar() {
     Math.random() * (Object.keys(skinObjects).length - 1 + 1) + 1
   )
 
-  const skin = `skinColor=${skinObjects[skinRandom]}`
+  const skin = `skinColor=${
+    skinObjects[skinRandom] !== undefined ? skinObjects[skinRandom] : 'Tanned'
+  }`
 
   const avatarImg = `https://avataaars.io/?${avatarStyle}&${top}&${accesories}&${hairColor}&${facialHair}&${clothes}&${colorFabric}&${eyes}&${eyeBrow}&${mouth}&${skin}`
   return avatarImg
