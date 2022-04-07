@@ -85,7 +85,7 @@ export default function MainConfig({}: Props) {
   }
   // end function to send data
   return (
-    <div>
+    <>
       <div className="hp-p-sm-16 hp-p-24 hp-border-radius hp-border-1 hp-border-color-black-40 hp-border-color-dark-80 hp-bg-color-black-0 hp-bg-color-dark-100 hp-bg-color-black-0">
         <h3 className="hp-mb-24 hp-text-color-black-80 hp-text-color-dark-0">
           Config Page
@@ -172,6 +172,6 @@ export default function MainConfig({}: Props) {
           </Row>
         </Form>
       </div>
-    </div>
+    </>
   )
 }
