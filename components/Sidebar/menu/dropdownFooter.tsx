@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import randomAvatar from '../../../lib/randomAvatar'
 import { Divider, Avatar, Row, Col, Dropdown } from 'antd'
 import { RiSettings3Line } from 'react-icons/ri'
 import { Session } from 'next-auth'
@@ -11,7 +10,6 @@ interface DropdownFooterProps {
   session?: Session | null
 }
 export default function DropDownFooter(props: DropdownFooterProps) {
-  const memoizedAvatar = useMemo(() => randomAvatar(), [])
   const { session } = props
   const nameShort = session?.user?.name?.match(/^([\w]+)\s([\w]+)/)![0]
   const menu = (
@@ -43,10 +41,14 @@ export default function DropDownFooter(props: DropdownFooterProps) {
         justify="space-between"
       >
         <Divider className="hp-border-color-black-20 hp-border-color-dark-70 hp-mt-0" />
-
         <Col>
           <Row align="middle">
-            <Avatar size={36} src={memoizedAvatar} className="hp-mr-8" />
+            <Avatar
+              size={36}
+              src={session?.user?.image}
+              className="hp-mr-8"
+              alt={`avatar-${session?.user?.name}`}
+            />
 
             <Dropdown overlay={menu}>
               <span
