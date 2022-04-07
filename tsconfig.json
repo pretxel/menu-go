@@ -7,7 +7,7 @@
       "@lib/*": ["lib/*"],
       "@utils/*": ["utils/*"],
       "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
     },
     "allowJs": true,
     "skipLibCheck": true,
