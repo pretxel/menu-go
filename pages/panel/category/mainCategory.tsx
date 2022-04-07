@@ -3,11 +3,11 @@ import { RiCloseFill, RiEditFill, RiDeleteBin6Fill } from 'react-icons/ri'
 import { Empty, Form, Input, Row, Col, Button, Modal } from 'antd'
 import defaultCategory from '@lib/defaultCategories.json'
 
-import pizza from '@utils/dummyImages/categories/pizza.jpg'
-import hamburguer from '@utils/dummyImages/categories/hamburguer.jpg'
-import tacos from '@utils/dummyImages/categories/tacos.jpg'
-import pasta from '@utils/dummyImages/categories/pastas.jpg'
-import drinks from '@utils/dummyImages/categories/drinks.jpg'
+import pizza from '@utils/dummyImages/categories/pizza.webp'
+import hamburguer from '@utils/dummyImages/categories/hamburguer.webp'
+import tacos from '@utils/dummyImages/categories/tacos.webp'
+import pasta from '@utils/dummyImages/categories/pastas.webp'
+import drinks from '@utils/dummyImages/categories/drinks.webp'
 
 type Props = {}
 interface defaulCategory {
