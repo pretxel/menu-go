@@ -11,7 +11,6 @@ export default function MenuLogo() {
             'https://toppng.com/uploads/preview/hamburger-png-vector-picture-11547059710uuexgsn6ph.png'
           }
           alt="logo"
-          layout="fill"
         />
 
         <span className="h3 d-font-weight-800 hp-text-color-primary-1 hp-mb-6">
