@@ -67,5 +67,11 @@ model ConfigRestaurant {
 model Categories {
     id            String    @id @default(auto()) @map("_id") @db.ObjectId
     name          String
-    description   String
+    description   String?
+}
+
+model Dishes {
+    id            String    @id @default(auto()) @map("_id") @db.ObjectId
+    name          String
+    categories    String
 }
