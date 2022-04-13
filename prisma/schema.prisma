@@ -71,3 +71,5 @@ model Category {
   name String
   description   String
 }
+
+
