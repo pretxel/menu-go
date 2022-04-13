@@ -5,7 +5,6 @@ import prisma from '@lib/prisma'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   // post
   const { name, description } = req.body
-  console.log(req.body, 'body')
   try {
     const data = await prisma.categories.create({
       data: {

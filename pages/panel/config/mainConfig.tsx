@@ -46,7 +46,6 @@ export default function MainConfig({}: Props) {
   const [form] = Form.useForm()
   // functions to dragger image
   const onChange = (info: UploadChangeParam) => {
-    console.log(info, 'INFOOO')
     const data = {
       name: form.getFieldValue('name'),
       address: form.getFieldValue('address'),
