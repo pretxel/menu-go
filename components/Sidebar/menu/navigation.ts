@@ -31,6 +31,11 @@ const config: Array<NavigationItem> = [
     title: 'Dishes',
     navLink: '/panel/dishes',
   },
+  {
+    id: 'category',
+    title: 'Category',
+    navLink: '/panel/category',
+  },
 ]
 
 const navigation = [...config]

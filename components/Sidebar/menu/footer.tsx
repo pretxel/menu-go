@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import randomAvatar from '../../../lib/randomAvatar'
 import { Avatar, Row, Col } from 'antd'
 import { Session } from 'next-auth'
 import DropDownFooter from './dropdownFooter'
@@ -12,7 +11,8 @@ interface FooterProps {
 }
 
 export default function MenuFooter(props: FooterProps) {
-  const memoizedAvatar = useMemo(() => randomAvatar(), [])
+  const { session } = props
+
   return props.collapsed === false ? (
     <DropDownFooter {...props} />
   ) : (
@@ -24,7 +24,11 @@ export default function MenuFooter(props: FooterProps) {
       <Col>
         <Link href="/pages/profile/personel-information">
           <a onClick={props.onClose}>
-            <Avatar size={36} src={memoizedAvatar} />
+            <Avatar
+              size={36}
+              src={session?.user?.image}
+              alt={`avatar-${session?.user?.name}`}
+            />
           </a>
         </Link>
       </Col>
