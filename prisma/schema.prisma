@@ -65,10 +65,10 @@ model ConfigRestaurant {
   image         String?
 }
 
-model Categories {
-    id            String    @id @default(auto()) @map("_id") @db.ObjectId
-    name          String
-    description   String?
+model Category {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description   String
 }
 
 model Dishes {
