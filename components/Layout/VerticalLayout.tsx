@@ -13,36 +13,36 @@ import MenuHeader from '../Header'
 const { Content } = Layout
 
 interface LayoutProps {
-  children: any
+    children: any
 }
 
 export default function VerticalLayout(props: LayoutProps) {
-  // eslint-disable-next-line react/prop-types
-  const { children } = props
+    // eslint-disable-next-line react/prop-types
+    const { children } = props
 
-  const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false)
 
-  // Redux
-  // const customise = useSelector(state => state.customise)
+    // Redux
+    // const customise = useSelector(state => state.customise)
 
-  return (
-    <Layout className="hp-app-layout">
-      <Sidebar visible={visible} setVisible={setVisible} />
+    return (
+        <Layout className="hp-app-layout">
+            <Sidebar visible={visible} setVisible={setVisible} />
 
-      <Layout className="hp-bg-color-dark-90">
-        <MenuHeader setVisible={setVisible} />
+            <Layout className="hp-bg-color-dark-90">
+                <MenuHeader setVisible={setVisible} />
 
-        <Content className="hp-content-main">
-          <Row justify="center">
-            <Col xxl={20} xl={22} span={24}>
-              {children}
-            </Col>
-          </Row>
-        </Content>
+                <Content className="hp-content-main">
+                    <Row justify="center">
+                        <Col xxl={20} xl={22} span={24}>
+                            {children}
+                        </Col>
+                    </Row>
+                </Content>
 
-        {/* <MenuFooter /> */}
-      </Layout>
-      {/* <ScrollTop /> */}
-    </Layout>
-  )
+                {/* <MenuFooter /> */}
+            </Layout>
+            {/* <ScrollTop /> */}
+        </Layout>
+    )
 }
