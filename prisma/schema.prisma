@@ -58,12 +58,11 @@ model VerificationToken {
 }
 
 model ConfigRestaurant {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  name    String?
-  address String?
-  phone   String?
-  image   String?
-
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  address       String?
+  phone         String?
+  image         String?
 }
 
 model Category {
@@ -72,4 +71,9 @@ model Category {
   description   String
 }
 
+model Dishes {
+    id            String    @id @default(auto()) @map("_id") @db.ObjectId
+    name          String
+    categories    String
+}
 

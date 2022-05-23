@@ -221,3 +221,29 @@ export default function MainCategory({}: Props) {
         </div>
     )
 }
+
+// export async function getServerSideProps() {
+//   const response = await fetch('/api/get/categories')
+//   const { data } = await response.json()
+//   console.log(response, 'response')
+//   // .then((res) => res.json())
+//   // .then((data) => setCategoriesData([...categoriesData, ...data]))
+//   return {
+//     props: {
+//       data,
+//     },
+//   }
+// }
+
+export async function getStaticProps() {
+  const response = await fetch('/api/get/categories')
+  const { data } = await response.json()
+  console.log(response, 'response')
+  // .then((res) => res.json())
+  // .then((data) => setCategoriesData([...categoriesData, ...data]))
+  return {
+    props: {
+      data,
+    },
+  }
+}
