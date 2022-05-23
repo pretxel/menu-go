@@ -2,5 +2,6 @@
   "trailingComma": "es5",
   "semi": false,
   "singleQuote": true,
-  "tabs": false
+  "tabs": false,
+  "tabWidth": 4,
 }
