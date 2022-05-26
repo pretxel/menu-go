@@ -7,3 +7,4 @@ describe('Header', () => {
   })
 })
 
+export {}
