@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { RiCloseFill, RiEditFill, RiDeleteBin6Fill } from 'react-icons/ri'
 import { Empty, Form, Input, Row, Col, Button, Modal } from 'antd'
 import defaultCategory from '@lib/defaultCategories.json'
-import { server } from '@utils/configs'
-
 import pizza from '@utils/dummyImages/categories/pizza.webp'
 import hamburguer from '@utils/dummyImages/categories/hamburguer.webp'
 import tacos from '@utils/dummyImages/categories/tacos.webp'
@@ -32,7 +30,7 @@ export default function MainCategory({}: Props) {
     }
 
     useEffect(() => {
-        fetch(`${server}/api/get/categories`)
+        fetch(`/api/get/categories`)
             .then((res) => res.json())
             .then((data) => setCategoriesData([...categoriesData, ...data]))
     })
@@ -53,9 +51,7 @@ export default function MainCategory({}: Props) {
             },
             body: JSON.stringify(dataForm),
         }
-        await fetch(`${server}/api/post/categories`, options).then((res) =>
-            res.json()
-        )
+        await fetch(`/api/post/categories`, options).then((res) => res.json())
         setFormModalVisible(false)
     }
     // end function to send data
@@ -225,25 +221,9 @@ export default function MainCategory({}: Props) {
     )
 }
 
-// export async function getServerSideProps() {
-//   const response = await fetch('/api/get/categories')
-//   const { data } = await response.json()
-//   console.log(response, 'response')
-//   // .then((res) => res.json())
-//   // .then((data) => setCategoriesData([...categoriesData, ...data]))
-//   return {
-//     props: {
-//       data,
-//     },
-//   }
-// }
-
 export async function getServerSideProps() {
-    const response = await fetch(`${server}/api/get/categories`)
+    const response = await fetch(`/api/get/categories`)
     const { data } = await response.json()
-    console.log(response, 'response')
-    // .then((res) => res.json())
-    // .then((data) => setCategoriesData([...categoriesData, ...data]))
     return {
         props: {
             data,

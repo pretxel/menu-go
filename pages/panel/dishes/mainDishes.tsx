@@ -222,7 +222,7 @@ export default function MainDishes({}: Props) {
         fetch('/api/get/dishes')
             .then((res) => res.json())
             .then((data) => setDishData([...dishData, ...data]))
-    }, [])
+    })
 
     return (
         <div className="hp-p-sm-16 hp-p-24 hp-border-radius hp-border-1 hp-border-color-black-40 hp-border-color-dark-80 hp-bg-color-black-0 hp-bg-color-dark-100 hp-bg-color-black-0">

@@ -106,6 +106,7 @@ export default function LandingContent1() {
                             <Image
                                 src={content1Image.src}
                                 alt="Perfect Solution For Small Business"
+                                layout="fill"
                             />
                         </div>
                     </Col>
