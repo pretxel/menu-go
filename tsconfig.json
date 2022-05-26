@@ -34,8 +34,8 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
-    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "jsx": "preserve",
     "incremental": true
   },
   "include": [

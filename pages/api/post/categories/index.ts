@@ -6,7 +6,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // post
     const { name, description } = req.body
     try {
-        const data = await prisma.categories.create({
+        const data = await prisma.category.create({
             data: {
                 name,
                 description,

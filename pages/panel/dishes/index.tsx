@@ -5,11 +5,9 @@ import MainDishes from './mainDishes'
 type Props = {}
 
 export default function index({}: Props) {
-
-  return (
-    <VerticalLayout>
-      <MainDishes />
-    </VerticalLayout>
-  )
-
+    return (
+        <VerticalLayout>
+            <MainDishes />
+        </VerticalLayout>
+    )
 }

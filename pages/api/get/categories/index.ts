@@ -5,7 +5,7 @@ import prisma from '@lib/prisma'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     // get
     try {
-        const data = await prisma.categories.findMany()
+        const data = await prisma.category.findMany()
         return res.status(200).send(data)
     } catch (error) {
         return res.status(500).send({ error })

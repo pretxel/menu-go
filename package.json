@@ -13,8 +13,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "@next-auth/prisma-adapter": "^1.0.1",
-    "@prisma/client": "^3.10.0",
+    "@prisma/client": "^3.14.0",
     "@reduxjs/toolkit": "^1.7.2",
     "antd": "^4.19.3",
     "i18next": "^21.6.10",
@@ -30,9 +31,8 @@
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.6",
     "react-slick": "^0.28.1",
-    "sharp": "^0.30.3",
     "react-syntax-highlighter": "^15.5.0",
-    "@faker-js/faker": "^6.0.0-alpha.5"
+    "sharp": "^0.30.3"
   },
   "devDependencies": {
     "@jest/types": "^28.1.0",
