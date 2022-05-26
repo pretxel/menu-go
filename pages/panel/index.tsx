@@ -5,38 +5,38 @@ import VerticalLayout from '../../components/Layout/VerticalLayout'
 import { getSession } from 'next-auth/react'
 
 function Panel() {
-  const { t } = useTranslation('homeScreen')
-  return (
-    <>
-      <Head>
-        <title>{t('panel_title')}</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="hp-landing hp-bg-black-0 hp-bg-dark-90">
-        <VerticalLayout>
-          <h1>Welcome</h1>
-        </VerticalLayout>
-      </div>
-    </>
-  )
+    const { t } = useTranslation('homeScreen')
+    return (
+        <>
+            <Head>
+                <title>{t('panel_title')}</title>
+                <meta name="description" content="" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div className="hp-landing hp-bg-black-0 hp-bg-dark-90">
+                <VerticalLayout>
+                    <h1>Welcome</h1>
+                </VerticalLayout>
+            </div>
+        </>
+    )
 }
 
 export async function getServerSideProps(context: any) {
-  const session = await getSession(context)
+    const session = await getSession(context)
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
     }
-  }
 
-  return {
-    props: { session },
-  }
+    return {
+        props: { session },
+    }
 }
 
 export default Panel

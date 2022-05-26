@@ -5,9 +5,9 @@ import MainCateogory from './mainCategory'
 type Props = {}
 
 export default function index({}: Props) {
-  return (
-    <VerticalLayout>
-      <MainCateogory />
-    </VerticalLayout>
-  )
+    return (
+        <VerticalLayout>
+            <MainCateogory />
+        </VerticalLayout>
+    )
 }

@@ -8,15 +8,15 @@ import '../src/assets/less/yoda-theme.less'
 import { SessionProvider } from 'next-auth/react'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  return (
-    <Provider store={store}>
-      <SessionProvider session={session}>
-        <I18nextProvider i18n={i18n}>
-          <Component {...pageProps} />
-        </I18nextProvider>
-      </SessionProvider>
-    </Provider>
-  )
+    return (
+        <Provider store={store}>
+            <SessionProvider session={session}>
+                <I18nextProvider i18n={i18n}>
+                    <Component {...pageProps} />
+                </I18nextProvider>
+            </SessionProvider>
+        </Provider>
+    )
 }
 
 export default MyApp

@@ -5,9 +5,9 @@ import MainConfig from './mainConfig'
 type Props = {}
 
 export default function index({}: Props) {
-  return (
-    <VerticalLayout>
-      <MainConfig />
-    </VerticalLayout>
-  )
+    return (
+        <VerticalLayout>
+            <MainConfig />
+        </VerticalLayout>
+    )
 }
