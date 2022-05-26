@@ -9,18 +9,18 @@ import LandingPeople from './people'
 import LandingPricing from './pricing'
 
 export default function Landing() {
-  return (
-    <div className="hp-landing hp-bg-black-0 hp-bg-dark-90">
-      <LandingHeader />
+    return (
+        <div className="hp-landing hp-bg-black-0 hp-bg-dark-90">
+            <LandingHeader />
 
-      <LandingHero />
-      <LandingCompanies />
-      <LandingFeatures />
-      <LandingContent1 />
-      <LandingContent2 />
-      <LandingPeople />
-      <LandingPricing />
-      <LandingFooter />
-    </div>
-  )
+            <LandingHero />
+            <LandingCompanies />
+            <LandingFeatures />
+            <LandingContent1 />
+            <LandingContent2 />
+            <LandingPeople />
+            <LandingPricing />
+            <LandingFooter />
+        </div>
+    )
 }

@@ -1,71 +1,37 @@
 import React from 'react'
 import Link from 'next/link'
-import randomAvatar from '../../../lib/randomAvatar'
-import { Divider, Avatar, Row, Col } from 'antd'
-import { RiSettings3Line } from 'react-icons/ri'
+import { Avatar, Row, Col } from 'antd'
 import { Session } from 'next-auth'
+import DropDownFooter from './dropdownFooter'
 
 interface FooterProps {
-  collapsed: Boolean
-  onClose: any
-  session?: Session | null
+    collapsed: Boolean
+    onClose: any
+    session?: Session | null
 }
 
 export default function MenuFooter(props: FooterProps) {
-  const avatarImg = randomAvatar()
-  const { session } = props
-  return props.collapsed === false ? (
-    <Row
-      className="hp-sidebar-footer hp-pb-24 hp-px-24 hp-bg-color-dark-100"
-      align="middle"
-      justify="space-between"
-    >
-      <Divider className="hp-border-color-black-20 hp-border-color-dark-70 hp-mt-0" />
+    const { session } = props
 
-      <Col>
-        <Row align="middle">
-          <Avatar size={36} src={avatarImg} className="hp-mr-8" />
-
-          <div>
-            <span className="hp-d-block hp-text-color-black-100 hp-text-color-dark-0 hp-p1-body">
-              {session?.user?.name}
-            </span>
-
-            <Link href="/pages/profile/personel-information">
-              <a
-                className="hp-badge-text hp-text-color-dark-30"
-                onClick={props.onClose}
-              >
-                View Profile
-              </a>
-            </Link>
-          </div>
+    return props.collapsed === false ? (
+        <DropDownFooter {...props} />
+    ) : (
+        <Row
+            className="hp-sidebar-footer hp-pt-16 hp-mb-16 hp-bg-color-dark-100"
+            align="middle"
+            justify="center"
+        >
+            <Col>
+                <Link href="/pages/profile/personel-information">
+                    <a onClick={props.onClose}>
+                        <Avatar
+                            size={36}
+                            src={session?.user?.image}
+                            alt={`avatar-${session?.user?.name}`}
+                        />
+                    </a>
+                </Link>
+            </Col>
         </Row>
-      </Col>
-
-      <Col>
-        <Link href="/pages/profile/security" passHref>
-          <RiSettings3Line
-            className="remix-icon hp-text-color-black-100 hp-text-color-dark-0"
-            size={24}
-            onClick={props.onClose}
-          />
-        </Link>
-      </Col>
-    </Row>
-  ) : (
-    <Row
-      className="hp-sidebar-footer hp-pt-16 hp-mb-16 hp-bg-color-dark-100"
-      align="middle"
-      justify="center"
-    >
-      <Col>
-        <Link href="/pages/profile/personel-information">
-          <a onClick={props.onClose}>
-            <Avatar size={36} src={avatarImg} />
-          </a>
-        </Link>
-      </Col>
-    </Row>
-  )
+    )
 }

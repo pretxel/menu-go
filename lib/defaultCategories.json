@@ -1,0 +1,22 @@
+[
+    {
+      "id": "1234",
+      "name": "Entrada",
+      "description": "Estos son los platos de entrada"
+    },
+    {
+      "id": "4567",
+      "name": "Primer Plato",
+      "description": "Estos son los primeros platos"
+    },
+    {
+      "id": "8901",
+      "name": "Postre",
+      "description": "Estos son los postres"
+    },
+    {
+      "id": "2468",
+      "name": "Bebidas",
+      "description": "Estas son las bebidas"
+    }
+  ]

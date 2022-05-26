@@ -14,53 +14,53 @@ import MenuItem from './menu/item'
 const { Sider } = Layout
 
 interface SiderbarProps {
-  setVisible: Function
-  visible: Boolean
+    setVisible: Function
+    visible: Boolean
 }
 
 interface ContextSession {
-  data: Session | null
-  status: string
+    data: Session | null
+    status: string
 }
 
 export default function Sidebar(props: SiderbarProps) {
-  const { setVisible } = props
-  const { data: session }: ContextSession = useSession()
+    const { setVisible } = props
+    const { data: session }: ContextSession = useSession()
 
-  // Collapsed
-  const [collapsed] = useState(false)
+    // Collapsed
+    const [collapsed] = useState(false)
 
-  // Mobile Sidebar
-  const onClose = () => {
-    setVisible(false)
-  }
+    // Mobile Sidebar
+    const onClose = () => {
+        setVisible(false)
+    }
 
-  // Menu
-  // function toggle() {
-  //   setCollapsed(!collapsed)
-  // }
+    // Menu
+    // function toggle() {
+    //   setCollapsed(!collapsed)
+    // }
 
-  // const trigger = createElement(collapsed ? RiMenuUnfoldLine : RiMenuFoldLine, {
-  //   className: 'trigger',
-  //   onClick: toggle,
-  // })
+    // const trigger = createElement(collapsed ? RiMenuUnfoldLine : RiMenuFoldLine, {
+    //   className: 'trigger',
+    //   onClick: toggle,
+    // })
 
-  return (
-    <Sider
-      trigger={null}
-      collapsible
-      collapsed={collapsed}
-      width={256}
-      className="hp-sidebar hp-bg-color-black-0 hp-bg-color-dark-100"
-    >
-      <Row
-        className="hp-mr-12 hp-ml-24 hp-mt-24"
-        align="bottom"
-        justify="space-between"
-      >
-        <Col>{collapsed === false ? <MenuLogo /> : ''}</Col>
+    return (
+        <Sider
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+            width={256}
+            className="hp-sidebar hp-bg-color-black-0 hp-bg-color-dark-100"
+        >
+            <Row
+                className="hp-mr-12 hp-ml-24 hp-mt-24"
+                align="bottom"
+                justify="space-between"
+            >
+                <Col>{collapsed === false ? <MenuLogo /> : ''}</Col>
 
-        {/* {customise.sidebarCollapseButton && (
+                {/* {customise.sidebarCollapseButton && (
           <Col className="hp-pr-0">
             <Button
               icon={trigger}
@@ -70,20 +70,24 @@ export default function Sidebar(props: SiderbarProps) {
           </Col>
         )} */}
 
-        {collapsed !== false && (
-          <Col className="hp-mt-8">
-            {/* <Link to="/" onClick={onClose}>
+                {collapsed !== false && (
+                    <Col className="hp-mt-8">
+                        {/* <Link to="/" onClick={onClose}>
               <img className="hp-logo" src={logoSmall} alt="logo" />
             </Link> */}
-          </Col>
-        )}
-      </Row>
+                    </Col>
+                )}
+            </Row>
 
-      <MenuItem onClose={onClose} />
+            <MenuItem onClose={onClose} />
 
-      <MenuFooter onClose={onClose} collapsed={collapsed} session={session} />
+            <MenuFooter
+                onClose={onClose}
+                collapsed={collapsed}
+                session={session}
+            />
 
-      {/* <MenuMobile onClose={onClose} visible={visible} />  */}
-    </Sider>
-  )
+            {/* <MenuMobile onClose={onClose} visible={visible} />  */}
+        </Sider>
+    )
 }

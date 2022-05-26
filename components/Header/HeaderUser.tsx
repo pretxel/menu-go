@@ -1,42 +1,46 @@
 import { signOut } from 'next-auth/react'
-
-import randomAvatar from '../../lib/randomAvatar'
 import Link from 'next/link'
 import { Session } from 'next-auth'
 import { Dropdown, Col, Avatar, Divider } from 'antd'
 
 interface ContextSession {
-  session: Session | null
+    session: Session | null
 }
 
 export default function HeaderUser({ session }: ContextSession) {
-  const avatarImg = randomAvatar()
-  const menu = (
-    <div
-      className="hp-border-radius hp-border-1 hp-border-color-black-40 hp-bg-black-0 hp-bg-dark-100 hp-border-color-dark-80 hp-p-24 hp-mt-12"
-      style={{ width: 260 }}
-    >
-      <span className="hp-d-block h5 hp-text-color-black-100 hp-text-color-dark-0 hp-mb-8">
-        {session?.user?.name}
-      </span>
+    const menu = (
+        <div
+            className="hp-border-radius hp-border-1 hp-border-color-black-40 hp-bg-black-0 hp-bg-dark-100 hp-border-color-dark-80 hp-p-24 hp-mt-12"
+            style={{ width: 260 }}
+        >
+            <span className="hp-d-block h5 hp-text-color-black-100 hp-text-color-dark-0 hp-mb-8">
+                {session?.user?.name}
+            </span>
 
-      <Link href={`/pages/profile/personel-information`}>View Profile</Link>
+            <Link href={`/pages/profile/personel-information`}>
+                View Profile
+            </Link>
 
-      <Divider className="hp-mb-16 hp-mt-6" />
+            <Divider className="hp-mb-16 hp-mt-6" />
 
-      <Link href="/" passHref>
-        <a className="hp-p1-body" onClick={() => signOut()}>
-          Log Out
-        </a>
-      </Link>
-    </div>
-  )
+            <Link href="/" passHref>
+                <a className="hp-p1-body" onClick={() => signOut()}>
+                    Log Out
+                </a>
+            </Link>
+        </div>
+    )
 
-  return (
-    <Col>
-      <Dropdown overlay={menu} placement="bottomLeft">
-        <Avatar src={avatarImg} size={40} className="hp-cursor-pointer" />
-      </Dropdown>
-    </Col>
-  )
+    return (
+        <Col>
+            <Dropdown overlay={menu} placement="bottomLeft">
+                <Avatar
+                    src={session?.user?.image}
+                    size={40}
+                    className="hp-cursor-pointer"
+                    alt={`avatar-${session?.user?.name}`}
+                />
+            </Dropdown>
+        </Col>
+    )
 }
