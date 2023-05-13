@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 // import Layout from '../components/Layout'
 // import LandingPage from '../components/LandingPage'
-import Landing from './landing/index'
+import Landing from '../components/Landing'
 import { useTranslation } from 'react-i18next'
 
 const Home: NextPage = () => {
