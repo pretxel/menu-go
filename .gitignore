@@ -39,3 +39,9 @@ yarn-error.log*
 # package-lock
 package-lock.json
 package-lock
+
+# turbo
+.turbo
+
+#docker
+db-data
