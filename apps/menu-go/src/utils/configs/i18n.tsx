@@ -27,6 +27,7 @@ i18n.use(initReactI18next).init(
     },
   },
   (err, t) => {
+    console.error(err)
     translate = t;
   }
 );

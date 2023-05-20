@@ -1,9 +1,10 @@
 import faker from "@faker-js/faker";
+
 import { Category } from "../models";
 import { GenerateDishes } from "./dishMock";
 
 export const GenerateCategories = (itemMax: number): Array<Category> => {
-  let categoriesArray = [];
+  const categoriesArray = [];
   for (let i = 0; i < itemMax; i += 1) {
     categoriesArray.push({
       id: faker.datatype.uuid(),

@@ -1,8 +1,9 @@
 import faker from '@faker-js/faker'
+
 import { Dish } from '../models'
 
 export const GenerateDishes = (itemMax: number): Array<Dish> => {
-  let dishesArray = []
+  const dishesArray = []
   for (let i = 0; i < itemMax; i += 1) {
     dishesArray.push({
       id: faker.datatype.uuid(),

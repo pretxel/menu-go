@@ -1,11 +1,13 @@
 import 'focus-visible';
 import '../styles/globals.css';
-import { Provider } from 'react-redux';
+
 import type { AppProps } from 'next/app';
-import { store } from '../utils/redux/store';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../utils/configs/i18n';
 import { SessionProvider } from 'next-auth/react';
+import { I18nextProvider } from 'react-i18next';
+import { Provider } from 'react-redux';
+
+import i18n from '../utils/configs/i18n';
+import { store } from '../utils/redux/store';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (

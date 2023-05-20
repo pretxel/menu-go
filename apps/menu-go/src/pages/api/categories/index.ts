@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+
 import { GenerateCategories } from '../../../mocks';
 import { Category } from '../../../models';
 

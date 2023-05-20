@@ -27,6 +27,7 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
+    'import/no-anonymous-default-export': 'off',
   },
   env: {
     jest: true,

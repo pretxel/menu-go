@@ -1,9 +1,10 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useTranslation } from 'react-i18next';
+
 // import Layout from '../components/Layout'
 // import LandingPage from '../components/LandingPage'
 import Landing from '../components/Landing';
-import { useTranslation } from 'react-i18next';
 
 const Home: NextPage = () => {
   const { t } = useTranslation('homeScreen');

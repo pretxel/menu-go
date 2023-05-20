@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
+
 import { decrement, increment, incrementByAmount } from './actions';
 
 type CounterState = {
