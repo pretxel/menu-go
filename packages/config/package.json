@@ -8,6 +8,9 @@
     "jest-config.js"
   ],
   "devDependencies": {
+    "@jest/types": "^28.1.0",
+    "react-test-renderer": "^18.1.0",
+    "jest": "^28.1.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "eslint": "^8.38.0",
