@@ -41,6 +41,7 @@
     "turbo": "^1.9.8"
   },
   "dependencies": {
+    "clsx": "^1.2.1",
     "dotenv-cli": "^7.0.0"
   },
   "packageManager": "npm@8.19.3"

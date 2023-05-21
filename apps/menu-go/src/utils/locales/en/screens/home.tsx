@@ -5,4 +5,6 @@ export default {
   title: 'Example',
   menu: 'Menu',
   panel_title: 'Panel',
-}
+  panel: 'Panel',
+  home: 'Menu',
+};
