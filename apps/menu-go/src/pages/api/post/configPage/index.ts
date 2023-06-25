@@ -5,7 +5,7 @@ import prisma from '../../../../lib/prisma';
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   // post
-  const { name, address, phone, image } = req.body;
+  const { name, address, phone, image, userId } = req.body;
   try {
     const data = await prisma.configRestaurant.create({
       data: {
@@ -13,6 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         address,
         phone,
         image,
+        userId,
       },
     });
 
