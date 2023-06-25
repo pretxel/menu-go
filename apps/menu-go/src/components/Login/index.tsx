@@ -1,9 +1,10 @@
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { RiFacebookFill } from 'react-icons/ri';
 
 export default function Login() {
-  const [emailLogin, setEmailLogin] = useState(false);
+  const [emailLogin] = useState(false);
 
   const handleClick = () => signIn('facebook');
   const handleClickGmail = () => signIn('google');
@@ -171,10 +172,11 @@ export default function Login() {
         </div>
       </div>
       <div className="relative hidden w-0 flex-1 lg:block">
-        <img
+        <Image
           className="absolute inset-0 h-full w-full object-cover"
-          src="https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+          src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
           alt=""
+          fill
         />
       </div>
     </div>

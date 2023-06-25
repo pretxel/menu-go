@@ -1,7 +1,7 @@
 import 'focus-visible';
 import '../styles/globals.css';
-import { Analytics } from '@vercel/analytics/react';
 
+import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { I18nextProvider } from 'react-i18next';

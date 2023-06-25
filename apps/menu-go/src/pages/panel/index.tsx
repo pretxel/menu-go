@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslation } from 'react-i18next';
 
+import Config from '../../components/Config';
 import Layout from '../../components/Panel/Layout';
 
 const Home: NextPage = () => {
@@ -15,7 +16,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Layout title={'Dashboard'}>
-        <h1>Example</h1>
+        <Config />
       </Layout>
     </>
   );

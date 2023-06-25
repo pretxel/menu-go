@@ -26,8 +26,7 @@ i18n.use(initReactI18next).init(
       bindI18n: 'languageChanged loaded',
     },
   },
-  (err, t) => {
-    console.error(err)
+  (_err, t) => {
     translate = t;
   }
 );
