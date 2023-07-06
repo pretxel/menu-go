@@ -31,17 +31,20 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^9.0.2",
+    "@semantic-release/npm": "^10.0.4",
     "commitlint-config-jira": "^1.6.4",
     "commitlint-plugin-jira-rules": "^1.6.4",
     "husky": "^8.0.3",
     "prettier": "^2.8.4",
-    "semantic-release": "^20.1.1",
+    "semantic-release": "^21.0.7",
     "turbo": "^1.9.8"
   },
   "dependencies": {
     "clsx": "^1.2.1",
     "dotenv-cli": "^7.0.0"
   },
-  "packageManager": "npm@8.19.3"
+  "packageManager": "npm@8.19.3",
+  "overrides": {
+    "semver": "~7.5.2"
+  }
 }

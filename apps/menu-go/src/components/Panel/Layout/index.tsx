@@ -1,9 +1,7 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { signOut,useSession  } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { Fragment } from 'react';
-
-import { SkeletonCard } from '../../skeleton-card';
 
 const user = {
   name: 'Tom Cook',
@@ -212,10 +210,7 @@ export default function Layout({ title, children }) {
             </div>
           </header>
           <main>
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-              <SkeletonCard />
-              {children}
-            </div>
+            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
       </div>

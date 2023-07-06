@@ -4,9 +4,10 @@ const path = require('path');
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
-  output: 'standalone',
+  // output: 'standalone',
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
+    appDir: true,
   },
   images: {
     remotePatterns: [
