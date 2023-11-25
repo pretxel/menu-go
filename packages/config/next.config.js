@@ -7,7 +7,6 @@ const nextConfig = {
   // output: 'standalone',
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
-    appDir: true,
   },
   images: {
     remotePatterns: [
