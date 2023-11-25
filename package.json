@@ -27,20 +27,18 @@
     "build:types": "dotenv -e .env -- turbo build:types"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.4",
-    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^10.0.4",
-    "commitlint-config-jira": "^1.6.4",
-    "commitlint-plugin-jira-rules": "^1.6.4",
+    "@semantic-release/npm": "^11.0.1",
     "husky": "^8.0.3",
-    "prettier": "^2.8.4",
-    "semantic-release": "^21.0.7",
+    "prettier": "^3.1.0",
+    "semantic-release": "^22.0.8",
     "turbo": "^1.9.8"
   },
   "dependencies": {
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "dotenv-cli": "^7.0.0"
   },
   "packageManager": "npm@8.19.3",
