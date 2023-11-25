@@ -10,11 +10,11 @@ export const User = () => {
     <>
       <div className="ml-3">
         <div className="text-base font-medium text-gray-800">
-          {session?.user.name}
+          {session?.user?.name}
           Hola
         </div>
         <div className="text-sm font-medium text-gray-500">
-          {session?.user.email}
+          {session?.user?.email}
         </div>
       </div>
     </>

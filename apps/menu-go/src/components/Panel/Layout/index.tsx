@@ -83,7 +83,7 @@ export default function Layout({ title, children }) {
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={session?.user.image}
+                            src={session?.user?.image as string}
                             alt=""
                           />
                         </Menu.Button>
@@ -162,16 +162,16 @@ export default function Layout({ title, children }) {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={session?.user.image}
+                        src={session?.user?.image as string}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">
-                        {session?.user.name}
+                        {session?.user?.name}
                       </div>
                       <div className="text-sm font-medium text-gray-500">
-                        {session?.user.email}
+                        {session?.user?.email}
                       </div>
                     </div>
                     <button
