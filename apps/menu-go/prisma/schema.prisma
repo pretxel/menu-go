@@ -1,17 +1,15 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = "postgres://postgres:secret@db.sandbox/postgres?schema=qr"
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -30,15 +28,15 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(uuid())
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id               String             @id @default(auto()) @map("_id") @db.ObjectId
+  id               String             @id @default(uuid())
   name             String?
   email            String?            @unique
   emailVerified    DateTime?
@@ -49,7 +47,7 @@ model User {
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(uuid())
   identifier String
   token      String   @unique
   expires    DateTime
@@ -58,26 +56,26 @@ model VerificationToken {
 }
 
 model ConfigRestaurant {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  id      String   @id @default(uuid())
   name    String?
   address String?
   phone   String?
   image   String?
-  userId  String   @db.ObjectId
+  userId  String
   user    User     @relation(fields: [userId], references: [id])
   Dishes  Dishes[]
 }
 
 model Category {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String @id @default(uuid())
   name        String
   description String
 }
 
 model Dishes {
-  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  id                 String           @id @default(uuid())
   name               String
   categories         String
-  configRestaurantId String           @db.ObjectId
+  configRestaurantId String
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
 }
