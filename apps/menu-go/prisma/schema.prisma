@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgres://postgres:secret@db.sandbox/postgres?schema=qr"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
