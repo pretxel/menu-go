@@ -1,10 +1,12 @@
-// import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
-// import { authOptions } from '../../lib/auth';
+import Form from '../../components/Form';
+import { authOptions } from '../../lib/auth';
+import { getRestaurant } from '../actions';
 
 export default async function Page() {
-  //   const session = await getServerSession(authOptions);
-  //   console.log(session);
+  const session = await getServerSession(authOptions);
+  const restaurant = await getRestaurant(session?.user.id);
 
-  return <h1>Hello, Dashboard Page!</h1>;
+  return <Form user={session?.user} restaurant={restaurant} />;
 }

@@ -10,8 +10,7 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     FacebookProvider({
-      // @ts-ignore
-      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
       // @ts-ignore
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
@@ -43,6 +42,16 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async redirect({ baseUrl }) {
       return `${baseUrl}/panel`;
+    },
+    async session({ session, user }) {
+      const userBDDD = await prisma.user.findFirst({
+        where: { email: user.email },
+      });
+      if (session.user) {
+        session.user.id = userBDDD?.id;
+      }
+
+      return session;
     },
   },
 };
