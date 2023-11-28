@@ -1,9 +1,9 @@
+/* eslint-disable import/no-duplicates */
 'use client';
 
-// import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { useEffect } from 'react';
-import { experimental_useFormState as useFormState } from 'react-dom';
-import { useFormStatus } from 'react-dom';
+// @ts-expect-error
+import { useFormState } from 'react-dom';
 
 import { postRestaurant } from '../../app/actions';
 import SuccessMessage from '../Alerts';
@@ -13,8 +13,6 @@ const initialState = {
 };
 
 export default function Form({ user, restaurant }) {
-  const { pending } = useFormStatus();
-
   const [state, formAction] = useFormState(postRestaurant, initialState);
 
   useEffect(() => {
@@ -207,7 +205,6 @@ export default function Form({ user, restaurant }) {
           Cancel
         </button>
         <button
-          disabled={pending}
           type="submit"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >

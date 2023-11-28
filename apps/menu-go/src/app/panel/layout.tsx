@@ -84,7 +84,6 @@ export default function Layout({ title, children }) {
                           </Menu.Button>
                         </div>
                         <Transition
-                          as={Fragment}
                           enter="transition ease-out duration-200"
                           enterFrom="transform opacity-0 scale-95"
                           enterTo="transform opacity-100 scale-100"
