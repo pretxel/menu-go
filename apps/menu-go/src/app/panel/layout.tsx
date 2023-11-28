@@ -6,6 +6,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from 'next-auth/react';
+import { ToastContainer } from 'react-toastify';
 
 import { User } from '../../components/User/user.component';
 
@@ -22,6 +23,7 @@ export default function Layout({ title, children }) {
   return (
     <>
       <SessionProvider>
+        <ToastContainer autoClose={3000} />
         <div className="min-h-full">
           <Disclosure as="nav" className="bg-white shadow-sm">
             {({ open }) => (

@@ -1,9 +1,12 @@
 /* eslint-disable import/no-duplicates */
 'use client';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useEffect } from 'react';
 // @ts-expect-error
 import { useFormState } from 'react-dom';
+import { toast } from 'react-toastify';
 
 import { postRestaurant } from '../../app/actions';
 import SuccessMessage from '../Alerts';
@@ -17,7 +20,7 @@ export default function Form({ user, restaurant }) {
 
   useEffect(() => {
     if (state?.message) {
-      console.log('TES', state);
+      toast.success(state?.message);
     }
   }, [state]);
 
@@ -49,7 +52,7 @@ export default function Form({ user, restaurant }) {
                   required
                   defaultValue={restaurant?.name || ''}
                   autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
               <div className="mt-2">
@@ -59,7 +62,46 @@ export default function Form({ user, restaurant }) {
                   id="userId"
                   value={user.id}
                   autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-3 sm:col-start-1">
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Address
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="address"
+                  id="address"
+                  required
+                  defaultValue={restaurant?.address || ''}
+                  autoComplete="given-address"
+                  className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Phone
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="phone"
+                  id="phone"
+                  required
+                  defaultValue={restaurant?.phone || ''}
+                  autoComplete="given-phone"
+                  className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>

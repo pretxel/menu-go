@@ -10,10 +10,6 @@ export const User = () => {
       <div className="ml-3">
         <div className="text-base font-medium text-gray-800">
           {session?.user?.email}
-          Hola
-        </div>
-        <div className="text-sm font-medium text-gray-500">
-          {session?.user?.email}
         </div>
       </div>
     </>
