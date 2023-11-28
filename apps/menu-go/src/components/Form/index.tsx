@@ -16,8 +16,10 @@ export default function Form({ user, restaurant }) {
   const [state, formAction] = useFormState(postRestaurant, initialState);
 
   useEffect(() => {
-    console.log('TES');
-  }, []);
+    if (state?.message) {
+      console.log('TES', state);
+    }
+  }, [state]);
 
   return (
     // eslint-disable-next-line react/jsx-no-bind

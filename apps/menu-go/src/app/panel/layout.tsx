@@ -1,21 +1,14 @@
 'use client';
-import 'focus-visible';
+// import 'focus-visible';
 import '../../styles/globals.css';
 
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from 'next-auth/react';
-import { Fragment } from 'react';
 
 import { User } from '../../components/User/user.component';
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
 const navigation = [{ name: 'Dashboard', href: '#', current: true }];
 const userNavigation = [
   { name: 'Sign out', href: '#', callback: () => console.log('dd') },
@@ -156,7 +149,7 @@ export default function Layout({ title, children }) {
                       <div className="flex-shrink-0">
                         <img
                           className="h-10 w-10 rounded-full"
-                          src={user.imageUrl}
+                          src={''}
                           alt=""
                         />
                       </div>
