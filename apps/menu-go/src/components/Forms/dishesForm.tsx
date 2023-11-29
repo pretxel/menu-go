@@ -17,7 +17,13 @@ const initialState = {
   message: null,
 };
 
-export default function DishesForm({ user, categoryId }) {
+type IDishesForm = {
+  user: any;
+  categoryId: string;
+  dish?: any;
+};
+
+export default function DishesForm({ user, categoryId, dish }: IDishesForm) {
   const [state, formAction] = useFormState(postDish, initialState);
   const router = useRouter();
 
@@ -55,6 +61,7 @@ export default function DishesForm({ user, categoryId }) {
                     name="name"
                     id="name"
                     required
+                    defaultValue={dish?.name || ''}
                     autoComplete="given-name"
                     className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -75,6 +82,34 @@ export default function DishesForm({ user, categoryId }) {
                     id="userId"
                     value={user.id}
                     autoComplete="given-name"
+                  />
+                </div>
+                <div className="mt-2">
+                  <input
+                    type="hidden"
+                    name="dishId"
+                    id="dishId"
+                    value={dish?.id}
+                    autoComplete="given-name"
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Price
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="price"
+                    id="price"
+                    required
+                    defaultValue={dish?.price || ''}
+                    autoComplete="given-price"
+                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -229,7 +264,7 @@ export default function DishesForm({ user, categoryId }) {
           </button>
         </div>
       </form>
-      <Uploader />
+      {dish && <Uploader dishId={dish.id} />}
     </>
   );
 }

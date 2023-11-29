@@ -26,7 +26,6 @@ function classNames(...classes) {
 
 export default function Layout({ title, children }) {
   const pathname = usePathname();
-  console.log(pathname);
 
   useEffect(() => {
     const urlSelected = navigation.find((item) => item.href === pathname);

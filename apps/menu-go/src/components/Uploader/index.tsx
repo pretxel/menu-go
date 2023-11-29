@@ -4,10 +4,11 @@
 import { BlobResult } from '@vercel/blob';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
+import { updateDish } from '../../app/actions';
 
 import LoadingDots from './loading-dots';
 
-export default function Uploader() {
+export default function Uploader({ dishId }) {
   const [data, setData] = useState<{
     image: string | null;
   }>({
@@ -55,7 +56,7 @@ export default function Uploader() {
         }).then(async (res) => {
           if (res.status === 200) {
             const { url } = (await res.json()) as BlobResult;
-            console.log(url);
+            await updateDish(dishId, url);
             toast.success('Image uploaded!');
             // toast(
             //   (t) => (

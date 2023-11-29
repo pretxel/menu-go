@@ -1,6 +1,7 @@
 {
   "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -14,5 +15,11 @@
     "strictNullChecks": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "transpileOnly": true, // you can specify ts-node options here
+    "compilerOptions": {
+      "module": "commonjs" // you can also override compilerOptions.  Only ts-node will use these overrides
+    }
+  }
 }

@@ -61,6 +61,7 @@ model ConfigRestaurant {
   address String?
   phone   String?
   image   String?
+  qrCode  String?
   userId  String
   user    User     @relation(fields: [userId], references: [id])
   Dishes  Dishes[]
@@ -77,6 +78,7 @@ model Dishes {
   id                 String           @id @default(uuid())
   name               String
   image              String?
+  price              Float
   configRestaurantId String
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
   categoryId         String

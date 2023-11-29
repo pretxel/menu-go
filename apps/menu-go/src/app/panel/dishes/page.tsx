@@ -10,8 +10,8 @@ export default async function Page() {
   const dishes = await getDishes(session?.user.id);
   return (
     <>
-      <Dishes />
       <ListDishes dishes={dishes} />
+      <Dishes />
     </>
   );
 }
