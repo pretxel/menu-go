@@ -4,8 +4,8 @@
 import { BlobResult } from '@vercel/blob';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { updateDish } from '../../app/actions';
 
+import { updateDish } from '../../app/actions';
 import LoadingDots from './loading-dots';
 
 export default function Uploader({ dishId }) {
