@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 
-import Form from '../../components/Form';
+import Form from '../../components/Forms';
 import { authOptions } from '../../lib/auth';
 import { getRestaurant } from '../actions';
 

@@ -5,12 +5,17 @@ import '../../styles/globals.css';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@vercel/analytics/react';
+import { usePathname } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
+import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { User } from '../../components/User/user.component';
 
-const navigation = [{ name: 'Dashboard', href: '#', current: true }];
+const navigation = [
+  { name: 'Dashboard', href: '/panel', current: false },
+  { name: 'Dishes', href: '/panel/dishes', current: false },
+];
 const userNavigation = [
   { name: 'Sign out', href: '#', callback: () => console.log('dd') },
 ];
@@ -20,6 +25,16 @@ function classNames(...classes) {
 }
 
 export default function Layout({ title, children }) {
+  const pathname = usePathname();
+  console.log(pathname);
+
+  useEffect(() => {
+    const urlSelected = navigation.find((item) => item.href === pathname);
+    if (urlSelected) {
+      urlSelected.current = true;
+    }
+  }, [pathname]);
+
   return (
     <>
       <SessionProvider>

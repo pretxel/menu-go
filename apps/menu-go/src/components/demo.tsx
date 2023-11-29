@@ -1,5 +1,5 @@
 import { getRestaurant } from '../app/actions';
-import Form from './Form';
+import Form from './Forms';
 export default async function Demo({ user }) {
   const restaurant = await getRestaurant(user.id);
 

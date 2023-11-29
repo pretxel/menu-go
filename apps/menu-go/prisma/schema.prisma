@@ -67,15 +67,18 @@ model ConfigRestaurant {
 }
 
 model Category {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
+  Dishes      Dishes[]
 }
 
 model Dishes {
   id                 String           @id @default(uuid())
   name               String
-  categories         String
+  image              String?
   configRestaurantId String
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
+  categoryId         String
+  category           Category         @relation(fields: [categoryId], references: [id])
 }
