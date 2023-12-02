@@ -1,5 +1,5 @@
-import RemoveButton from './remove-button';
 import EmptyList from './empty-list';
+import RemoveButton from './remove-button';
 
 export default function ListDishes({ dishes }) {
   return (
