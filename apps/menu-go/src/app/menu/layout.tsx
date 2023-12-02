@@ -2,6 +2,8 @@
 // import 'focus-visible';
 import '../../styles/globals.css';
 
+import Analytics from '../../components/Analytics';
+
 export default function RootLayout({
   children,
 }: {
@@ -9,6 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Analytics />
       <body>{children}</body>
     </html>
   );

@@ -7,4 +7,5 @@ export default {
   panel_title: 'Panel',
   panel: 'Panel',
   home: 'Menu',
+  login: 'Login',
 };
