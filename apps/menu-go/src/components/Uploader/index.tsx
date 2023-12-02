@@ -1,7 +1,7 @@
 /* eslint-disable react/self-closing-comp */
 'use client';
 
-import { BlobResult } from '@vercel/blob';
+import { PutBlobResult } from '@vercel/blob';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -55,7 +55,7 @@ export default function Uploader({ dishId }) {
           body: file,
         }).then(async (res) => {
           if (res.status === 200) {
-            const { url } = (await res.json()) as BlobResult;
+            const { url } = (await res.json()) as PutBlobResult;
             await updateDish(dishId, url);
             toast.success('Image uploaded!');
           } else {

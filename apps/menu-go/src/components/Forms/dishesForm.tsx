@@ -1,11 +1,9 @@
-/* eslint-disable import/no-duplicates */
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-// @ts-expect-error
 import { useFormState } from 'react-dom';
 import { toast } from 'react-toastify';
 

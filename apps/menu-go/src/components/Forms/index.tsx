@@ -1,13 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable import/no-duplicates */
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useEffect } from 'react';
-// @ts-expect-error
 import { useFormState } from 'react-dom';
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+  XIcon,
+} from 'react-share';
 import { toast } from 'react-toastify';
 
 import { postRestaurant } from '../../app/actions';
@@ -138,6 +142,28 @@ export default function Form({ user, restaurant }) {
                   </label>
                   <div className="mt-2">
                     <img src={restaurant?.qrCode || ''} />
+                  </div>
+
+                  <div className="flex sm:col-span-2 gap-2">
+                    <FacebookShareButton
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                    >
+                      <FacebookIcon size={32} round />
+                    </FacebookShareButton>
+
+                    <WhatsappShareButton
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                      title={`Menu ${restaurant?.name}}`}
+                      separator=":: "
+                    >
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
+                    <TwitterShareButton
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                      title={`Menu ${restaurant?.name}}`}
+                    >
+                      <XIcon size={32} round />
+                    </TwitterShareButton>
                   </div>
                 </div>
               </>
