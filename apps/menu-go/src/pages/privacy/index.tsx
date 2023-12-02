@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <iframe src="/privacy.html" width="100%" height="100%" />
+      <iframe src="/privacy-html.html" width="100%" height="100%" />
     </>
   );
 };
