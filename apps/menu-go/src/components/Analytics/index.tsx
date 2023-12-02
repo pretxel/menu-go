@@ -29,7 +29,7 @@ export default function Analytics() {
           </noscript>
           <Script
             id="gtm-script-global"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
