@@ -153,14 +153,14 @@ export default function Form({ user, restaurant }) {
 
                     <WhatsappShareButton
                       url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
-                      title={`Menu ${restaurant?.name}}`}
+                      title={`Menu ${restaurant?.name}`}
                       separator=":: "
                     >
                       <WhatsappIcon size={32} round />
                     </WhatsappShareButton>
                     <TwitterShareButton
                       url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
-                      title={`Menu ${restaurant?.name}}`}
+                      title={`Menu ${restaurant?.name}`}
                     >
                       <XIcon size={32} round />
                     </TwitterShareButton>
