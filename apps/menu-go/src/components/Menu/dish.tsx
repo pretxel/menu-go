@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default async function Dish({ dish }) {
+export default function Dish({ dish }) {
   return (
     <a key={dish.id} href={'#'} className="group">
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
