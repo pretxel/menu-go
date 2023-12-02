@@ -152,12 +152,12 @@ export async function getDish(id: string): Promise<any | null> {
 }
 
 export async function getMenu(restaurantId: string) {
-  const menu = await prisma.dishes.findMany({
-    where: { configRestaurantId: restaurantId },
-    include: { category: true },
+  const restaurantConf = await prisma.configRestaurant.findFirst({
+    where: { id: restaurantId },
+    include: { Dishes: { include: { category: true } } },
   });
 
-  if (menu.length === 0) throw new Error('No menu found');
+  if (!restaurantConf) throw new Error('No restaurant found');
 
-  return menu;
+  return restaurantConf;
 }

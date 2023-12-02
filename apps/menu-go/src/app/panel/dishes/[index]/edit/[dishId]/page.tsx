@@ -1,8 +1,14 @@
+import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 
 import DishesForm from '../../../../../../components/Forms/dishesForm';
 import { authOptions } from '../../../../../../lib/auth';
 import { getDish } from '../../../../../actions';
+
+export const metadata: Metadata = {
+  title: 'Edit Dish',
+  description: 'edit dish',
+};
 
 export default async function Page({
   params,

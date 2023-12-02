@@ -46,9 +46,13 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       const userBDDD = await prisma.user.findFirst({
         where: { email: user.email },
+        include: { ConfigRestaurant: true },
       });
       if (session.user) {
         session.user.id = userBDDD?.id;
+        session.user.configRestaurantId = userBDDD?.ConfigRestaurant.length
+          ? userBDDD?.ConfigRestaurant[0].id
+          : null;
       }
 
       return session;

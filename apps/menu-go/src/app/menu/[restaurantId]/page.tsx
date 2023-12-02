@@ -1,15 +1,19 @@
-// import { getServerSession } from 'next-auth';
+import type { Metadata } from 'next';
 
-// import Form from '../../components/Forms';
 import Menu from '../../../components/Menu';
 import { getMenu } from '../../actions';
+
+export const metadata: Metadata = {
+  title: 'Menu',
+  description: 'Menu',
+};
 
 export default async function Page({
   params,
 }: {
   params: { restaurantId: string };
 }) {
-  const dishes = await getMenu(params.restaurantId);
+  const restaurant = await getMenu(params.restaurantId);
 
-  return <Menu dishes={dishes} />;
+  return <Menu dishes={restaurant.Dishes} restaurant={restaurant} />;
 }

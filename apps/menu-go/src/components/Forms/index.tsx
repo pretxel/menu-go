@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable import/no-duplicates */
 'use client';
 
@@ -10,6 +12,7 @@ import { toast } from 'react-toastify';
 
 import { postRestaurant } from '../../app/actions';
 import SuccessMessage from '../Alerts';
+import InfoAlert from './info-alert';
 
 const initialState = {
   message: null,
@@ -29,11 +32,12 @@ export default function Form({ user, restaurant }) {
     <form action={formAction}>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
+          {restaurant && <InfoAlert />}
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Restaurant
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Use a permanent address where you can receive mail.
+            Restaurant information and settings.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -105,29 +109,39 @@ export default function Form({ user, restaurant }) {
                 />
               </div>
             </div>
-            <div className="sm:col-span-6">
-              <label
-                htmlFor="menu"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Menu URL
-              </label>
-              <div className="mt-2">
-                <p>/menu/{restaurant?.id || ''}</p>
-              </div>
-            </div>
-            <div className="sm:col-span-6">
-              <label
-                htmlFor="menu"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                QR
-              </label>
-              <div className="mt-2">
-                <img src={restaurant?.qrCode || ''} />
-                {/* <p>/menu/{restaurant?.id || ''}</p> */}
-              </div>
-            </div>
+            {restaurant && (
+              <>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="menu"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Menu URL
+                  </label>
+                  <div className="mt-2">
+                    <a
+                      href={
+                        `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}` ||
+                        ''
+                      }
+                    >
+                      {`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                    </a>
+                  </div>
+                </div>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="menu"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    QR
+                  </label>
+                  <div className="mt-2">
+                    <img src={restaurant?.qrCode || ''} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -136,12 +150,6 @@ export default function Form({ user, restaurant }) {
         {state?.message && <SuccessMessage message={state?.message} />}
       </p>
       <div className="mt-6 flex items-center justify-end gap-x-6">
-        <button
-          type="button"
-          className="text-sm font-semibold leading-6 text-gray-900"
-        >
-          Cancel
-        </button>
         <button
           type="submit"
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

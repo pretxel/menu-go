@@ -1,3 +1,6 @@
+import RemoveButton from './remove-button';
+import EmptyList from './empty-list';
+
 export default function ListDishes({ dishes }) {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -7,8 +10,7 @@ export default function ListDishes({ dishes }) {
             Dishes
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
-            email and role.
+            A list of all dishes in the menu.
           </p>
         </div>
       </div>
@@ -34,7 +36,7 @@ export default function ListDishes({ dishes }) {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Image
+                    Price
                   </th>
 
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
@@ -43,29 +45,33 @@ export default function ListDishes({ dishes }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {dishes.map((person) => (
-                  <tr key={person.email}>
+                {dishes.map((dish) => (
+                  <tr key={dish.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {person.name}
+                      {dish.name}
                     </td>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {person?.category?.name}
+                      {dish?.category?.name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {person.image}
+                      ${dish.price}
+                    </td>
+                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      <RemoveButton dishId={dish.id} />
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <a
-                        href={`/panel/dishes/${person.categoryId}/edit/${person.id}`}
+                        href={`/panel/dishes/${dish.categoryId}/edit/${dish.id}`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
-                        Edit<span className="sr-only">, {person.name}</span>
+                        Edit<span className="sr-only">, {dish.name}</span>
                       </a>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            {dishes.length === 0 && <EmptyList />}
           </div>
         </div>
       </div>
