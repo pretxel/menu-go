@@ -32,7 +32,7 @@ export default function DishesForm({ user, categoryId, dish }: IDishesForm) {
       toast.success(state?.message);
       router.push('/panel/dishes');
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     // eslint-disable-next-line react/jsx-no-bind
