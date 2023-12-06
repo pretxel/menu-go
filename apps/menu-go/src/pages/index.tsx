@@ -20,13 +20,29 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{t('tab_title', { ns: 'common' })}</title>
+        <title>Dineqrs</title>
         <meta
           name="description"
           content={t('tab_description', { ns: 'common' })}
         />
         <link rel="icon" href="/favicon.ico" />
-        <meta property="twitter:image" content="/api/og" />
+        <meta
+          property="twitter:image"
+          content="https://www.dineqrs.com/api/og"
+        />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content="Dineqrs" />
+        <meta
+          property="twitter:description"
+          content="Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code."
+        />
+        <meta property="og:image" content="https://www.dineqrs.com/api/og" />
+        <meta property="og:title" content="Dineqrs" />
+        <meta
+          property="og:description"
+          content="Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code."
+        />
+        <meta property="og:url" content="https://www.dineqrs.com/" />
       </Head>
       <Landing />
     </>
