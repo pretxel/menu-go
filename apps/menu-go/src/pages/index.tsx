@@ -23,7 +23,7 @@ const Home: NextPage = () => {
         <title>Dineqrs</title>
         <meta
           name="description"
-          content={t('tab_description', { ns: 'common' })}
+          content="Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code."
         />
         <link rel="icon" href="/favicon.ico" />
         <meta
