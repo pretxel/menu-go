@@ -1,4 +1,3 @@
 export default {
-    title: 'Configuration',
-  }
-  
+  title: 'Configuration',
+};

@@ -1,0 +1,15 @@
+{
+  "tab_title": "Empieza a generar tu Menú",
+  "description": "Genera menús de restaurantes personalizados y modernos en línea con nuestra herramienta fácil de usar. Crea códigos QR únicos para cada plato y facilita a tus clientes el acceso instantáneo a tu menú desde sus dispositivos móviles. Simplifica la experiencia gastronómica con nuestra plataforma, diseñada para restaurantes que buscan innovar y mejorar la accesibilidad. ¡Haz que tus platos destaquen y atrae a más clientes hoy mismo!",
+  "title": "Dineqrs",
+  "create-account": "Crea tu cuenta",
+  "create-account-info": "Facebook and Google.",
+  "configure-restaurant": "Configura tu restaurante",
+  "configure-restaurant-info": "Agrega tu información de restaurante, como nombre, dirección, número de teléfono, etc.",
+  "create-menu": "Crear menú",
+  "create-menu-p": "Puedes agregar en tu menu plato principal, bebidas, postres",
+  "create-menu-info": "Puedes personalizar tu menú",
+  "preview-menu": "Vista previa del menú",
+  "preview-menu-info": "Enlace web y codigo QR",
+  "preview-menu-info-2": "Enlace web"
+}

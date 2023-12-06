@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
-
+import { useTranslation } from 'react-i18next';
 export default function Landing() {
+  const { t } = useTranslation();
   return (
     <div className="bg-white">
       <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 pt-14">
@@ -10,26 +12,34 @@ export default function Landing() {
         />
         <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
-            <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto">
-              Dineqrs
+            <h1
+              className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto"
+              suppressHydrationWarning
+            >
+              {t('home.info_section.title', { ns: 'common' })}
             </h1>
             <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
-              <p className="text-lg leading-8 text-gray-600">
-                Digitalice y gestione la Carta digital de su negocio, comparta
-                en redes sociales, analice sus datos y utilice el QR
+              <p
+                className="text-lg leading-8 text-gray-600"
+                suppressHydrationWarning
+              >
+                {t('home.info_section.description', { ns: 'common' })}
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <Link
                   href="/login"
                   className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  suppressHydrationWarning
                 >
-                  Get started
+                  {t('home.buttons_section.button1', { ns: 'common' })}
                 </Link>
                 <Link
                   href="/learn"
                   className="text-sm font-semibold leading-6 text-gray-900"
+                  suppressHydrationWarning
                 >
-                  Learn more <span aria-hidden="true">→</span>
+                  {t('home.buttons_section.button2', { ns: 'common' })}
+                  <span aria-hidden="true">→</span>
                 </Link>
               </div>
             </div>

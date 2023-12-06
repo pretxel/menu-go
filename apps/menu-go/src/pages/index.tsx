@@ -1,18 +1,29 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
 
 import Landing from '../components/Landing';
 
+export const getServerSideProps = async (context) => {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, ['common'])),
+    },
+  };
+};
+
 const Home: NextPage = () => {
-  const { t } = useTranslation('homeScreen');
+  const { t } = useTranslation();
   return (
     <>
       <Head>
-        <title>{t('home')}</title>
+        <title>{t('tab_title', { ns: 'common' })}</title>
         <meta
           name="description"
-          content="Genera menús de restaurantes personalizados y modernos en línea con nuestra herramienta fácil de usar. Crea códigos QR únicos para cada plato y facilita a tus clientes el acceso instantáneo a tu menú desde sus dispositivos móviles. Simplifica la experiencia gastronómica con nuestra plataforma, diseñada para restaurantes que buscan innovar y mejorar la accesibilidad. ¡Haz que tus platos destaquen y atrae a más clientes hoy mismo"
+          content={t('tab_description', { ns: 'common' })}
         />
         <link rel="icon" href="/favicon.ico" />
         <meta property="twitter:image" content="/api/og" />

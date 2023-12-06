@@ -1,0 +1,15 @@
+{
+  "tab_title": "Start",
+  "description": "Generate personalized and modern restaurant menus online with our easy-to-use tool. Create unique QR codes for each dish, allowing your customers instant access to your menu from their mobile devices. Simplify the dining experience with our platform, designed for restaurants seeking innovation and improved accessibility. Make your dishes stand out and attract more customers today!",
+  "title": "Dineqrs",
+  "create-account": "Create your account",
+  "create-account-info": "Facebook and Google.",
+  "configure-restaurant": "Configure your restaurant",
+  "configure-restaurant-info": "You can add your restaurant details.",
+  "create-menu": "Create your menu",
+  "create-menu-p": "You can add your menu, appetizers, main dishes, desserts, drinks and set the price.",
+  "create-menu-info": "You can add your personalized menu",
+  "preview-menu": "Preview your menu",
+  "preview-menu-info": "URL and QR code",
+  "preview-menu-info-2": "Public menu URL"
+}

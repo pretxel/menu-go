@@ -5,31 +5,31 @@ import { useRouter } from 'next/navigation';
 const products = [
   {
     id: 1,
-    name: 'Entrantes',
+    name: 'Appetizers',
     href: '/panel/dishes/1',
     imageSrc: '/images/categories/appetizers.png',
-    imageAlt: 'Entrantes',
+    imageAlt: 'Appetizers',
   },
   {
     id: 2,
-    name: 'Plato principal',
+    name: 'Main Course',
     href: '/panel/dishes/2',
     imageSrc: '/images/categories/main.png',
-    imageAlt: 'Plato principal',
+    imageAlt: 'Main Course',
   },
   {
     id: 3,
-    name: 'Postres',
+    name: 'Dessert',
     href: '/panel/dishes/3',
     imageSrc: '/images/categories/dessert.png',
-    imageAlt: 'Postres',
+    imageAlt: 'Dessert',
   },
   {
     id: 4,
-    name: 'Bebidas',
+    name: 'Beverages',
     href: '/panel/dishes/4',
     imageSrc: '/images/categories/drinks.png',
-    imageAlt: 'Bebidas',
+    imageAlt: 'Beverages',
   },
 ];
 

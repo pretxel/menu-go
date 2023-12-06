@@ -8,6 +8,11 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
+  i18n: {
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+    localeDetection: false,
+  },
   images: {
     remotePatterns: [
       {

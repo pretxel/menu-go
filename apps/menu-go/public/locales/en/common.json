@@ -1,0 +1,14 @@
+{
+  "tab_title": "Dineqrs",
+  "tab_description": "Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code.",
+  "home": {
+    "info_section": {
+      "title": "Dineqrs",
+      "description": "Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code."
+    },
+    "buttons_section": {
+      "button1": "Start",
+      "button2": "Learn more"
+    }
+  }
+}

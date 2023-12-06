@@ -8,5 +8,5 @@ export default {
   panel: 'Panel',
   home: 'Menu',
   login: 'Login',
-  learn: 'Learn',
+  learn: 'Aprende',
 };

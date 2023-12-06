@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import * as en from '../locales/en';
+import * as es from '../locales/es';
 
 let translate: any;
 
@@ -9,6 +10,7 @@ i18n.use(initReactI18next).init(
   {
     resources: {
       en,
+      es,
     },
     fallbackLng: 'en',
 
