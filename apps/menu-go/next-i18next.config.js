@@ -1,9 +1,1 @@
-/** @type {import('next-i18next').UserConfig} */
-module.exports = {
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'es'],
-    localeDetection: false,
-  },
-  react: { useSuspense: false }, //this line
-};
+module.exports = require('config/next-i18next.config');
