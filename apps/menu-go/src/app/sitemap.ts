@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: 'https://www.dineqrs.com/learn',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: 'https://www.dineqrs.com/privacy',
       lastModified: new Date(),
       changeFrequency: 'monthly',
