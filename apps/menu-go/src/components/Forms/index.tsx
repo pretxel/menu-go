@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -141,7 +142,7 @@ export default function Form({ user, restaurant }) {
                     QR
                   </label>
                   <div className="mt-2">
-                    <img src={restaurant?.qrCode || ''} />
+                    <img src={restaurant?.qrCode || ''} alt="" />
                   </div>
 
                   <div className="flex sm:col-span-2 gap-2">

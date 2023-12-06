@@ -8,6 +8,8 @@ import { useFormState } from 'react-dom';
 import { toast } from 'react-toastify';
 
 import { postDish } from '../../app/actions';
+import { IDish } from '../../types/dish';
+import { IUser } from '../../types/user';
 import SuccessMessage from '../Alerts';
 import Uploader from '../Uploader';
 
@@ -16,9 +18,9 @@ const initialState = {
 };
 
 type IDishesForm = {
-  user: any;
+  user: IUser;
   categoryId: string;
-  dish?: any;
+  dish?: IDish | null;
 };
 
 export default function DishesForm({ user, categoryId, dish }: IDishesForm) {

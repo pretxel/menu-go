@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable n/handle-callback-err */
 'use server';
 import { revalidatePath } from 'next/cache';
 import QRCode from 'qrcode';
 
 import prisma from '../lib/prisma';
+import { IDish } from '../types/dish';
 
 export type Restaurant = {
   name: string | null;
@@ -123,7 +125,7 @@ export async function getRestaurant(userId): Promise<Restaurant | null> {
   };
 }
 
-export async function getDishes(userId: string): Promise<any | null> {
+export async function getDishes(userId: string): Promise<IDish[] | null> {
   const configRestaurant = await prisma.configRestaurant.findFirst({
     where: { userId },
   });
@@ -140,7 +142,7 @@ export async function getDishes(userId: string): Promise<any | null> {
   return dishes;
 }
 
-export async function getDish(id: string): Promise<any | null> {
+export async function getDish(id: string): Promise<IDish | undefined | null> {
   const dish = await prisma.dishes.findFirst({
     where: { id },
     include: {
