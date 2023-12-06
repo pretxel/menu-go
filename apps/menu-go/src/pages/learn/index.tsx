@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Learn from '../../components/Learn';
 
-export const getServerSideProps = async (context) => {
+export const getStaticProps = async (context) => {
   const { locale } = context;
 
   return {
