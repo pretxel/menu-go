@@ -16,6 +16,13 @@ export type Restaurant = {
 };
 
 export async function updateDish(id: string, image: string) {
+  /**
+   * Updates the image field of a dish in the database.
+   *
+   * @param id - The ID of the dish to be updated.
+   * @param image - The new image URL for the dish.
+   * @returns None
+   */
   await prisma.dishes.update({
     where: { id },
     data: { image },
