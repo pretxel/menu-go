@@ -7,8 +7,8 @@ import { authOptions } from '../../../lib/auth';
 import { getDishes } from '../../actions';
 
 export const metadata: Metadata = {
-  title: 'Dishes',
-  description: 'main dishes',
+  title: 'Categories',
+  description: 'categories',
 };
 
 export default async function Page() {

@@ -1,7 +1,8 @@
 // styles
-import "./styles.css";
+import './styles.css';
 
 // components
-export * from "./button";
-export * from "./card";
-export * from "./timeout-label";
+export * from './button';
+export * from './card';
+export * from './timeout-label';
+export * from './simple-cards';

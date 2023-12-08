@@ -170,3 +170,16 @@ export async function getMenu(restaurantId: string) {
 
   return restaurantConf;
 }
+
+export async function getAllCategories() {
+  return prisma.category.findMany();
+}
+
+export async function addCategory(prevState: any, formData: FormData) {
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+  await prisma.category.create({ data: { name, description } });
+  const message = '';
+  revalidatePath('/panel/categories');
+  return { message };
+}

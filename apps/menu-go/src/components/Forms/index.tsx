@@ -39,10 +39,10 @@ export default function Form({ user, restaurant }) {
         <div className="border-b border-gray-900/10 pb-12">
           {restaurant && <InfoAlert />}
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Restaurant
+            Business name
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Restaurant information and settings.
+            Business name information and settings.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -121,7 +121,7 @@ export default function Form({ user, restaurant }) {
                     htmlFor="menu"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
-                    Menu URL
+                    URL
                   </label>
                   <div className="mt-2">
                     <a
