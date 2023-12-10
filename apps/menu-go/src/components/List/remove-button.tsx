@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import RemoveModal from './remove-modal';
 
-export default function RemoveButton({ dishId }) {
+export default function RemoveButton({ idType, type }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -15,7 +15,14 @@ export default function RemoveButton({ dishId }) {
       >
         Remove<span className="sr-only">Remove</span>
       </button>
-      {open && <RemoveModal open={open} setOpen={setOpen} dishId={dishId} />}
+      {open && (
+        <RemoveModal
+          open={open}
+          setOpen={setOpen}
+          idType={idType}
+          type={type}
+        />
+      )}
     </>
   );
 }

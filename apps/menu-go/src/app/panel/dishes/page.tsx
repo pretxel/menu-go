@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import Dishes from '../../../components/Dishes';
 import ListDishes from '../../../components/List/dishes';
 import { authOptions } from '../../../lib/auth';
-import { getDishes } from '../../actions';
+import { getAllCategories, getDishes } from '../../actions';
 
 export const metadata: Metadata = {
   title: 'Categories',
@@ -14,10 +14,11 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getServerSession(authOptions);
   const dishes = await getDishes(session?.user.id);
+  const categories = await getAllCategories();
   return (
     <>
       <ListDishes dishes={dishes} />
-      <Dishes />
+      <Dishes categories={categories} />
     </>
   );
 }

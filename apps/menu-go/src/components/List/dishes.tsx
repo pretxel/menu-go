@@ -57,7 +57,7 @@ export default function ListDishes({ dishes }) {
                       ${dish.price}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <RemoveButton dishId={dish.id} />
+                      <RemoveButton idType={dish.id} type="dish" />
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <a

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { getAllCategories, getCategory } from '../../../app/actions';
 import Categories from '../../../components/Categories';
 
 export const metadata: Metadata = {
@@ -7,10 +8,23 @@ export const metadata: Metadata = {
   description: 'categories',
 };
 
-export default async function Page() {
+type Props = {
+  params: unknown;
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function Page(props: Props) {
+  const categories = await getAllCategories();
+  const searchParams = props.searchParams;
+  const categoryId = searchParams.category;
+  const category = categoryId ? await getCategory(categoryId as string) : null;
   return (
     <>
-      <Categories />
+      <Categories
+        categories={categories}
+        category={category}
+        categoryId={categoryId}
+      />
     </>
   );
 }

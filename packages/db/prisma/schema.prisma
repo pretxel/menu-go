@@ -79,6 +79,7 @@ model Dishes {
   name               String
   image              String?
   price              Float
+  description        String?
   configRestaurantId String
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
   categoryId         String

@@ -15,7 +15,7 @@ export default function Dish({ dish }) {
         )}
       </div>
       <h3 className="mt-4 text-lg text-gray-700 font-bold">{dish.name}</h3>
-      <p className="mt-1 text-sm text-gray-900">Description</p>
+      {/* <p className="mt-1 text-sm text-gray-900">Description</p> */}
       <span className="mt-1 text-lg font-medium text-gray-900">
         ${dish?.price}
       </span>

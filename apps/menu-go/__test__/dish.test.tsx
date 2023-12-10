@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 
 import Dishes from '../src/components/Dishes';
 
-const products = [
+const categories = [
   {
     id: 1,
     name: 'Appetizers',
@@ -37,13 +37,13 @@ const products = [
 ];
 describe('Dishes', () => {
   test('should render a grid of product cards with images and names', () => {
-    render(<Dishes />);
+    render(<Dishes categories={categories} />);
     const productCards = screen.getAllByRole('button');
-    expect(productCards.length).toBe(products.length);
+    expect(productCards.length).toBe(categories.length);
   });
 
   test('should display images with correct aspect ratio', () => {
-    render(<Dishes />);
+    render(<Dishes categories={categories} />);
     const images = screen.getAllByRole('img');
     images.forEach((image) => {
       expect(image).toHaveAttribute('src', expect.stringContaining('.png'));

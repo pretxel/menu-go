@@ -7,22 +7,39 @@ import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-export default function RemoveModal({ open, setOpen, dishId }) {
+export default function RemoveModal({ open, setOpen, idType, type }) {
   const cancelButtonRef = useRef(null);
   const router = useRouter();
 
-  const removeDish = async (dishId) => {
-    console.log(dishId);
-    const res = await fetch(`/api/dishes/${dishId}`, {
+  const removeDish = async (id) => {
+    const res = await fetch(`/api/dishes/${id}`, {
       method: 'DELETE',
     });
     const data = await res.json();
-    if (res.status === 200 && data.id === dishId) {
+    if (res.status === 200 && data.id === id) {
       toast.success('Dish removed!');
     } else {
       toast.error('Error removing dish!');
     }
     router.refresh();
+  };
+
+  const removeCategory = async (id) => {
+    try {
+      const res = await fetch(`/api/category/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (res.status === 200 && data.id === id) {
+        toast.success('Category removed!');
+      } else {
+        toast.error('Error removing category!');
+      }
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast.error('Error removing category!');
+    }
   };
 
   return (
@@ -67,11 +84,11 @@ export default function RemoveModal({ open, setOpen, dishId }) {
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      Remove dish
+                      Remove {type}
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Are you sure you want to remove this dish?
+                        Are you sure you want to remove this {type}?
                       </p>
                     </div>
                   </div>
@@ -82,7 +99,8 @@ export default function RemoveModal({ open, setOpen, dishId }) {
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       setOpen(false);
-                      removeDish(dishId);
+                      if (type === 'category') removeCategory(idType);
+                      else removeDish(idType);
                     }}
                   >
                     Remove

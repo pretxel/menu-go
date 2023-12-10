@@ -1,14 +1,11 @@
-import { getAllCategories } from '../../app/actions';
 import ClientCategory from './client-category';
 import ListCategories from './list-categories';
 
-export default async function Categories() {
-  const categories = await getAllCategories();
-
+export default async function Categories({ categories, category, categoryId }) {
   return (
     <>
       <ListCategories categories={categories} />
-      <ClientCategory />
+      <ClientCategory categoryId={categoryId} category={category} />
     </>
   );
 }

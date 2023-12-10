@@ -175,6 +175,10 @@ export async function getAllCategories() {
   return prisma.category.findMany();
 }
 
+export async function getCategory(id: string) {
+  return prisma.category.findFirst({ where: { id } });
+}
+
 export async function addCategory(prevState: any, formData: FormData) {
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;

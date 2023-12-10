@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,13 +13,18 @@ import { addCategory } from '../../app/actions';
 type IDialogCategory = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  category: any;
 };
 
 const initialState = {
   message: null,
 };
 
-export default function DialogCategory({ open, setOpen }: IDialogCategory) {
+export default function DialogCategory({
+  open,
+  setOpen,
+  category,
+}: IDialogCategory) {
   const [state, formAction] = useFormState(addCategory, initialState);
 
   useEffect(() => {
@@ -53,7 +59,7 @@ export default function DialogCategory({ open, setOpen }: IDialogCategory) {
                       <div className="bg-indigo-700 px-4 py-6 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-base font-semibold leading-6 text-white">
-                            New Category
+                            {category ? 'Edit Category' : 'New Category'}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -92,6 +98,7 @@ export default function DialogCategory({ open, setOpen }: IDialogCategory) {
                                   type="text"
                                   name="name"
                                   id="name"
+                                  defaultValue={category?.name || ''}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                               </div>
@@ -107,9 +114,9 @@ export default function DialogCategory({ open, setOpen }: IDialogCategory) {
                                 <textarea
                                   id="description"
                                   name="description"
+                                  defaultValue={category?.description || ''}
                                   rows={4}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                  defaultValue={''}
                                 />
                               </div>
                             </div>

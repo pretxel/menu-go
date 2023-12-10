@@ -35,7 +35,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function SimpleCards() {
+export const SimpleCards = () => {
   return (
     <div>
       <h2 className="text-sm font-medium text-gray-500">Pinned Projects</h2>
@@ -84,4 +84,4 @@ export default function SimpleCards() {
       </ul>
     </div>
   );
-}
+};
