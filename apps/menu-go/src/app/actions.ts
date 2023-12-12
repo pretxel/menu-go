@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable n/handle-callback-err */
 'use server';
+import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
+import OpenAI from 'openai';
 import QRCode from 'qrcode';
 
 import prisma from '../lib/prisma';
@@ -182,7 +184,29 @@ export async function getCategory(id: string) {
 export async function addCategory(prevState: any, formData: FormData) {
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
-  await prisma.category.create({ data: { name, description } });
+
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+  // dall-e-2 0.02 per request
+  // dall-e-3 0.60 per request
+
+  const image = await openai.images.generate({
+    model: 'dall-e-2', // 'dall-e-3',
+    prompt: name,
+  });
+
+  const res = await fetch(image.data[0].url as string, {
+    cache: 'no-store',
+  });
+  const blobImage = await res.blob();
+
+  const blob = await put(name, blobImage, {
+    access: 'public',
+  });
+
+  await prisma.category.create({
+    data: { name, description, image: blob.url },
+  });
   const message = '';
   revalidatePath('/panel/categories');
   return { message };

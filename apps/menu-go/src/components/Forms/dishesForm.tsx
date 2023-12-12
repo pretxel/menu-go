@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,9 +22,15 @@ type IDishesForm = {
   user: IUser;
   categoryId: string;
   dish?: IDish | null;
+  category?: any;
 };
 
-export default function DishesForm({ user, categoryId, dish }: IDishesForm) {
+export default function DishesForm({
+  user,
+  categoryId,
+  dish,
+  category,
+}: IDishesForm) {
   const [state, formAction] = useFormState(postDish, initialState);
   const router = useRouter();
 
@@ -41,10 +48,10 @@ export default function DishesForm({ user, categoryId, dish }: IDishesForm) {
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Dishes
+              {category.name}
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              Dishes information
+              {category.description}
             </p>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

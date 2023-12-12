@@ -24,7 +24,7 @@ export default function Layout({ title, children }) {
         <div className="min-h-full">
           <Nav navigation={navigation} userNavigation={userNavigation} />
 
-          <div className="py-10">
+          <div className="py-2">
             <header>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">

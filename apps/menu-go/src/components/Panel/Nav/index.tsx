@@ -27,15 +27,15 @@ export default function Nav({ navigation, userNavigation }) {
     if (status === 'authenticated') {
       if (!session.user.configRestaurantId) {
         // Remove item of navigation
-        const index = navigation.findIndex((item) => item.name === 'Dishes');
+        const index = navigation.findIndex((item) => item.name === 'Products');
         if (index !== -1) {
           navigation.splice(index, 1);
         }
       } else {
-        const index = navigation.findIndex((item) => item.name === 'Dishes');
+        const index = navigation.findIndex((item) => item.name === 'Products');
         if (index === -1) {
           navigation.push({
-            name: 'Dishes',
+            name: 'Products',
             href: '/panel/dishes',
             current: false,
           });

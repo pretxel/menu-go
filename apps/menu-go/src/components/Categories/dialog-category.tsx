@@ -79,7 +79,7 @@ export default function DialogCategory({
                         <div className="mt-1">
                           <p className="text-sm text-indigo-300">
                             Get started by filling in the information below to
-                            create your new project.
+                            create your new category.
                           </p>
                         </div>
                       </div>
@@ -99,7 +99,7 @@ export default function DialogCategory({
                                   name="name"
                                   id="name"
                                   defaultValue={category?.name || ''}
-                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                                 />
                               </div>
                             </div>
@@ -116,7 +116,7 @@ export default function DialogCategory({
                                   name="description"
                                   defaultValue={category?.description || ''}
                                   rows={4}
-                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                               </div>
                             </div>
