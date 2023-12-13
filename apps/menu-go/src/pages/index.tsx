@@ -9,12 +9,13 @@ export const getStaticProps = async (context) => {
 
   return {
     props: {
+      locale,
       ...(await serverSideTranslations(locale as string, ['common'])),
     },
   };
 };
 
-const Home: NextPage = () => {
+const Home = ({ locale }) => {
   return (
     <>
       <Head>
@@ -42,7 +43,7 @@ const Home: NextPage = () => {
         />
         <meta property="og:url" content="https://www.dineqrs.com/" />
       </Head>
-      <Landing />
+      <Landing locale={locale} />
     </>
   );
 };

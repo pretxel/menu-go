@@ -2,7 +2,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-export default function Landing() {
+
+import LanguageSelect from './language-select';
+export default function Landing({ locale }) {
   const { t } = useTranslation();
   return (
     <div className="bg-white">
@@ -11,6 +13,7 @@ export default function Landing() {
           className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
           aria-hidden="true"
         />
+        <LanguageSelect locale={locale} />
         <div className="mx-auto max-w-7xl px-6 py-4 sm:py-40 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
             <h1
