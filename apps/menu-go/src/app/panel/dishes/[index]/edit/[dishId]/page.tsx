@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 
 import DishesForm from '../../../../../../components/Forms/dishesForm';
 import { authOptions } from '../../../../../../lib/auth';
-import { getDish } from '../../../../../actions';
+import { getCategory, getDish } from '../../../../../actions';
 
 export const metadata: Metadata = {
   title: 'Edit Dish',
@@ -17,10 +17,16 @@ export default async function Page({
 }) {
   const session = await getServerSession(authOptions);
   const dish = await getDish(params.dishId);
+  const category = await getCategory(params.index);
 
   return (
     <>
-      <DishesForm user={session?.user} categoryId={params.index} dish={dish} />
+      <DishesForm
+        user={session?.user}
+        categoryId={params.index}
+        dish={dish}
+        category={category}
+      />
     </>
   );
 }
