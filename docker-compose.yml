@@ -19,24 +19,22 @@ services:
       - POSTGRES_USER=postgres
 
   #turborepo
-  api:
-    container_name: qr-app
-    hostname: app
-    build:
-      context: .
-      dockerfile: dev.Dockerfile
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./:/app/
-      - ./node_modules:/app/node_modules
-        # Just specify a path and let the Engine create a volume
-      # - /app/node_modules/
-    networks:
-      default:
-        aliases:
-          - 'app.sandbox'
-    restart: always
+  # api:
+  #   container_name: qr-app
+  #   hostname: app
+  #   build:
+  #     context: .
+  #     dockerfile: dev.Dockerfile
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./:/app/
+  #     - ./node_modules:/app/node_modules
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - 'app.sandbox'
+  #   restart: always
 
 networks:
   turbo-network:
