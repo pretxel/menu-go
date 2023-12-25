@@ -7,6 +7,12 @@ export default function Dishes({ categories }) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <div className="sm:flex-auto">
+        <h1 className="text-base font-semibold leading-6 text-gray-900">
+          Categories
+        </h1>
+        <p className="mt-2 text-sm text-gray-700">Add categories.</p>
+      </div>
       <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
         {categories.map((product) => (
           <div

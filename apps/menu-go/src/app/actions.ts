@@ -37,6 +37,7 @@ export async function postDish(prevState: any, formData: FormData) {
   const categoryId = formData.get('categoryId') as string;
   const userId = formData.get('userId') as string;
   const dishId = formData.get('dishId') as string;
+  const description = formData.get('description') as string;
   let message = '';
 
   try {
@@ -55,6 +56,7 @@ export async function postDish(prevState: any, formData: FormData) {
             name,
             categoryId,
             configRestaurantId: existConfig.id,
+            description: description || '',
             price: parseFloat(price),
           },
         });
@@ -62,7 +64,7 @@ export async function postDish(prevState: any, formData: FormData) {
       } else {
         await prisma.dishes.update({
           where: { id: dishId },
-          data: { name, price: parseFloat(price) },
+          data: { name, price: parseFloat(price), description },
         });
         message = `Dish updated successfully!`;
       }
