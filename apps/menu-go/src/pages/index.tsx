@@ -42,6 +42,7 @@ const Home = ({ locale }) => {
           content="Digitize and manage your business's digital menu, share on social media, analyze your data, and utilize the QR code."
         />
         <meta property="og:url" content="https://www.dineqrs.com/" />
+        <meta name="google-adsense-account" content="ca-pub-1098294754637557" />
       </Head>
       <Landing locale={locale} />
     </>
