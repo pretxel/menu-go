@@ -9,7 +9,7 @@ export const User = () => {
     <>
       <div className="ml-3">
         <div className="text-base font-medium text-gray-800">
-          {session?.user?.email}
+          {session?.user?.name}
         </div>
       </div>
     </>

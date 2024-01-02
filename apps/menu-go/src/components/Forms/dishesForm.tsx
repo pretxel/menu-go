@@ -151,6 +151,7 @@ export default function DishesForm({
           <button
             type="button"
             className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => router.push('/panel/dishes')}
           >
             Cancel
           </button>

@@ -100,7 +100,7 @@ export default function Nav({ navigation, userNavigation }) {
                         <img
                           className="h-8 w-8 rounded-full"
                           src={session?.user?.image || ''}
-                          alt=""
+                          alt={session?.user?.name || 'user image'}
                         />
                       )}
                     </Menu.Button>
@@ -148,7 +148,7 @@ export default function Nav({ navigation, userNavigation }) {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="sm:hidden bg-indigo-100">
             <div className="space-y-1 pb-3 pt-2">
               {navigation.map((item) => (
                 <Disclosure.Button

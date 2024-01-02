@@ -28,9 +28,7 @@ export default function Dishes({ categories }) {
                 src={product.image}
                 alt={product.imageAlt}
                 className="object-cover object-center"
-                width={400}
-                height={200}
-                style={{ objectFit: 'fill' }}
+                style={{ objectFit: 'fill', height: 'auto', width: 'auto' }}
               />
             </div>
             <button
