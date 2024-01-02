@@ -145,7 +145,7 @@ export default function Form({ user, restaurant }) {
                     <img src={restaurant?.qrCode || ''} alt="" />
                   </div>
 
-                  <div className="flex sm:col-span-2 gap-2">
+                  <div className="flex sm:col-span-2 gap-2 pl-4">
                     <FacebookShareButton
                       url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
                     >
