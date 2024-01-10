@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 export default function Learn() {
   const { t } = useTranslation();
   return (
@@ -13,7 +13,10 @@ export default function Learn() {
         >
           {t('title', { ns: 'learn' })}
         </h1>
-        <p className="mt-6 text-xl leading-8" suppressHydrationWarning>
+        <p
+          className="mt-6 text-xl leading-8 text-pretty"
+          suppressHydrationWarning
+        >
           {t('description', { ns: 'learn' })}
         </p>
         <div className="mt-10 max-w-2xl">
@@ -26,8 +29,8 @@ export default function Learn() {
           <figure className="mt-16">
             <Image
               className="rounded-xl bg-gray-50 object-cover"
-              src="/images/learn/create-account.png"
-              alt=""
+              src="/images/learn/create-account.webp"
+              alt="create your account"
               width={600}
               height={300}
             />
@@ -51,9 +54,9 @@ export default function Learn() {
           </h2>
           <figure className="mt-16">
             <img
-              className="rounded-xl bg-gray-50 object-cover"
-              src="/images/learn/restaurant-details.png"
-              alt=""
+              className="rounded-xl bg-gray-50 object-fill"
+              src="/images/learn/restaurant-details.webp"
+              alt="restaurant details"
             />
             <figcaption
               className="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500"
@@ -73,14 +76,14 @@ export default function Learn() {
           >
             {t('create-menu', { ns: 'learn' })}
           </h2>
-          <p className="mt-8" suppressHydrationWarning>
+          <p className="mt-8 text-pretty" suppressHydrationWarning>
             {t('create-menu-p', { ns: 'learn' })}
           </p>
           <figure className="mt-16">
             <img
-              className="rounded-xl bg-gray-50 object-cover"
-              src="/images/learn/menu.png"
-              alt=""
+              className="rounded-xl bg-gray-50 object-fill"
+              src="/images/learn/menu.webp"
+              alt="menu created"
             />
             <figcaption
               className="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500"
@@ -103,9 +106,9 @@ export default function Learn() {
 
           <figure className="mt-16">
             <img
-              className="rounded-xl bg-gray-50 object-cover"
-              src="/images/learn/menu-qr.png"
-              alt=""
+              className="rounded-xl bg-gray-50 object-fill"
+              src="/images/learn/menu-qr.webp"
+              alt="menu qr example"
             />
             <figcaption
               className="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500"
@@ -120,9 +123,9 @@ export default function Learn() {
           </figure>
           <figure className="mt-16">
             <img
-              className="rounded-xl bg-gray-50 object-cover"
-              src="/images/learn/menu-preview.png"
-              alt=""
+              className="rounded-xl bg-gray-50 object-fill"
+              src="/images/learn/menu-preview.webp"
+              alt="menu preview"
             />
             <figcaption
               className="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500"

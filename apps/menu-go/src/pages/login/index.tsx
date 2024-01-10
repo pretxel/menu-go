@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import Login from '../../components/Login';
 

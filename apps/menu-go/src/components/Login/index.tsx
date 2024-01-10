@@ -176,8 +176,8 @@ export default function Login() {
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
           className="absolute inset-0 h-full w-full object-cover"
-          src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt=""
+          src="/images/login/burguer-login.webp"
+          alt="burguer-login"
           fill
         />
       </div>
