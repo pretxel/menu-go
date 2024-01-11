@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import LanguageSelect from './language-select';
 export default function Landing({ locale }) {
@@ -14,7 +14,7 @@ export default function Landing({ locale }) {
           aria-hidden="true"
         />
         <LanguageSelect locale={locale} />
-        <div className="mx-auto max-w-7xl px-6 py-4 sm:py-40 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 py-4 sm:pt-3 lg:pt-40 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
             <h1
               className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:col-span-2 xl:col-auto"
@@ -47,13 +47,14 @@ export default function Landing({ locale }) {
                 </Link>
               </div>
             </div>
-            <Image
-              width={750}
-              height={400}
-              src="https://www.techguide.com.au/wp-content/uploads/2020/11/QRCode1-750x400.jpeg"
-              alt=""
-              className="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
-            />
+            <div className="relative mt-10 sm:aspect-[4/3] aspect-[6/5] lg:aspect-[6/5] w-full max-w-lg sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36">
+              <Image
+                fill
+                src="/images/home/home-qr.webp"
+                alt="home-qr-image"
+                className="absolute rounded-2xl object-cover shadow-lg"
+              />
+            </div>
           </div>
         </div>
         <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
