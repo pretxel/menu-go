@@ -1,7 +1,26 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import { getDishes } from '../../app/actions';
+import { IDish } from '../../types/dish';
 import EmptyList from './empty-list';
 import RemoveButton from './remove-button';
 
 export default function ListDishes({ dishes }) {
+  const [dishesD, setDishes] = useState<IDish[] | null>([]);
+
+  useEffect(() => {
+    if (!dishes) {
+      const userId = localStorage.getItem('usedIdTemp');
+      getDishes(userId as string).then((res) => {
+        setDishes(res);
+      });
+    } else {
+      setDishes(dishes);
+    }
+  }, [dishes]);
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -43,33 +62,34 @@ export default function ListDishes({ dishes }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {dishes.map((dish) => (
-                  <tr key={dish.id}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {dish.name}
-                    </td>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {dish?.category?.name}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      ${dish.price}
-                    </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <RemoveButton idType={dish.id} type="dish" />
-                    </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a
-                        href={`/panel/dishes/${dish.categoryId}/edit/${dish.id}`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        Edit<span className="sr-only">, {dish.name}</span>
-                      </a>
-                    </td>
-                  </tr>
-                ))}
+                {dishesD &&
+                  dishesD.map((dish) => (
+                    <tr key={dish.id}>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                        {dish.name}
+                      </td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                        {dish?.category?.name}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        ${dish.price}
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <RemoveButton idType={dish.id} type="dish" />
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <a
+                          href={`/panel/dishes/${dish.categoryId}/edit/${dish.id}`}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          Edit<span className="sr-only">, {dish.name}</span>
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
-            {dishes.length === 0 && <EmptyList />}
+            {dishesD?.length === 0 && <EmptyList />}
           </div>
         </div>
       </div>

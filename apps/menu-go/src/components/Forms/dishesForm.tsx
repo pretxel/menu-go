@@ -4,13 +4,12 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import { toast } from 'react-toastify';
 
 import { postDish } from '../../app/actions';
 import { IDish } from '../../types/dish';
-import { IUser } from '../../types/user';
 import SuccessMessage from '../Alerts';
 import Uploader from '../Uploader';
 
@@ -19,27 +18,38 @@ const initialState = {
 };
 
 type IDishesForm = {
-  user: IUser;
+  userId: string | undefined;
   categoryId: string;
   dish?: IDish | null;
   category?: any;
 };
 
 export default function DishesForm({
-  user,
+  userId,
   categoryId,
   dish,
   category,
 }: IDishesForm) {
   const [state, formAction] = useFormState(postDish, initialState);
+  const [userIdD, setUserDId] = useState<string>('');
+
   const router = useRouter();
 
   useEffect(() => {
     if (state?.message) {
       toast.success(state?.message);
-      router.push('/panel/dishes');
+      router.back();
     }
   }, [state, router]);
+
+  useEffect(() => {
+    if (!userId) {
+      const userIdd = localStorage.getItem('usedIdTemp');
+      setUserDId(userIdd as string);
+    } else {
+      setUserDId(userId);
+    }
+  }, [userId]);
 
   return (
     // eslint-disable-next-line react/jsx-no-bind
@@ -87,7 +97,7 @@ export default function DishesForm({
                     type="hidden"
                     name="userId"
                     id="userId"
-                    value={user.id}
+                    value={userIdD}
                     autoComplete="given-name"
                   />
                 </div>

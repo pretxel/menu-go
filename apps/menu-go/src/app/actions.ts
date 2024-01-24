@@ -90,33 +90,48 @@ export async function postRestaurant(prevState: any, formData: FormData) {
       where: { userId },
     });
 
+    let restaurantResp;
     if (!existConfig) {
+      const existUser = await prisma.user.findUnique({ where: { id: userId } });
+      if (!existUser) {
+        await prisma.user.create({ data: { id: userId } });
+      }
+
       const restaurant = await prisma.configRestaurant.create({
         data: { name, userId, address, phone },
       });
 
-      QRCode.toDataURL(
-        `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant.id}`,
-        async (err, url) => {
-          await prisma.configRestaurant.update({
-            where: { id: restaurant.id },
-            data: { qrCode: url },
-          });
-        }
+      const url = await QRCode.toDataURL(
+        `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant.id}`
       );
 
-      message = `Restaurant created successfully!`;
+      await prisma.configRestaurant.update({
+        where: { id: restaurant.id },
+        data: { qrCode: url },
+      });
+
+      restaurantResp = await prisma.configRestaurant.findUnique({
+        where: { id: restaurant.id },
+      });
+
+      message = `Business created successfully!`;
     } else {
       await prisma.configRestaurant.update({
         where: { id: existConfig.id },
         data: { name, address, phone },
       });
-      message = `Restaurant updated successfully!`;
+      restaurantResp = await prisma.configRestaurant.findUnique({
+        where: { id: existConfig.id },
+      });
+      message = `Business updated successfully!`;
     }
     revalidatePath('/panel');
-    return { message };
+    revalidatePath('/d');
+
+    return { message, restaurant: restaurantResp };
   } catch (e) {
-    return { message: `ERROO todo ` };
+    console.log(e);
+    return { message: `Business failed` };
   }
 }
 

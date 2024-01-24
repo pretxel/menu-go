@@ -3,7 +3,8 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import {
   FacebookIcon,
@@ -14,8 +15,9 @@ import {
   XIcon,
 } from 'react-share';
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 
-import { postRestaurant } from '../../app/actions';
+import { getRestaurant, postRestaurant, Restaurant } from '../../app/actions';
 import SuccessMessage from '../Alerts';
 import InfoAlert from './info-alert';
 
@@ -23,21 +25,46 @@ const initialState = {
   message: null,
 };
 
-export default function Form({ user, restaurant }) {
+export default function Form({ userId }) {
+  const [userIdD, setUserDId] = useState<string>('');
+  const [restaurantD, setRestaurantD] = useState<Restaurant | null>();
   const [state, formAction] = useFormState(postRestaurant, initialState);
+  const path = usePathname();
+
+  useEffect(() => {
+    if (!userId) {
+      let userId = localStorage.getItem('usedIdTemp');
+      if (!userId) {
+        userId = uuidv4();
+        localStorage.setItem('usedIdTemp', userId as string);
+      }
+      setUserDId(userId as string);
+    } else {
+      setUserDId(userId);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    getRestaurant(userIdD).then((res) => {
+      setRestaurantD(res);
+    });
+  }, [userIdD]);
 
   useEffect(() => {
     if (state?.message) {
       toast.success(state?.message);
+      setRestaurantD(state.restaurant);
     }
   }, [state]);
+
+  console.log('restaurantD', restaurantD);
 
   return (
     // eslint-disable-next-line react/jsx-no-bind
     <form action={formAction}>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
-          {restaurant && <InfoAlert />}
+          {restaurantD && <InfoAlert path={path} />}
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Business name
           </h2>
@@ -59,7 +86,7 @@ export default function Form({ user, restaurant }) {
                   name="name"
                   id="name"
                   required
-                  defaultValue={restaurant?.name || ''}
+                  defaultValue={restaurantD?.name || ''}
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -69,7 +96,7 @@ export default function Form({ user, restaurant }) {
                   type="hidden"
                   name="userId"
                   id="userId"
-                  value={user.id}
+                  value={userIdD}
                   autoComplete="given-name"
                 />
               </div>
@@ -88,7 +115,7 @@ export default function Form({ user, restaurant }) {
                   name="address"
                   id="address"
                   required
-                  defaultValue={restaurant?.address || ''}
+                  defaultValue={restaurantD?.address || ''}
                   autoComplete="given-address"
                   className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -108,13 +135,13 @@ export default function Form({ user, restaurant }) {
                   name="phone"
                   id="phone"
                   required
-                  defaultValue={restaurant?.phone || ''}
+                  defaultValue={restaurantD?.phone || ''}
                   autoComplete="given-phone"
                   className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
-            {restaurant && (
+            {restaurantD && (
               <>
                 <div className="sm:col-span-3">
                   <label
@@ -126,11 +153,11 @@ export default function Form({ user, restaurant }) {
                   <div className="mt-2">
                     <a
                       href={
-                        `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}` ||
+                        `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}` ||
                         ''
                       }
                     >
-                      {`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                      {`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
                     </a>
                   </div>
                 </div>
@@ -142,26 +169,26 @@ export default function Form({ user, restaurant }) {
                     QR
                   </label>
                   <div className="mt-2">
-                    <img src={restaurant?.qrCode || ''} alt="" />
+                    <img src={restaurantD?.qrCode || ''} alt="" />
                   </div>
 
                   <div className="flex sm:col-span-2 gap-2 pl-4">
                     <FacebookShareButton
-                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
                     >
                       <FacebookIcon size={32} round />
                     </FacebookShareButton>
 
                     <WhatsappShareButton
-                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
-                      title={`Menu ${restaurant?.name}`}
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                      title={`Menu ${restaurantD?.name}`}
                       separator=":: "
                     >
                       <WhatsappIcon size={32} round />
                     </WhatsappShareButton>
                     <TwitterShareButton
-                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
-                      title={`Menu ${restaurant?.name}`}
+                      url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                      title={`Menu ${restaurantD?.name}`}
                     >
                       <XIcon size={32} round />
                     </TwitterShareButton>

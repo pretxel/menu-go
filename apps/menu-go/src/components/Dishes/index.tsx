@@ -18,7 +18,7 @@ export default function Dishes({ categories }) {
           <div
             key={product.id}
             className="group relative cursor-pointer"
-            onClick={() => router.push(`/panel/dishes/${product.id}`)}
+            onClick={() => router.push(`dishes/${product.id}`)}
           >
             <div
               className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100"

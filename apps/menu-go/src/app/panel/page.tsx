@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 
 import Form from '../../components/Forms';
 import { authOptions } from '../../lib/auth';
-import { getRestaurant } from '../actions';
 
 export const metadata: Metadata = {
   title: 'Panel',
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
-  const restaurant = await getRestaurant(session?.user.id);
+  const user = session?.user;
 
-  return <Form user={session?.user} restaurant={restaurant} />;
+  return <Form userId={user.id} />;
 }

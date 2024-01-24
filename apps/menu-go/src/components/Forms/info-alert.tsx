@@ -1,6 +1,6 @@
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 
-export default function InfoAlert() {
+export default function InfoAlert({ path }) {
   return (
     <div className="rounded-md bg-blue-50 p-4">
       <div className="flex">
@@ -12,11 +12,11 @@ export default function InfoAlert() {
         </div>
         <div className="ml-3 flex-1 md:flex md:justify-between">
           <p className="text-sm text-blue-700">
-            You can create a new menu by clicking on the button below.
+            You can create a new catalog by clicking on the button below.
           </p>
           <p className="mt-3 text-sm md:ml-6 md:mt-0">
             <a
-              href="/panel/dishes"
+              href={`${path}/dishes`}
               className="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600"
             >
               Details

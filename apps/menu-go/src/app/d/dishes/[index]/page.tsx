@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
 
 import DishesForm from '../../../../components/Forms/dishesForm';
-import { authOptions } from '../../../../lib/auth';
 import { getCategory } from '../../../actions';
 
 export const metadata: Metadata = {
@@ -11,13 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({ params }: { params: { index: string } }) {
-  const session = await getServerSession(authOptions);
   const category = await getCategory(params.index);
-  const user = session?.user;
+
   return (
     <>
       <DishesForm
-        userId={user.id}
+        userId={undefined}
         categoryId={params.index}
         category={category}
       />
