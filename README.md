@@ -1,27 +1,43 @@
 # MENU-GO
 
 # Welcome to MENU-GO!
+This repository is a catalog generated with QR Code and integrated with a web app
 
-[🚜 Building .....]
+
+Requirements:
+- PNPM (https://pnpm.js.org/)
+- TurboRepo (https://turborepo.org/)
+- Node.js >=14.0.0
+- Prisma >=5.0.0 (https://www.prisma.io/)
+- Docker >=20.10.7 (https://docs.docker.com/get-docker/)
+- Docker Compose >=1.29.0 (https://docs.docker.com/compose/install/)
 
 # Table of Contents
 
--   [Installation and Deployment](#installation-and-deployment)
-    -   [Development](#development)
-    -   [GitHub - Set-Up an OAuth Application](#github---set-up-an-oauth-application)
--   [Talk with us or Report an Issue](#talk-with-us-or-report-an-issue)
+- [MENU-GO](#menu-go)
+- [Welcome to MENU-GO!](#welcome-to-menu-go)
+- [Table of Contents](#table-of-contents)
+- [Installation and Documentation](#installation-and-documentation)
+  - [Development](#development)
+    - [Install dependencies](#install-dependencies)
+    - [Run container](#run-container)
+    - [Validate app](#validate-app)
 
 # Installation and Documentation
 
 ## Development
 
-1. Install the project with `npm install`
-2. Initialize the `@prisma/client` with `npm prisma generate` or `npx prisma generate`
-3. Set-up your environment variables following the `.env.example` file. NOTE: The environment file must be named like: `.env`
-    - You can get the `GITHUB_ID` and `GITHUB_SECRET` following [GitHub - Set-Up an OAuth Application](#github-set-up-an-oauth-application)
-    - You can set in `SECRET` whatever you want or a strong character string like a base64, sha1, etc...
-    - You need to uncomment `NEXTAUTH_URL` to remove the warning alert in localhost.
-4. Migrate the prisma generated database to the PostgreSQL on Railway with `npm run migrate:dev`
-5. You can now start developing for vota.dev
+### Install dependencies
+```bash
+pnpm install
+```
 
-## Talk with us or Report an Issue
+### Run container
+```bash
+doccker-compose up -d
+```
+
+### Validate app
+http://localhost:3000/
+
+
