@@ -79,7 +79,7 @@ export default function ListDishes({ dishes }) {
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <a
-                          href={`/panel/dishes/${dish.categoryId}/edit/${dish.id}`}
+                          href={`dishes/${dish.categoryId}/edit/${dish.id}`}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
                           Edit<span className="sr-only">, {dish.name}</span>

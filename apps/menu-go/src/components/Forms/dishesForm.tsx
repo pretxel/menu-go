@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { postDish } from '../../app/actions';
 import { IDish } from '../../types/dish';
 import SuccessMessage from '../Alerts';
+import UserNoAuth from '../Menu/user-no-auth';
 import Uploader from '../Uploader';
 
 const initialState = {
@@ -54,6 +55,7 @@ export default function DishesForm({
   return (
     // eslint-disable-next-line react/jsx-no-bind
     <>
+      <UserNoAuth />
       <form action={formAction}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -161,7 +163,7 @@ export default function DishesForm({
           <button
             type="button"
             className="text-sm font-semibold leading-6 text-gray-900"
-            onClick={() => router.push('/panel/dishes')}
+            onClick={() => router.back()}
           >
             Cancel
           </button>

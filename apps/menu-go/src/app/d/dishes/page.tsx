@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Dishes from '../../../components/Dishes';
 import DishHeader from '../../../components/Dishes/qr-button';
 import ListDishes from '../../../components/List/dishes';
+import UserNoAuth from '../../../components/Menu/user-no-auth';
 import { getAllCategories } from '../../actions';
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default async function Page() {
 
   return (
     <>
+      <UserNoAuth />
       <DishHeader restaurant={undefined} />
       <ListDishes dishes={undefined} />
       <Dishes categories={categories} />

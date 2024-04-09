@@ -7,8 +7,9 @@ export default function Dish({ dish }) {
         {dish.image && (
           <Image
             src={dish.image || '/images/dish.png'}
+            width={500}
+            height={500}
             alt={dish.name}
-            fill
             className="h-full w-full object-cover object-center group-hover:opacity-75"
           />
         )}
