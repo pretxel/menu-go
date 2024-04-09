@@ -4,6 +4,7 @@ ENV NODE_ENV development
 
 #add turborepo
 RUN npm -g install npm
+RUN npm -g install pnpm
 RUN npm -g install dotenv-cli
 RUN apt-get update -y && apt-get install -y openssl xdg-utils
 # RUN yarn global add turbo
@@ -15,17 +16,17 @@ RUN apt-get update -y && apt-get install -y openssl xdg-utils
 WORKDIR /app
 
 # Install app dependencies
-COPY  ["package-lock.json", "package.json", "./"]
+COPY  ["pnpm-lock.yaml", "pnpm-workspace.yaml", "package.json", "./"]
 
 # Copy source files
 COPY . .
 
 # Install app dependencies
-RUN npm install
+RUN pnpm install
 # Install app dependencies
 # RUN yarn install
 
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]

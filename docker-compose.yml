@@ -18,23 +18,23 @@ services:
       - POSTGRES_PASSWORD=secrect
       - POSTGRES_USER=postgres
 
-  #turborepo
-  # api:
-  #   container_name: qr-app
-  #   hostname: app
-  #   build:
-  #     context: .
-  #     dockerfile: dev.Dockerfile
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - ./:/app/
-  #     - ./node_modules:/app/node_modules
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - 'app.sandbox'
-  #   restart: always
+  # turborepo
+  api:
+    container_name: qr-app
+    hostname: app
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app/
+      - ./node_modules:/app/node_modules
+    networks:
+      default:
+        aliases:
+          - 'app.sandbox'
+    restart: always
 
 networks:
   turbo-network:

@@ -6,7 +6,7 @@ declare global {
 }
 
 // create only one prisma client instance for development
-const prisma = global.prisma || new PrismaClient();
+const prisma: PrismaClient = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
