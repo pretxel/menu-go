@@ -34,7 +34,7 @@ pnpm install
 
 ### Run container
 ```bash
-doccker-compose up -d
+docker-compose up -d
 ```
 
 ### Validate app

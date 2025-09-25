@@ -1,30 +1,55 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env"],
-  "pipeline": {
+  "globalDependencies": [
+    "**/.env"
+  ],
+  "globalEnv": [
+    "DATABASE_URL",
+    "NODE_ENV",
+    "VERCEL",
+    "VERCEL_URL"
+  ],
+  "tasks": {
     "db:generate": {
-      "inputs": ["prisma/schema.prisma"],
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
       "cache": false
     },
     "db:push": {
-      "inputs": ["prisma/schema.prisma"],
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
       "cache": false
     },
     "db:seed": {
-      "inputs": ["prisma/schema.prisma"],
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
       "cache": false
     },
     "db:reset": {
-      "inputs": ["prisma/schema.prisma"],
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
       "cache": false
     },
     "db:migrate": {
-      "inputs": ["prisma/schema.prisma"],
+      "inputs": [
+        "prisma/schema.prisma"
+      ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["db:generate", "^build"],
-      "outputs": ["build/**", "dist/**", ".next/**"]
+      "dependsOn": [
+        "db:generate",
+        "^build"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**",
+        ".next/**"
+      ]
     },
     "lint": {
       "outputs": [],
@@ -49,6 +74,5 @@
     "ci": {
       "cache": false
     }
-  },
-  "globalEnv": ["DATABASE_URL", "NODE_ENV", "VERCEL", "VERCEL_URL"]
+  }
 }
