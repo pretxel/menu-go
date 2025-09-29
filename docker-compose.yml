@@ -3,6 +3,7 @@ services:
   db:
     container_name: qr-db
     image: postgres:14
+    platform: linux/amd64
     hostname: db
     ports:
       - '5432:5432'
@@ -22,6 +23,7 @@ services:
   api:
     container_name: qr-app
     hostname: app
+    platform: linux/amd64
     build:
       context: .
       dockerfile: dev.Dockerfile

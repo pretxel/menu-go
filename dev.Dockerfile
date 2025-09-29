@@ -1,9 +1,8 @@
-FROM node:20-buster-slim
+FROM node:20-bookworm-slim
 
 ENV NODE_ENV development
 
 #add turborepo
-RUN npm -g install npm
 RUN npm -g install pnpm
 RUN npm -g install dotenv-cli
 RUN apt-get update -y && apt-get install -y openssl xdg-utils
