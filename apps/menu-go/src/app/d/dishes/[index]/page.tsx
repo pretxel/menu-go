@@ -8,14 +8,15 @@ export const metadata: Metadata = {
   description: 'new product',
 };
 
-export default async function Page({ params }: { params: { index: string } }) {
-  const category = await getCategory(params.index);
+export default async function Page({ params }: { params: Promise<{ index: string }> }) {
+  const { index } = await params;
+  const category = await getCategory(index);
 
   return (
     <>
       <DishesForm
         userId={undefined}
-        categoryId={params.index}
+        categoryId={index}
         category={category}
       />
     </>

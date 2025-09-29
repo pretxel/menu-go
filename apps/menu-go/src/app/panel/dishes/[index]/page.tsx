@@ -10,15 +10,16 @@ export const metadata: Metadata = {
   description: 'new product',
 };
 
-export default async function Page({ params }: { params: { index: string } }) {
+export default async function Page({ params }: { params: Promise<{ index: string }> }) {
+  const { index } = await params;
   const session = await getServerSession(authOptions);
-  const category = await getCategory(params.index);
+  const category = await getCategory(index);
   const user = session?.user;
   return (
     <>
       <DishesForm
         userId={user.id}
-        categoryId={params.index}
+        categoryId={index}
         category={category}
       />
     </>

@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 export default async function Page({
   params,
 }: {
-  params: { restaurantId: string };
+  params: Promise<{ restaurantId: string }>;
 }) {
-  const restaurant = await getMenu(params.restaurantId);
+  const { restaurantId } = await params;
+  const restaurant = await getMenu(restaurantId);
 
   return <Menu dishes={restaurant.Dishes} restaurant={restaurant} />;
 }

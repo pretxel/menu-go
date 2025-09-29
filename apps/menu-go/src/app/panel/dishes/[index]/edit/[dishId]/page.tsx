@@ -13,18 +13,19 @@ export const metadata: Metadata = {
 export default async function Page({
   params,
 }: {
-  params: { dishId: string; index: string };
+  params: Promise<{ dishId: string; index: string }>;
 }) {
+  const { dishId, index } = await params;
   const session = await getServerSession(authOptions);
-  const dish = await getDish(params.dishId);
-  const category = await getCategory(params.index);
+  const dish = await getDish(dishId);
+  const category = await getCategory(index);
   const user = session?.user;
 
   return (
     <>
       <DishesForm
         userId={user.id}
-        categoryId={params.index}
+        categoryId={index}
         dish={dish}
         category={category}
       />

@@ -28,6 +28,7 @@ Requirements:
 ## Development
 
 ### Install dependencies
+
 ```bash
 pnpm install
 ```

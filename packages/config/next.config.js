@@ -6,9 +6,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
   // output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
+  outputFileTracingRoot: path.join(__dirname, '../../'),
   i18n,
   images: {
     remotePatterns: [
