@@ -19,10 +19,8 @@ export default function UserNoAuth() {
     return (
       <div className="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
         <p className="text-sm leading-6 text-white">
-          <a href="#">
-            <strong className="font-semibold">
-              <a href={`/login?referalId=${userDId}`}>Login</a>
-            </strong>
+          <a href={`/login?referalId=${userDId}`} className="font-semibold">
+            Login
             <span aria-hidden="true">&rarr;</span>
           </a>
         </p>
