@@ -2,7 +2,7 @@ version: '3.0'
 services:
   db:
     container_name: qr-db
-    image: postgres:14
+    image: postgres:17
     platform: linux/amd64
     hostname: db
     ports:
