@@ -41,6 +41,7 @@ model User {
   email            String?            @unique
   emailVerified    DateTime?
   image            String?
+  password         String?
   accounts         Account[]
   sessions         Session[]
   ConfigRestaurant ConfigRestaurant[]
@@ -56,23 +57,34 @@ model VerificationToken {
 }
 
 model ConfigRestaurant {
-  id      String   @id @default(uuid())
-  name    String?
-  address String?
-  phone   String?
-  image   String?
-  qrCode  String?
-  userId  String
-  user    User     @relation(fields: [userId], references: [id])
-  Dishes  Dishes[]
+  id          String      @id @default(uuid())
+  name        String?
+  slug        String?     @unique
+  address     String?
+  phone       String?
+  image       String?
+  logoUrl     String?
+  cuisineType     String?
+  primaryColor    String?  @default("#4F46E5")
+  backgroundColor String?  @default("#FFFFFF")
+  qrCode          String?
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  Dishes      Dishes[]
+  Category    Category[]
+  MenuView    MenuView[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Category {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  image       String?
-  Dishes      Dishes[]
+  id                 String            @id @default(uuid())
+  name               String
+  description        String
+  image              String?
+  configRestaurantId String?
+  configRestaurant   ConfigRestaurant? @relation(fields: [configRestaurantId], references: [id])
+  Dishes             Dishes[]
 }
 
 model Dishes {
@@ -81,8 +93,20 @@ model Dishes {
   image              String?
   price              Float
   description        String?
+  tags               String[]         @default([])
+  isAvailable        Boolean          @default(true)
   configRestaurantId String
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
   categoryId         String
   category           Category         @relation(fields: [categoryId], references: [id])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model MenuView {
+  id                 String           @id @default(uuid())
+  configRestaurantId String
+  configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
+  source             String           @default("direct")
+  createdAt          DateTime         @default(now())
 }
