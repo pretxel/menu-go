@@ -144,6 +144,45 @@ export default function Form({ userId }) {
                   />
                 </div>
               </div>
+
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="primaryColor"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Primary color
+                </label>
+                <div className="mt-2 flex items-center gap-3">
+                  <input
+                    type="color"
+                    name="primaryColor"
+                    id="primaryColor"
+                    defaultValue={restaurantD?.primaryColor || '#4F46E5'}
+                    className="h-9 w-16 cursor-pointer rounded border border-gray-300 p-0.5"
+                  />
+                  <span className="text-sm text-gray-500">Used for accents and buttons</span>
+                </div>
+              </div>
+
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="backgroundColor"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Background color
+                </label>
+                <div className="mt-2 flex items-center gap-3">
+                  <input
+                    type="color"
+                    name="backgroundColor"
+                    id="backgroundColor"
+                    defaultValue={restaurantD?.backgroundColor || '#FFFFFF'}
+                    className="h-9 w-16 cursor-pointer rounded border border-gray-300 p-0.5"
+                  />
+                  <span className="text-sm text-gray-500">Menu page background</span>
+                </div>
+              </div>
+
               {restaurantD && (
                 <>
                   <div className="sm:col-span-3">
@@ -156,11 +195,11 @@ export default function Form({ userId }) {
                     <div className="mt-2">
                       <a
                         href={
-                          `${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}` ||
+                          `${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}` ||
                           ''
                         }
                       >
-                        {`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                        {`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
                       </a>
                     </div>
                   </div>
@@ -177,20 +216,20 @@ export default function Form({ userId }) {
 
                     <div className="flex sm:col-span-2 gap-2 pl-4">
                       <FacebookShareButton
-                        url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
                       >
                         <FacebookIcon size={32} round />
                       </FacebookShareButton>
 
                       <WhatsappShareButton
-                        url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
                         title={`Menu ${restaurantD?.name}`}
                         separator=":: "
                       >
                         <WhatsappIcon size={32} round />
                       </WhatsappShareButton>
                       <TwitterShareButton
-                        url={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
                         title={`Menu ${restaurantD?.name}`}
                       >
                         <XIcon size={32} round />
