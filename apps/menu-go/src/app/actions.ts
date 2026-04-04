@@ -4,6 +4,8 @@ import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import Anthropic from '@anthropic-ai/sdk';
 import QRCode from 'qrcode';
+
+const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 import { z } from 'zod';
 
 import prisma from '../lib/prisma';
@@ -361,9 +363,7 @@ export async function parseMenuFromPhoto(imageBase64: string): Promise<{
     | 'image/gif'
     | 'image/webp';
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-  const response = await client.messages.create({
+  const response = await anthropicClient.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 4096,
     tools: [

@@ -12,18 +12,20 @@ jest.mock('openai', () => {
 });
 
 jest.mock('@anthropic-ai/sdk', () => {
-  return jest.fn().mockImplementation(() => ({
-    messages: {
-      create: jest.fn(),
-    },
+  const mockCreate = jest.fn();
+  const MockAnthropic = jest.fn().mockImplementation(() => ({
+    messages: { create: mockCreate },
   }));
+  // Expose the shared mockCreate so tests can configure it
+  (MockAnthropic as any)._mockCreate = mockCreate;
+  return MockAnthropic;
 });
 
 jest.mock('qrcode', () => ({
   toDataURL: jest.fn(),
 }));
 
-// zod is not installed — provide a chainable mock that supports the patterns used in actions.ts
+// Mock zod to control safeParse behavior and avoid ESM/CJS interop issues in Jest
 jest.mock('zod', () => {
   const createChainable = (): any => {
     const chain: any = () => chain;
@@ -70,10 +72,9 @@ jest.mock('../src/lib/prisma', () => ({
   },
 }));
 
-import { getMenu, getMenuBySlug, getAllCategories, trackMenuView } from '../src/app/actions';
+import { getMenu, getMenuBySlug, getAllCategories, trackMenuView, parseMenuFromPhoto } from '../src/app/actions';
 import prisma from '../src/lib/prisma';
 import Anthropic from '@anthropic-ai/sdk';
-import { parseMenuFromPhoto } from '../src/app/actions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma = prisma as any;
@@ -228,15 +229,11 @@ describe('trackMenuView', () => {
 });
 
 describe('parseMenuFromPhoto', () => {
-  let mockCreate: jest.Mock;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mockCreate: jest.Mock = (Anthropic as any)._mockCreate;
 
   beforeEach(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AnthropicMock = Anthropic as any;
-    mockCreate = jest.fn();
-    AnthropicMock.mockImplementation(() => ({
-      messages: { create: mockCreate },
-    }));
+    mockCreate.mockReset();
   });
 
   it('returns parsed categories from tool_use response', async () => {
