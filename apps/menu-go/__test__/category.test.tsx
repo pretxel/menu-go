@@ -24,9 +24,9 @@ describe('Category', () => {
     expect(screen.getByAltText('Dish 1')).toBeInTheDocument();
     expect(screen.getByAltText('Dish 2')).toBeInTheDocument();
     expect(screen.getByAltText('Dish 3')).toBeInTheDocument();
-    expect(screen.getByText('$10')).toBeInTheDocument();
-    expect(screen.getByText('$15')).toBeInTheDocument();
-    expect(screen.getByText('$20')).toBeInTheDocument();
+    expect(screen.getByText('$10.00')).toBeInTheDocument();
+    expect(screen.getByText('$15.00')).toBeInTheDocument();
+    expect(screen.getByText('$20.00')).toBeInTheDocument();
   });
 
   test('should display each dish with its name, image, and price', () => {
@@ -45,7 +45,7 @@ describe('Category', () => {
     category.forEach((dish) => {
       expect(screen.getByText(dish.name)).toBeInTheDocument();
       expect(screen.getByAltText(dish.name)).toBeInTheDocument();
-      expect(screen.getByText(`$${dish.price}`)).toBeInTheDocument();
+      expect(screen.getByText(`$${dish.price}.00`)).toBeInTheDocument();
     });
   });
 });
