@@ -28,6 +28,8 @@ const postRestaurantSchema = z.object({
   phone: z.string().min(1, 'Phone is required'),
   cuisineType: z.string().optional().default(''),
   userId: z.string().min(1, 'User ID is required'),
+  primaryColor: z.string().optional().default('#4F46E5'),
+  backgroundColor: z.string().optional().default('#FFFFFF'),
 });
 
 export type Restaurant = {
@@ -39,6 +41,8 @@ export type Restaurant = {
   qrCode: string | null;
   cuisineType: string | null;
   logoUrl: string | null;
+  primaryColor: string | null;
+  backgroundColor: string | null;
 };
 
 function generateSlug(name: string): string {
@@ -128,6 +132,8 @@ export async function postRestaurant(prevState: any, formData: FormData) {
     phone: formData.get('phone'),
     cuisineType: formData.get('cuisineType') || '',
     userId: formData.get('userId'),
+    primaryColor: formData.get('primaryColor') || undefined,
+    backgroundColor: formData.get('backgroundColor') || undefined,
   });
 
   if (!parsed.success) {
@@ -136,7 +142,7 @@ export async function postRestaurant(prevState: any, formData: FormData) {
     return { message: firstError };
   }
 
-  const { name, address, phone, cuisineType, userId } = parsed.data;
+  const { name, address, phone, cuisineType, userId, primaryColor, backgroundColor } = parsed.data;
   let message = '';
 
   try {
@@ -157,7 +163,7 @@ export async function postRestaurant(prevState: any, formData: FormData) {
       if (existing) slug = `${slug}-${Date.now()}`;
 
       const restaurant = await prisma.configRestaurant.create({
-        data: { name, userId, address, phone, slug, cuisineType },
+        data: { name, userId, address, phone, slug, cuisineType, primaryColor, backgroundColor },
       });
 
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
@@ -175,7 +181,7 @@ export async function postRestaurant(prevState: any, formData: FormData) {
 
       message = 'Business created successfully!';
     } else {
-      const updateData: any = { name, address, phone };
+      const updateData: any = { name, address, phone, primaryColor, backgroundColor };
       if (cuisineType) updateData.cuisineType = cuisineType;
       // Update slug if name changed significantly
       if (name !== existConfig.name && !existConfig.slug) {
@@ -218,6 +224,8 @@ export async function getRestaurant(userId: string): Promise<Restaurant | null> 
     slug: existConfig.slug,
     cuisineType: existConfig.cuisineType,
     logoUrl: existConfig.logoUrl,
+    primaryColor: existConfig.primaryColor,
+    backgroundColor: existConfig.backgroundColor,
   };
 }
 
