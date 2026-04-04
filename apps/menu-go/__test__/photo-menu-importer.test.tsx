@@ -61,4 +61,32 @@ describe('PhotoMenuImporter — editable preview', () => {
       ])
     );
   });
+
+  it('editing price updates state before import', async () => {
+    render(
+      <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
+    );
+    fireEvent.click(screen.getByText('Import from photo'));
+
+    const priceInput = screen.getByDisplayValue('8.5');
+    fireEvent.change(priceInput, { target: { value: '12.99' } });
+
+    const mockPostBulkDishes = postBulkDishes as jest.Mock;
+    mockPostBulkDishes.mockResolvedValue(undefined);
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Import all'));
+    });
+
+    expect(mockPostBulkDishes).toHaveBeenCalledWith(
+      'user-1',
+      expect.arrayContaining([
+        expect.objectContaining({
+          dishes: expect.arrayContaining([
+            expect.objectContaining({ price: 12.99 }),
+          ]),
+        }),
+      ])
+    );
+  });
 });

@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 
 import { parseMenuFromPhoto, postBulkDishes } from '../../app/actions';
 
-type ParsedDish = { name: string; description: string; price: number; tags: string[] };
+type ParsedDish = { name: string; description: string; price: number | string; tags: string[] };
 type ParsedCategory = { name: string; dishes: ParsedDish[] };
 
 type PhotoMenuImporterProps = {
@@ -16,6 +16,7 @@ export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMe
   const [isOpen, setIsOpen] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  // initialCategories seeds state for testing; post-mount updates to this prop are ignored.
   const [categories, setCategories] = useState<ParsedCategory[] | null>(initialCategories ?? null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,9 +30,7 @@ export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMe
           : {
               ...cat,
               dishes: cat.dishes.map((dish, di) =>
-                di !== dishIdx
-                  ? dish
-                  : { ...dish, [field]: field === 'price' ? parseFloat(value) || 0 : value }
+                di !== dishIdx ? dish : { ...dish, [field]: value }
               ),
             }
       );
@@ -83,7 +82,14 @@ export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMe
     setIsImporting(true);
     setError(null);
     try {
-      await postBulkDishes(userId, categories);
+      const sanitized = categories.map((cat) => ({
+        ...cat,
+        dishes: cat.dishes.map((d) => ({
+          ...d,
+          price: typeof d.price === 'string' ? parseFloat(d.price) || 0 : d.price,
+        })),
+      }));
+      await postBulkDishes(userId, sanitized);
       setCategories(null);
       setIsOpen(false);
     } catch {
