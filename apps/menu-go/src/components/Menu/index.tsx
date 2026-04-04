@@ -13,7 +13,16 @@ export default function Menu({ dishes, restaurant }) {
   }, {});
 
   return (
-    <div className="bg-white">
+    <div
+      style={
+        {
+          '--color-primary': restaurant.primaryColor ?? '#4F46E5',
+          '--color-bg': restaurant.backgroundColor ?? '#FFFFFF',
+          backgroundColor: restaurant.backgroundColor ?? '#FFFFFF',
+        } as import('react').CSSProperties
+      }
+      className="min-h-screen"
+    >
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
         <Banner restaurant={restaurant} />
         <UserNoAuth />

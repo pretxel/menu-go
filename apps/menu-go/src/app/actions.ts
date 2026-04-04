@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
+import Anthropic from '@anthropic-ai/sdk';
 import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
-import Anthropic from '@anthropic-ai/sdk';
 import QRCode from 'qrcode';
-
-const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 import { z } from 'zod';
 
 import prisma from '../lib/prisma';
 import { IDish } from '../types/dish';
+
+const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const postDishSchema = z.object({
   name: z.string().min(1, 'Name is required'),
