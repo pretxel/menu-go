@@ -181,8 +181,10 @@ export async function postRestaurant(prevState: any, formData: FormData) {
 
       message = 'Business created successfully!';
     } else {
-      const updateData: any = { name, address, phone, primaryColor, backgroundColor };
+      const updateData: any = { name, address, phone };
       if (cuisineType) updateData.cuisineType = cuisineType;
+      if (primaryColor) updateData.primaryColor = primaryColor;
+      if (backgroundColor) updateData.backgroundColor = backgroundColor;
       // Update slug if name changed significantly
       if (name !== existConfig.name && !existConfig.slug) {
         const slug = generateSlug(name);
