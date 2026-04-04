@@ -18,4 +18,5 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 }
 
-export default appWithTranslation(MyApp);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default appWithTranslation(MyApp) as any;

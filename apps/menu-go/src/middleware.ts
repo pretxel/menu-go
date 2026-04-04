@@ -22,7 +22,7 @@ export default async function middleware(req: NextRequest) {
 
     try {
       return NextResponse.next();
-    } catch (err) {
+    } catch {
       req.nextUrl.pathname = '/login';
       return NextResponse.redirect(req.nextUrl);
     }

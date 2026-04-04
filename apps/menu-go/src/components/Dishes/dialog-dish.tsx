@@ -90,7 +90,7 @@ export default function DialogDish({ open, setOpen, restaurant }) {
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                           <a
-                            href={`${process.env.NEXT_PUBLIC_SIE}/menu/${restaurant?.id}`}
+                            href={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurant?.id}`}
                             target="_blank"
                             rel="noreferrer"
                             className="group inline-flex items-center font-medium text-indigo-600 hover:text-indigo-900"

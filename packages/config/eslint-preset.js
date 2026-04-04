@@ -4,7 +4,6 @@ module.exports = {
     'standard',
     'prettier',
     'standard-jsx',
-    'standard-react',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
   ],
@@ -13,6 +12,12 @@ module.exports = {
   settings: {
     next: {
       rootDir: ['apps/*/', 'packages/*/'],
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: ['apps/*/tsconfig.json', 'packages/*/tsconfig.json'],
+      },
     },
   },
   rules: {

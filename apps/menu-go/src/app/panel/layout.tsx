@@ -4,6 +4,7 @@ import '../../styles/globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider, signOut } from 'next-auth/react';
+import React from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import Nav from '../../components/Panel/Nav';
@@ -16,7 +17,7 @@ const userNavigation = [
   { name: 'Sign out', href: '#', callback: () => signOut() },
 ];
 
-export default function Layout({ title, children }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SessionProvider>
@@ -25,13 +26,6 @@ export default function Layout({ title, children }) {
           <Nav navigation={navigation} userNavigation={userNavigation} />
 
           <div className="py-2">
-            <header>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-                  {title}
-                </h1>
-              </div>
-            </header>
             <main>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {children}

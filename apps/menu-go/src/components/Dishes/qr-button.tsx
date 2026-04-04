@@ -10,7 +10,7 @@ export default function DishHeader({ restaurant }) {
 
   useEffect(() => {
     if (!restaurant) {
-      const userId = localStorage.getItem('usedIdTemp');
+      const userId = localStorage.getItem('usedIdTemp') ?? '';
       getRestaurant(userId).then((res) => {
         setRestaurantD(res);
       });
