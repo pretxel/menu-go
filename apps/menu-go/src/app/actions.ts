@@ -167,7 +167,7 @@ export async function postRestaurant(prevState: any, formData: FormData) {
       });
 
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
-      const menuUrl = `${siteUrl}/menu/${slug || restaurant.id}`;
+      const menuUrl = `${siteUrl}/r/${slug || restaurant.id}`;
       const url = await QRCode.toDataURL(menuUrl);
 
       await prisma.configRestaurant.update({

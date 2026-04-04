@@ -195,11 +195,11 @@ export default function Form({ userId }) {
                     <div className="mt-2">
                       <a
                         href={
-                          `${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}` ||
+                          `${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}` ||
                           ''
                         }
                       >
-                        {`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
+                        {`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
                       </a>
                     </div>
                   </div>
@@ -216,20 +216,20 @@ export default function Form({ userId }) {
 
                     <div className="flex sm:col-span-2 gap-2 pl-4">
                       <FacebookShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
                       >
                         <FacebookIcon size={32} round />
                       </FacebookShareButton>
 
                       <WhatsappShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
                         title={`Menu ${restaurantD?.name}`}
                         separator=":: "
                       >
                         <WhatsappIcon size={32} round />
                       </WhatsappShareButton>
                       <TwitterShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/menu/${restaurantD?.id}`}
+                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
                         title={`Menu ${restaurantD?.name}`}
                       >
                         <XIcon size={32} round />
