@@ -17,13 +17,13 @@ type Props = {
 };
 
 export default function OnboardingBanner({ hasCategory, hasDish }: Props) {
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState<boolean | null>(null);
 
   useEffect(() => {
     setDismissed(localStorage.getItem(DISMISS_KEY) === '1');
   }, []);
 
-  if (dismissed) return null;
+  if (dismissed === null || dismissed) return null;
 
   const steps: Step[] = [
     { label: 'Profile', done: true, href: null },
