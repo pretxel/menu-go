@@ -203,7 +203,7 @@ export default function Form({ userId }) {
                       </a>
                     </div>
                   </div>
-                  <div className="sm:col-span-3">
+                  <div id="qr-section" className="sm:col-span-3">
                     <label
                       htmlFor="menu"
                       className="block text-sm font-medium leading-6 text-gray-900"
