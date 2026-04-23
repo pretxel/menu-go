@@ -65,6 +65,10 @@ jest.mock('../src/lib/prisma', () => ({
     },
     category: {
       findMany: jest.fn(),
+      count: jest.fn(),
+    },
+    dishes: {
+      count: jest.fn(),
     },
     menuView: {
       create: jest.fn(),
@@ -72,7 +76,7 @@ jest.mock('../src/lib/prisma', () => ({
   },
 }));
 
-import { getMenu, getMenuBySlug, getAllCategories, trackMenuView, parseMenuFromPhoto } from '../src/app/actions';
+import { getMenu, getMenuBySlug, getAllCategories, trackMenuView, parseMenuFromPhoto, getOnboardingStatus } from '../src/app/actions';
 import prisma from '../src/lib/prisma';
 import Anthropic from '@anthropic-ai/sdk';
 
@@ -272,5 +276,60 @@ describe('parseMenuFromPhoto', () => {
     const imageBlock = callArg.messages[0].content[0];
     expect(imageBlock.source.data).toBe('xyz789');
     expect(imageBlock.source.media_type).toBe('image/png');
+  });
+});
+
+describe('getOnboardingStatus', () => {
+  it('returns false/false when no restaurant found for user', async () => {
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue(null);
+
+    const result = await getOnboardingStatus('user-no-restaurant');
+
+    expect(result).toEqual({ hasCategory: false, hasDish: false });
+  });
+
+  it('returns hasCategory:false and hasDish:false when counts are 0', async () => {
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
+    mockPrisma.category.count.mockResolvedValue(0);
+    mockPrisma.dishes.count.mockResolvedValue(0);
+
+    const result = await getOnboardingStatus('user-1');
+
+    expect(result).toEqual({ hasCategory: false, hasDish: false });
+  });
+
+  it('returns hasCategory:true when category count > 0', async () => {
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
+    mockPrisma.category.count.mockResolvedValue(2);
+    mockPrisma.dishes.count.mockResolvedValue(0);
+
+    const result = await getOnboardingStatus('user-1');
+
+    expect(result).toEqual({ hasCategory: true, hasDish: false });
+  });
+
+  it('returns hasDish:true when dish count > 0', async () => {
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
+    mockPrisma.category.count.mockResolvedValue(1);
+    mockPrisma.dishes.count.mockResolvedValue(5);
+
+    const result = await getOnboardingStatus('user-1');
+
+    expect(result).toEqual({ hasCategory: true, hasDish: true });
+  });
+
+  it('queries category count scoped to the restaurant', async () => {
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-42' });
+    mockPrisma.category.count.mockResolvedValue(0);
+    mockPrisma.dishes.count.mockResolvedValue(0);
+
+    await getOnboardingStatus('user-1');
+
+    expect(mockPrisma.category.count).toHaveBeenCalledWith({
+      where: { configRestaurantId: 'rest-42' },
+    });
+    expect(mockPrisma.dishes.count).toHaveBeenCalledWith({
+      where: { configRestaurantId: 'rest-42' },
+    });
   });
 });

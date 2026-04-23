@@ -446,6 +446,24 @@ export async function parseMenuFromPhoto(imageBase64: string): Promise<{
   };
 }
 
+export async function getOnboardingStatus(
+  userId: string
+): Promise<{ hasCategory: boolean; hasDish: boolean }> {
+  const restaurant = await prisma.configRestaurant.findFirst({
+    where: { userId },
+    select: { id: true },
+  });
+
+  if (!restaurant) return { hasCategory: false, hasDish: false };
+
+  const [catCount, dishCount] = await Promise.all([
+    prisma.category.count({ where: { configRestaurantId: restaurant.id } }),
+    prisma.dishes.count({ where: { configRestaurantId: restaurant.id } }),
+  ]);
+
+  return { hasCategory: catCount > 0, hasDish: dishCount > 0 };
+}
+
 export async function postBulkDishes(
   userId: string,
   categories: Array<{
