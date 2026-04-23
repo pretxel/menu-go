@@ -7,9 +7,10 @@ import { getRestaurant } from '../../../actions';
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
-  const restaurant = await getRestaurant(session?.user.id);
+  if (!session?.user?.id) redirect('/panel');
 
+  const restaurant = await getRestaurant(session.user.id);
   if (!restaurant) redirect('/panel');
 
-  return <ImportHeroPage userId={session!.user.id} />;
+  return <ImportHeroPage userId={session.user.id} />;
 }
