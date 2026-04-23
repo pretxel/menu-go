@@ -89,4 +89,32 @@ describe('PhotoMenuImporter — editable preview', () => {
       ])
     );
   });
+
+  it('renders upload zone immediately when alwaysOpen is true (no toggle click needed)', () => {
+    render(<PhotoMenuImporter userId="user-1" alwaysOpen />);
+    expect(screen.queryByText('Import from photo')).not.toBeInTheDocument();
+    expect(screen.getByText(/drag and drop/i)).toBeInTheDocument();
+  });
+
+  it('calls onImportSuccess after successful import instead of closing', async () => {
+    const mockPostBulkDishes = postBulkDishes as jest.Mock;
+    mockPostBulkDishes.mockResolvedValue(undefined);
+
+    const onImportSuccess = jest.fn();
+
+    render(
+      <PhotoMenuImporter
+        userId="user-1"
+        initialCategories={parsedCategories}
+        alwaysOpen
+        onImportSuccess={onImportSuccess}
+      />
+    );
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Import all'));
+    });
+
+    expect(onImportSuccess).toHaveBeenCalledTimes(1);
+  });
 });

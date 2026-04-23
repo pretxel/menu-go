@@ -10,10 +10,17 @@ type ParsedCategory = { name: string; dishes: ParsedDish[] };
 type PhotoMenuImporterProps = {
   userId: string;
   initialCategories?: ParsedCategory[];
+  alwaysOpen?: boolean;
+  onImportSuccess?: () => void;
 };
 
-export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMenuImporterProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function PhotoMenuImporter({
+  userId,
+  initialCategories,
+  alwaysOpen,
+  onImportSuccess,
+}: PhotoMenuImporterProps) {
+  const [isOpen, setIsOpen] = useState(alwaysOpen ?? false);
   const [isParsing, setIsParsing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   // initialCategories seeds state for testing; post-mount updates to this prop are ignored.
@@ -91,7 +98,11 @@ export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMe
       }));
       await postBulkDishes(userId, sanitized);
       setCategories(null);
-      setIsOpen(false);
+      if (onImportSuccess) {
+        onImportSuccess();
+      } else {
+        setIsOpen(false);
+      }
     } catch {
       setError('Failed to import dishes. Please try again.');
     } finally {
@@ -101,7 +112,7 @@ export default function PhotoMenuImporter({ userId, initialCategories }: PhotoMe
 
   const totalDishes = categories?.reduce((sum, cat) => sum + cat.dishes.length, 0) ?? 0;
 
-  if (!isOpen) {
+  if (!isOpen && !alwaysOpen) {
     return (
       <button
         type="button"
