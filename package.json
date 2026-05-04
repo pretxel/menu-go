@@ -16,7 +16,7 @@
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky install",
+    "prepare": "husky",
     "clean": "turbo run clean",
     "db:generate": "dotenv -e .env -- turbo run db:generate",
     "db:push": "dotenv -e .env -- turbo db:push db:generate",
@@ -27,22 +27,21 @@
     "build:types": "dotenv -e .env -- turbo build:types"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.6.1",
-    "@commitlint/config-conventional": "^18.6.3",
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^11.0.3",
-    "husky": "^8.0.3",
-    "openai": "^4.33.0",
+    "husky": "^9.1.7",
     "prettier": "^3.8.3",
-    "semantic-release": "^22.0.12",
+    "semantic-release": "^25.0.3",
     "turbo": "^2.9.8"
   },
   "dependencies": {
     "@prisma/client": "^7.8.0",
     "clsx": "^2.1.1",
-    "dotenv-cli": "^7.4.1",
-    "nanoid": "^4.0.2"
+    "dotenv-cli": "^11.0.0",
+    "nanoid": "^5.1.11"
   },
   "overrides": {
     "semver": "~7.5.2"
