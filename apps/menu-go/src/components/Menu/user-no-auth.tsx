@@ -9,24 +9,26 @@ export default function UserNoAuth() {
   useEffect(() => {
     const userId = localStorage.getItem('usedIdTemp');
     if (userId) {
-      console.log('SHOW LOGIN');
       setUserDId(userId as string);
       setShowLogin(true);
     }
   }, []);
 
-  if (showLogin) {
-    return (
-      <div className="flex items-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-        <p className="text-sm leading-6 text-white">
-          <a href={`/login?referalId=${userDId}`} className="font-semibold">
-            Login
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </p>
-      </div>
-    );
-  }
+  if (!showLogin) return null;
 
-  return <></>;
+  return (
+    <div className="border-b-3 border-ink bg-ink px-4 py-2 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+        <p className="font-mono text-xs uppercase tracking-widest text-paper">
+          ◆ Demo session active
+        </p>
+        <a
+          href={`/login?referalId=${userDId}`}
+          className="inline-flex items-center gap-2 border-2 border-paper bg-tomato px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-paper transition-transform hover:-translate-y-0.5"
+        >
+          Login <span aria-hidden>→</span>
+        </a>
+      </div>
+    </div>
+  );
 }

@@ -1,7 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { act, render, screen, fireEvent } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+
 import PhotoMenuImporter from '../src/components/PhotoMenuImporter';
 
 jest.mock('../src/app/actions', () => ({
@@ -23,7 +24,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     const { container } = render(
       <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
     );
-    fireEvent.click(screen.getByText('Import from photo'));
+    fireEvent.click(screen.getByText(/import from photo/i));
 
     const nameInputs = container.querySelectorAll('input[data-field="name"]');
     const priceInputs = container.querySelectorAll('input[data-field="price"]');
@@ -38,7 +39,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     render(
       <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
     );
-    fireEvent.click(screen.getByText('Import from photo'));
+    fireEvent.click(screen.getByText(/import from photo/i));
 
     const nameInput = screen.getByDisplayValue('Nachos');
     fireEvent.change(nameInput, { target: { value: 'Edited Nachos' } });
@@ -47,7 +48,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     mockPostBulkDishes.mockResolvedValue(undefined);
 
     await act(async () => {
-      fireEvent.click(screen.getByText('Import all'));
+      fireEvent.click(screen.getByRole('button', { name: /import all/i }));
     });
 
     expect(mockPostBulkDishes).toHaveBeenCalledWith(
@@ -66,7 +67,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     render(
       <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
     );
-    fireEvent.click(screen.getByText('Import from photo'));
+    fireEvent.click(screen.getByText(/import from photo/i));
 
     const priceInput = screen.getByDisplayValue('8.5');
     fireEvent.change(priceInput, { target: { value: '12.99' } });
@@ -75,7 +76,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     mockPostBulkDishes.mockResolvedValue(undefined);
 
     await act(async () => {
-      fireEvent.click(screen.getByText('Import all'));
+      fireEvent.click(screen.getByRole('button', { name: /import all/i }));
     });
 
     expect(mockPostBulkDishes).toHaveBeenCalledWith(
@@ -92,8 +93,8 @@ describe('PhotoMenuImporter — editable preview', () => {
 
   it('renders upload zone immediately when alwaysOpen is true (no toggle click needed)', () => {
     render(<PhotoMenuImporter userId="user-1" alwaysOpen />);
-    expect(screen.queryByText('Import from photo')).not.toBeInTheDocument();
-    expect(screen.getByText(/drag and drop/i)).toBeInTheDocument();
+    expect(screen.queryByText(/import from photo/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/drop menu photo/i)).toBeInTheDocument();
   });
 
   it('calls onImportSuccess after successful import instead of closing', async () => {
@@ -112,7 +113,7 @@ describe('PhotoMenuImporter — editable preview', () => {
     );
 
     await act(async () => {
-      fireEvent.click(screen.getByText('Import all'));
+      fireEvent.click(screen.getByRole('button', { name: /import all/i }));
     });
 
     expect(onImportSuccess).toHaveBeenCalledTimes(1);

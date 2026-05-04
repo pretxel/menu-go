@@ -2,6 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --paper: #FAFAF5;
+    --ink: #0F0F0F;
+    --tomato: #FF3B2E;
+    --lime: #D9F25C;
+    --mustard: #FFC83D;
+    --bone: #F2EFE3;
+  }
+
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 1px 1px, rgba(15, 15, 15, 0.06) 1px, transparent 0) 0 0 / 22px 22px,
+      var(--paper);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: var(--lime);
+    color: var(--ink);
+  }
+}
+
 #__next {
   min-height: 100%;
+}
+
+@layer components {
+  .btn-brut {
+    @apply inline-flex items-center justify-center gap-2 border-3 border-ink bg-paper px-5 py-3 font-display font-bold uppercase tracking-tight text-ink shadow-brut transition-all duration-100;
+  }
+  .btn-brut:hover {
+    @apply -translate-x-0.5 -translate-y-0.5 shadow-brut-lg;
+  }
+  .btn-brut:active {
+    @apply translate-x-0.5 translate-y-0.5 shadow-brut-press;
+  }
+  .btn-brut-primary {
+    @apply btn-brut bg-tomato text-paper;
+  }
+  .btn-brut-lime {
+    @apply btn-brut bg-lime text-ink;
+  }
+
+  .input-brut {
+    @apply block w-full border-3 border-ink bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-none focus:shadow-brut focus:-translate-x-0.5 focus:-translate-y-0.5 transition-all duration-100;
+  }
+
+  .card-brut {
+    @apply border-3 border-ink bg-paper shadow-brut;
+  }
+
+  .tape {
+    position: relative;
+  }
+  .tape::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 80px;
+    height: 18px;
+    background: var(--mustard);
+    border: 2px solid var(--ink);
+    opacity: 0.95;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.18;
+  }
+
+  .stripe-bg {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--ink),
+      var(--ink) 2px,
+      transparent 2px,
+      transparent 12px
+    );
+  }
 }

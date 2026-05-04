@@ -10,10 +10,11 @@ export default function RemoveButton({ idType, type }) {
   return (
     <>
       <button
+        type="button"
         onClick={() => setOpen(true)}
-        className="text-red-600 hover:text-red-900"
+        className="font-mono text-xs font-bold uppercase tracking-widest text-tomato underline-offset-4 hover:underline"
       >
-        Remove<span className="sr-only">Remove</span>
+        Remove
       </button>
       {open && (
         <RemoveModal

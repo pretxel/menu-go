@@ -4,8 +4,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState, useEffect, useState } from 'react';
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -22,14 +21,12 @@ import SuccessMessage from '../Alerts';
 import UserNoAuth from '../Menu/user-no-auth';
 import InfoAlert from './info-alert';
 
-const initialState = {
-  message: null,
-};
+const initialState = { message: null };
 
 export default function Form({ userId }) {
   const [userIdD, setUserDId] = useState<string>('');
   const [restaurantD, setRestaurantD] = useState<Restaurant | null>();
-  const [state, formAction] = useFormState(postRestaurant, initialState);
+  const [state, formAction] = useActionState(postRestaurant, initialState);
   const path = usePathname();
 
   useEffect(() => {
@@ -46,9 +43,7 @@ export default function Form({ userId }) {
   }, [userId]);
 
   useEffect(() => {
-    getRestaurant(userIdD).then((res) => {
-      setRestaurantD(res);
-    });
+    getRestaurant(userIdD).then((res) => setRestaurantD(res));
   }, [userIdD]);
 
   useEffect(() => {
@@ -58,202 +53,184 @@ export default function Form({ userId }) {
     }
   }, [state]);
 
-  console.log('restaurantD', restaurantD);
+  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`;
 
   return (
-    // eslint-disable-next-line react/jsx-no-bind
     <>
       <UserNoAuth />
-      <form action={formAction}>
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            {restaurantD && <InfoAlert path={path} />}
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Business name
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Business name information and settings.
-            </p>
-
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Name
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    defaultValue={restaurantD?.name || ''}
-                    autoComplete="given-name"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-                <div className="mt-2">
-                  <input
-                    type="hidden"
-                    name="userId"
-                    id="userId"
-                    value={userIdD}
-                    autoComplete="given-name"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-3 sm:col-start-1">
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Address
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="address"
-                    id="address"
-                    required
-                    defaultValue={restaurantD?.address || ''}
-                    autoComplete="given-address"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Phone
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="phone"
-                    id="phone"
-                    required
-                    defaultValue={restaurantD?.phone || ''}
-                    autoComplete="given-phone"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="primaryColor"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Primary color
-                </label>
-                <div className="mt-2 flex items-center gap-3">
-                  <input
-                    type="color"
-                    name="primaryColor"
-                    id="primaryColor"
-                    defaultValue={restaurantD?.primaryColor || '#4F46E5'}
-                    className="h-9 w-16 cursor-pointer rounded border border-gray-300 p-0.5"
-                  />
-                  <span className="text-sm text-gray-500">Used for accents and buttons</span>
-                </div>
-              </div>
-
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="backgroundColor"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Background color
-                </label>
-                <div className="mt-2 flex items-center gap-3">
-                  <input
-                    type="color"
-                    name="backgroundColor"
-                    id="backgroundColor"
-                    defaultValue={restaurantD?.backgroundColor || '#FFFFFF'}
-                    className="h-9 w-16 cursor-pointer rounded border border-gray-300 p-0.5"
-                  />
-                  <span className="text-sm text-gray-500">Menu page background</span>
-                </div>
-              </div>
-
-              {restaurantD && (
-                <>
-                  <div className="sm:col-span-3">
-                    <label
-                      htmlFor="menu"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      URL
-                    </label>
-                    <div className="mt-2">
-                      <a
-                        href={
-                          `${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}` ||
-                          ''
-                        }
-                      >
-                        {`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
-                      </a>
-                    </div>
-                  </div>
-                  <div id="qr-section" className="sm:col-span-3">
-                    <label
-                      htmlFor="menu"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      QR
-                    </label>
-                    <div className="mt-2">
-                      <img src={restaurantD?.qrCode || ''} alt="" />
-                    </div>
-
-                    <div className="flex sm:col-span-2 gap-2 pl-4">
-                      <FacebookShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
-                      >
-                        <FacebookIcon size={32} round />
-                      </FacebookShareButton>
-
-                      <WhatsappShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
-                        title={`Menu ${restaurantD?.name}`}
-                        separator=":: "
-                      >
-                        <WhatsappIcon size={32} round />
-                      </WhatsappShareButton>
-                      <TwitterShareButton
-                        url={`${process.env.NEXT_PUBLIC_SITE_URL}/r/${restaurantD?.slug || restaurantD?.id}`}
-                        title={`Menu ${restaurantD?.name}`}
-                      >
-                        <XIcon size={32} round />
-                      </TwitterShareButton>
-                    </div>
-                  </div>
-                </>
-              )}
+      <form action={formAction} className="mt-6">
+        <div className="card-brut p-6 sm:p-8">
+          <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+                Section / 01
+              </span>
+              <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                Business profile
+              </h2>
             </div>
+            <span className="hidden font-mono text-xs uppercase tracking-widest text-ink/40 sm:inline">
+              required
+            </span>
+          </div>
+
+          {restaurantD && (
+            <div className="mt-6">
+              <InfoAlert path={path} />
+            </div>
+          )}
+
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <Field label="Restaurant name" name="name" required defaultValue={restaurantD?.name || ''} />
+            <Field label="Address" name="address" required defaultValue={restaurantD?.address || ''} />
+            <Field label="Phone" name="phone" required defaultValue={restaurantD?.phone || ''} />
+            <input type="hidden" name="userId" value={userIdD} />
+
+            <ColorField
+              label="Primary color"
+              name="primaryColor"
+              defaultValue={restaurantD?.primaryColor || '#FF3B2E'}
+              hint="Buttons and accents on your menu"
+            />
+            <ColorField
+              label="Background color"
+              name="backgroundColor"
+              defaultValue={restaurantD?.backgroundColor || '#FAFAF5'}
+              hint="Customer-facing menu background"
+            />
           </div>
         </div>
+
+        {restaurantD && (
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <div className="card-brut p-6 sm:p-8">
+              <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+                    Section / 02
+                  </span>
+                  <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">
+                    Public link
+                  </h2>
+                </div>
+              </div>
+              <div className="mt-6 break-all border-3 border-ink bg-bone p-4 font-mono text-xs">
+                <a href={shareUrl} className="hover:underline">{shareUrl}</a>
+              </div>
+              <div className="mt-4 flex items-center gap-2">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-ink/60">
+                  Share →
+                </span>
+                <FacebookShareButton url={shareUrl}>
+                  <FacebookIcon size={36} round />
+                </FacebookShareButton>
+                <WhatsappShareButton url={shareUrl} title={`Menu ${restaurantD?.name}`} separator=":: ">
+                  <WhatsappIcon size={36} round />
+                </WhatsappShareButton>
+                <TwitterShareButton url={shareUrl} title={`Menu ${restaurantD?.name}`}>
+                  <XIcon size={36} round />
+                </TwitterShareButton>
+              </div>
+            </div>
+
+            <div id="qr-section" className="card-brut p-6 sm:p-8">
+              <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+                    Section / 03
+                  </span>
+                  <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">
+                    QR code
+                  </h2>
+                </div>
+                <span className="hidden font-mono text-xs uppercase tracking-widest text-ink/40 sm:inline">
+                  print me
+                </span>
+              </div>
+              <div className="mt-6 flex justify-center border-3 border-ink bg-paper p-4">
+                {restaurantD?.qrCode ? (
+                  <img src={restaurantD.qrCode} alt="qr" className="h-48 w-48 object-contain" />
+                ) : (
+                  <div className="grid h-48 w-48 place-items-center font-mono text-xs uppercase tracking-widest text-ink/40">
+                    No QR yet
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <p aria-live="polite" className="sr-only" role="status">
           {state?.message && <SuccessMessage message={state?.message} />}
         </p>
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
+
+        <div className="sticky bottom-4 mt-8 flex justify-end">
+          <button type="submit" className="btn-brut-primary text-sm">
+            Save changes <span aria-hidden>→</span>
           </button>
         </div>
       </form>
     </>
+  );
+}
+
+function Field({
+  label,
+  name,
+  defaultValue,
+  required,
+  type = 'text',
+}: {
+  label: string;
+  name: string;
+  defaultValue?: string;
+  required?: boolean;
+  type?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-ink">
+        {label}
+        {required && <span className="text-tomato">*</span>}
+      </span>
+      <input
+        type={type}
+        name={name}
+        required={required}
+        defaultValue={defaultValue}
+        className="input-brut mt-2"
+      />
+    </label>
+  );
+}
+
+function ColorField({
+  label,
+  name,
+  defaultValue,
+  hint,
+}: {
+  label: string;
+  name: string;
+  defaultValue?: string;
+  hint?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink">
+        {label}
+      </span>
+      <div className="mt-2 flex items-center gap-3 border-3 border-ink bg-paper px-3 py-2">
+        <input
+          type="color"
+          name={name}
+          defaultValue={defaultValue}
+          className="h-10 w-16 cursor-pointer border-2 border-ink bg-paper p-0.5"
+        />
+        <span className="font-mono text-xs uppercase tracking-widest text-ink/60">
+          {hint}
+        </span>
+      </div>
+    </label>
   );
 }

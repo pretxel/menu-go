@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import OnboardingBanner from '../src/components/OnboardingBanner';
 
@@ -29,51 +29,57 @@ describe('OnboardingBanner', () => {
     localStorage.clear();
   });
 
-  it('renders GET STARTED label', () => {
+  it('renders the get-started header', () => {
     render(<OnboardingBanner hasCategory={false} hasDish={false} />);
-    expect(screen.getByText('GET STARTED')).toBeInTheDocument();
+    expect(screen.getByText(/get started/i)).toBeInTheDocument();
   });
 
-  it('Profile pill is always shown as done', () => {
+  it('Profile step is always shown as done', () => {
     render(<OnboardingBanner hasCategory={false} hasDish={false} />);
-    expect(screen.getByText('✓ Profile')).toBeInTheDocument();
+    const profileItem = screen.getByText('Profile').closest('li');
+    expect(profileItem).toHaveTextContent(/done/i);
   });
 
-  it('Add category pill is active (→) when hasCategory is false', () => {
+  it('Category step is active when hasCategory is false', () => {
     render(<OnboardingBanner hasCategory={false} hasDish={false} />);
-    expect(screen.getByText('→ Add category')).toBeInTheDocument();
+    const item = screen.getByText('Category').closest('li');
+    expect(item).toHaveTextContent(/now/i);
   });
 
-  it('Add category pill is done (✓) when hasCategory is true', () => {
+  it('Category step is done when hasCategory is true', () => {
     render(<OnboardingBanner hasCategory={true} hasDish={false} />);
-    expect(screen.getByText('✓ Add category')).toBeInTheDocument();
+    const item = screen.getByText('Category').closest('li');
+    expect(item).toHaveTextContent(/done/i);
   });
 
-  it('Add dishes pill is active when hasCategory is true and hasDish is false', () => {
+  it('Dishes step is active when hasCategory is true and hasDish is false', () => {
     render(<OnboardingBanner hasCategory={true} hasDish={false} />);
-    expect(screen.getByText('→ Add dishes')).toBeInTheDocument();
+    const item = screen.getByText('Dishes').closest('li');
+    expect(item).toHaveTextContent(/now/i);
   });
 
-  it('Add dishes pill is done when hasDish is true', () => {
+  it('Dishes step is done when hasDish is true', () => {
     render(<OnboardingBanner hasCategory={true} hasDish={true} />);
-    expect(screen.getByText('✓ Add dishes')).toBeInTheDocument();
+    const item = screen.getByText('Dishes').closest('li');
+    expect(item).toHaveTextContent(/done/i);
   });
 
-  it('Share QR pill is active when all other steps are done', () => {
+  it('Share QR step is active when all other steps are done', () => {
     render(<OnboardingBanner hasCategory={true} hasDish={true} />);
-    expect(screen.getByText('→ Share QR')).toBeInTheDocument();
+    const item = screen.getByText('Share QR').closest('li');
+    expect(item).toHaveTextContent(/now/i);
   });
 
-  it('Add dishes pill links to /panel/onboarding/dishes', () => {
+  it('Dishes step links to /panel/onboarding/dishes', () => {
     render(<OnboardingBanner hasCategory={true} hasDish={false} />);
-    const link = screen.getByText('→ Add dishes').closest('a');
+    const link = screen.getByText('Dishes').closest('a');
     expect(link).toHaveAttribute('href', '/panel/onboarding/dishes');
   });
 
   it('Dismiss button hides banner and sets localStorage flag', () => {
     render(<OnboardingBanner hasCategory={false} hasDish={false} />);
-    fireEvent.click(screen.getByText('Dismiss ×'));
-    expect(screen.queryByText('GET STARTED')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /dismiss/i }));
+    expect(screen.queryByText(/get started/i)).not.toBeInTheDocument();
     expect(localStorage.getItem('onboarding-dismissed')).toBe('1');
   });
 

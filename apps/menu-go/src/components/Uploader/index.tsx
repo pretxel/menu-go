@@ -9,43 +9,31 @@ import { updateDish } from '../../app/actions';
 import LoadingDots from './loading-dots';
 
 export default function Uploader({ dishId }) {
-  const [data, setData] = useState<{
-    image: string | null;
-  }>({
-    image: null,
-  });
+  const [data, setData] = useState<{ image: string | null }>({ image: null });
   const [file, setFile] = useState<File | null>(null);
-
   const [dragActive, setDragActive] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const onChangePicture = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const file = event.currentTarget.files && event.currentTarget.files[0];
-      if (file) {
-        if (file.size / 1024 / 1024 > 50) {
-          //   toast.error('File size too big (max 50MB)');
-        } else {
-          setFile(file);
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            setData((prev) => ({ ...prev, image: e.target?.result as string }));
-          };
-          reader.readAsDataURL(file);
-        }
+      if (file && file.size / 1024 / 1024 <= 50) {
+        setFile(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setData((prev) => ({ ...prev, image: e.target?.result as string }));
+        };
+        reader.readAsDataURL(file);
       }
     },
     [setData]
   );
 
-  const [saving, setSaving] = useState(false);
-
-  const saveDisabled = useMemo(() => {
-    return !data.image || saving;
-  }, [data.image, saving]);
+  const saveDisabled = useMemo(() => !data.image || saving, [data.image, saving]);
 
   return (
     <form
-      className="grid gap-6"
+      className="card-brut p-6 sm:p-8"
       onSubmit={async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -57,83 +45,77 @@ export default function Uploader({ dishId }) {
           if (res.status === 200) {
             const { url } = (await res.json()) as PutBlobResult;
             await updateDish(dishId, url);
-            toast.success('Image uploaded!');
+            toast.success('Image uploaded');
           } else {
-            toast.error("Image couldn't be uploaded!");
+            toast.error("Upload failed");
           }
           setSaving(false);
         });
       }}
     >
-      <div>
-        <div className="space-y-1 mb-4">
-          <h2 className="text-xl font-semibold">Upload a file</h2>
-          <p className="text-sm text-gray-500">Accepted formats: .png, .jpg</p>
-        </div>
-        <label
-          htmlFor="image-upload"
-          className="group relative mt-2 flex h-72 cursor-pointer flex-col items-center justify-center rounded-md border border-gray-300 bg-white shadow-sm transition-all hover:bg-gray-50"
-        >
-          <div
-            className="absolute z-[5] h-full w-full rounded-md"
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(true);
-            }}
-            onDragEnter={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(true);
-            }}
-            onDragLeave={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(false);
-            }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(false);
+      <div className="border-b-3 border-ink pb-4">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+          Asset / image
+        </span>
+        <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">
+          Dish photo
+        </h2>
+        <p className="mt-1 font-mono text-xs text-ink/60">
+          .png · .jpg · max 50MB
+        </p>
+      </div>
 
-              const file = e.dataTransfer.files && e.dataTransfer.files[0];
-              if (file) {
-                if (file.size / 1024 / 1024 > 50) {
-                  //   toast.error('File size too big (max 50MB)');
-                } else {
-                  setFile(file);
-                  const reader = new FileReader();
-                  reader.onload = (e) => {
-                    setData((prev) => ({
-                      ...prev,
-                      image: e.target?.result as string,
-                    }));
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }
-            }}
-          />
-          <div
-            className={`${
-              dragActive ? 'border-2 border-black' : ''
-            } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${
-              data.image
-                ? 'bg-white/80 opacity-0 hover:opacity-100 hover:backdrop-blur-md'
-                : 'bg-white opacity-100 hover:bg-gray-50'
-            }`}
-          >
+      <label
+        htmlFor="image-upload"
+        className={`relative mt-6 block aspect-[16/9] cursor-pointer overflow-hidden border-3 transition-all ${
+          dragActive ? 'border-tomato shadow-brut-tomato' : 'border-ink'
+        } bg-bone`}
+      >
+        <div
+          className="absolute inset-0 z-[5]"
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragActive(true);
+          }}
+          onDragEnter={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragActive(true);
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragActive(false);
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setDragActive(false);
+            const file = e.dataTransfer.files && e.dataTransfer.files[0];
+            if (file && file.size / 1024 / 1024 <= 50) {
+              setFile(file);
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                setData((prev) => ({ ...prev, image: e.target?.result as string }));
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        <div
+          className={`absolute inset-0 z-[3] flex flex-col items-center justify-center gap-2 px-10 transition-all ${
+            data.image ? 'bg-paper/0 opacity-0 hover:bg-paper/85 hover:opacity-100' : 'opacity-100'
+          }`}
+        >
+          <div className="grid h-12 w-12 place-items-center border-3 border-ink bg-mustard shadow-brut-sm">
             <svg
-              className={`${
-                dragActive ? 'scale-110' : 'scale-100'
-              } h-7 w-7 text-gray-500 transition-all duration-75 group-hover:scale-110 group-active:scale-95`}
+              className="h-6 w-6"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
@@ -141,48 +123,41 @@ export default function Uploader({ dishId }) {
               <path d="M12 12v9"></path>
               <path d="m16 16-4-4-4 4"></path>
             </svg>
-            <p className="mt-2 text-center text-sm text-gray-500">
-              Drag and drop or click to upload.
-            </p>
-            <p className="mt-2 text-center text-sm text-gray-500">
-              Max file size: 50MB
-            </p>
-            <span className="sr-only">Photo upload</span>
           </div>
-          {data.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={data.image}
-              alt="Preview"
-              className="h-full w-full rounded-md object-cover"
-            />
-          )}
-        </label>
-        <div className="mt-1 flex rounded-md shadow-sm">
-          <input
-            id="image-upload"
-            name="image"
-            type="file"
-            accept="image/*"
-            className="sr-only"
-            onChange={onChangePicture}
-          />
+          <p className="font-display text-base font-extrabold tracking-tight">
+            Drop file or click
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-ink/60">
+            Max 50MB
+          </p>
         </div>
-      </div>
+        {data.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={data.image}
+            alt="Preview"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+      </label>
+      <input
+        id="image-upload"
+        name="image"
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={onChangePicture}
+      />
 
       <button
         disabled={saveDisabled}
-        className={`${
+        className={`mt-6 flex h-12 w-full items-center justify-center border-3 border-ink font-display text-sm font-bold uppercase tracking-tight transition-all ${
           saveDisabled
-            ? 'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400'
-            : 'border-black bg-black text-white hover:bg-white hover:text-black'
-        } flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
+            ? 'cursor-not-allowed bg-bone text-ink/40'
+            : 'bg-tomato text-paper shadow-brut hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut-lg'
+        }`}
       >
-        {saving ? (
-          <LoadingDots color="#808080" />
-        ) : (
-          <p className="text-sm">Confirm upload</p>
-        )}
+        {saving ? <LoadingDots color="#FAFAF5" /> : 'Confirm upload →'}
       </button>
     </form>
   );

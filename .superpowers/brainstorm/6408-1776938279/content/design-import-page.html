@@ -1,0 +1,102 @@
+<h2>Design: /panel/onboarding/dishes</h2>
+<p class="subtitle">New page. "Add dishes" pill links here. Photo import is the hero action.</p>
+
+<div class="section">
+  <h3>State A — Upload prompt (initial)</h3>
+  <div class="mockup">
+    <div class="mockup-header">http://localhost:3000/panel/onboarding/dishes</div>
+    <div class="mockup-body" style="font-family:sans-serif;">
+      <div style="background:#1e1b4b;color:#fff;padding:10px 16px;font-size:12px;font-weight:600;">Dineqrs</div>
+      <!-- banner in mid-progress state -->
+      <div style="background:#eef2ff;border-bottom:2px solid #c7d2fe;padding:8px 16px;display:flex;gap:6px;align-items:center;">
+        <span style="font-size:10px;font-weight:700;color:#4F46E5;">GET STARTED</span>
+        <a style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;">✓ Profile</a>
+        <span style="color:#c7d2fe;font-size:10px;">›</span>
+        <a style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;">✓ Category</a>
+        <span style="color:#c7d2fe;font-size:10px;">›</span>
+        <a style="background:#4F46E5;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;">→ Add dishes</a>
+        <span style="color:#c7d2fe;font-size:10px;">›</span>
+        <a style="background:#e5e7eb;color:#9ca3af;padding:3px 10px;border-radius:20px;font-size:10px;">Share QR</a>
+      </div>
+      <!-- page content -->
+      <div style="max-width:520px;margin:0 auto;padding:32px 16px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:8px;">Add your dishes</div>
+        <div style="font-size:12px;color:#6b7280;margin-bottom:24px;">The fastest way: snap a photo of your paper menu. We'll read it for you.</div>
+
+        <!-- upload zone -->
+        <div style="border:2px dashed #a5b4fc;border-radius:12px;padding:36px 16px;background:#f5f3ff;cursor:pointer;margin-bottom:16px;">
+          <div style="font-size:32px;margin-bottom:8px;">📷</div>
+          <div style="font-size:13px;font-weight:600;color:#4F46E5;margin-bottom:4px;">Upload a photo of your menu</div>
+          <div style="font-size:11px;color:#818cf8;">JPG, PNG, HEIC — up to 20MB</div>
+          <div style="margin-top:16px;">
+            <span style="background:#4F46E5;color:#fff;padding:8px 20px;border-radius:6px;font-size:12px;font-weight:600;">Choose photo</span>
+          </div>
+        </div>
+
+        <!-- divider -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <div style="flex:1;height:1px;background:#e5e7eb;"></div>
+          <span style="font-size:11px;color:#9ca3af;">or</span>
+          <div style="flex:1;height:1px;background:#e5e7eb;"></div>
+        </div>
+
+        <a style="font-size:12px;color:#4F46E5;text-decoration:underline;cursor:pointer;">Add dishes manually →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>State B — Parsing in progress</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family:sans-serif;">
+      <div style="max-width:520px;margin:0 auto;padding:32px 16px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:8px;">Reading your menu...</div>
+        <div style="border:2px dashed #a5b4fc;border-radius:12px;padding:36px 16px;background:#f5f3ff;margin-bottom:16px;">
+          <div style="font-size:32px;margin-bottom:12px;animation:none;">⏳</div>
+          <div style="font-size:12px;color:#818cf8;">Claude is extracting dishes from your photo</div>
+          <div style="margin-top:16px;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+            <div style="width:60%;height:100%;background:#4F46E5;border-radius:3px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>State C — Preview (editable, existing component) + import button</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family:sans-serif;">
+      <div style="max-width:520px;margin:0 auto;padding:24px 16px;">
+        <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px;">Found 12 dishes in 3 categories</div>
+        <div style="font-size:11px;color:#6b7280;margin-bottom:16px;">Edit names and prices before importing.</div>
+
+        <!-- category group -->
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;margin-bottom:10px;">
+          <div style="background:#4F46E5;color:#fff;padding:6px 12px;font-size:11px;font-weight:700;">Appetizers</div>
+          <div style="padding:8px 12px;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;background:#fff;padding:5px 8px;border-radius:4px;border:1px solid #e5e7eb;">
+              <input style="flex:1;border:none;font-size:11px;outline:none;" value="Garlic Bread" readonly />
+              <input style="width:50px;border:none;font-size:11px;outline:none;text-align:right;color:#4F46E5;font-weight:600;" value="$4.50" readonly />
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;background:#fff;padding:5px 8px;border-radius:4px;border:1px solid #e5e7eb;">
+              <input style="flex:1;border:none;font-size:11px;outline:none;" value="Bruschetta" readonly />
+              <input style="width:50px;border:none;font-size:11px;outline:none;text-align:right;color:#4F46E5;font-weight:600;" value="$6.00" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:10px;color:#9ca3af;margin-bottom:12px;">+ 2 more categories collapsed...</div>
+
+        <!-- import button -->
+        <button style="width:100%;background:#4F46E5;color:#fff;padding:12px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;">Import all 12 dishes →</button>
+        <div style="text-align:center;margin-top:8px;">
+          <a style="font-size:11px;color:#9ca3af;cursor:pointer;">← Try a different photo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">After "Import all" → redirect to /panel/dishes. Banner updates: "Dishes" pill turns green. Reply in terminal.</p>

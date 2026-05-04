@@ -1,59 +1,67 @@
 import Image from 'next/image';
 
-const TAG_LABELS: Record<string, { label: string; color: string }> = {
-  vegan: { label: 'Vegan', color: 'bg-green-100 text-green-800' },
-  vegetarian: { label: 'Vegetarian', color: 'bg-lime-100 text-lime-800' },
-  spicy: { label: 'Spicy', color: 'bg-red-100 text-red-800' },
-  'gluten-free': { label: 'Gluten-Free', color: 'bg-yellow-100 text-yellow-800' },
-  'dairy-free': { label: 'Dairy-Free', color: 'bg-blue-100 text-blue-800' },
+const TAG_LABELS: Record<string, { label: string; bg: string }> = {
+  vegan: { label: 'Vegan', bg: 'bg-lime' },
+  vegetarian: { label: 'Vegetarian', bg: 'bg-lime' },
+  spicy: { label: 'Spicy', bg: 'bg-tomato text-paper' },
+  'gluten-free': { label: 'Gluten-Free', bg: 'bg-mustard' },
+  'dairy-free': { label: 'Dairy-Free', bg: 'bg-sky' },
 };
 
 export default function Dish({ dish }) {
   const tags: string[] = dish.tags || [];
 
   return (
-    <div className="group flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-100">
-        {dish.image ? (
-          <Image
-            src={dish.image}
-            width={400}
-            height={300}
-            alt={dish.name}
-            className="h-48 w-full object-cover object-center group-hover:opacity-90 transition-opacity"
-          />
-        ) : (
-          <div className="h-48 w-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-            <span className="text-4xl">🍽️</span>
-          </div>
-        )}
-      </div>
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-base font-semibold text-gray-900 leading-tight">{dish.name}</h3>
+    <article className="group relative">
+      <div className="card-brut flex h-full flex-col overflow-hidden transition-transform duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-brut-lg">
+        <div className="relative aspect-[4/3] w-full overflow-hidden border-b-3 border-ink bg-bone">
+          {dish.image ? (
+            <Image
+              src={dish.image}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              alt={dish.name}
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-bone">
+              <span className="font-display text-5xl">🍽️</span>
+            </div>
+          )}
           <span
-            className="text-base font-bold whitespace-nowrap"
-            style={{ color: 'var(--color-primary, #4F46E5)' }}
+            className="absolute right-3 top-3 inline-flex items-center border-3 border-ink bg-paper px-2.5 py-1 font-display text-base font-extrabold shadow-brut-sm"
+            style={{ color: 'var(--color-primary, #FF3B2E)' }}
           >
             ${dish.price?.toFixed(2)}
           </span>
         </div>
-        {dish.description && (
-          <p className="mt-1 text-sm text-gray-500 leading-relaxed line-clamp-2">{dish.description}</p>
-        )}
-        {tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {tags.map((tag) => {
-              const tagInfo = TAG_LABELS[tag] || { label: tag, color: 'bg-gray-100 text-gray-700' };
-              return (
-                <span key={tag} className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${tagInfo.color}`}>
-                  {tagInfo.label}
-                </span>
-              );
-            })}
-          </div>
-        )}
+
+        <div className="flex flex-1 flex-col p-4">
+          <h3 className="font-display text-lg font-extrabold leading-tight tracking-tight">
+            {dish.name}
+          </h3>
+          {dish.description && (
+            <p className="mt-2 line-clamp-3 font-mono text-sm leading-relaxed text-ink/70">
+              {dish.description}
+            </p>
+          )}
+          {tags.length > 0 && (
+            <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
+              {tags.map((tag) => {
+                const info = TAG_LABELS[tag] || { label: tag, bg: 'bg-paper' };
+                return (
+                  <span
+                    key={tag}
+                    className={`inline-flex items-center border-2 border-ink px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${info.bg}`}
+                  >
+                    {info.label}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

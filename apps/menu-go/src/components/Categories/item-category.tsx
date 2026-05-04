@@ -2,57 +2,50 @@
 import { useRouter } from 'next/navigation';
 
 import RemoveButton from '../List/remove-button';
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
-function generateInitials(name) {
+const PALETTE = ['bg-tomato text-paper', 'bg-lime text-ink', 'bg-mustard text-ink', 'bg-sky text-ink'];
+
+function generateInitials(name: string) {
   const [first, second] = name.split(' ');
-  if (!second) return first.charAt(0);
-  return `${first.charAt(0)}${second?.charAt(0)}`;
+  if (!second) return first.charAt(0).toUpperCase();
+  return `${first.charAt(0)}${second?.charAt(0)}`.toUpperCase();
 }
 
-function generateColor() {
-  const colors = [
-    'bg-pink-600',
-    'bg-purple-600',
-    'bg-yellow-500',
-    'bg-green-500',
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
+function colorFor(name: string) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return PALETTE[h % PALETTE.length];
 }
 
 export default function ItemCategory({ category }) {
   const router = useRouter();
+  const swatch = colorFor(category.name);
+
   return (
-    <li
-      key={category.name}
-      className="col-span-1 flex rounded-md shadow-sm cursor-pointer"
-    >
-      <div
-        className={classNames(
-          generateColor(),
-          'flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white'
-        )}
+    <li className="card-brut group flex transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut-lg">
+      <button
+        type="button"
+        onClick={() => router.push(`?category=${category.id}`)}
+        className="flex flex-1 items-stretch text-left"
       >
-        {generateInitials(category.name)}
-      </div>
-      <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
         <div
-          className="flex-1 truncate px-4 py-2 text-sm"
-          onClick={() => router.push(`?category=${category.id}`)}
+          className={`grid w-20 flex-shrink-0 place-items-center border-r-3 border-ink font-display text-2xl font-extrabold ${swatch}`}
         >
-          <a
-            href={category.href}
-            className="font-medium text-gray-900 hover:text-gray-600"
-          >
+          {generateInitials(category.name)}
+        </div>
+        <div className="flex-1 px-4 py-3">
+          <p className="font-display text-lg font-extrabold tracking-tight">
             {category.name}
-          </a>
-          <p className="text-gray-500">{category.description} </p>
+          </p>
+          {category.description && (
+            <p className="mt-0.5 line-clamp-2 font-mono text-xs text-ink/70">
+              {category.description}
+            </p>
+          )}
         </div>
-        <div className="flex-1">
-          <RemoveButton idType={category.id} type="category" />
-        </div>
+      </button>
+      <div className="grid place-items-center border-l-3 border-ink bg-paper px-3">
+        <RemoveButton idType={category.id} type="category" />
       </div>
     </li>
   );

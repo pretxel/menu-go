@@ -1,0 +1,84 @@
+<h2>Where does the "Get Started" checklist live?</h2>
+<p class="subtitle">Applies to the /panel dashboard. Once all steps done, the card disappears.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="top-banner" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-family:sans-serif;font-size:11px;">
+        <div style="background:#1e1b4b;color:#fff;padding:6px 10px;border-radius:4px 4px 0 0;font-size:10px;">Dineqrs Panel</div>
+        <div style="background:#eef2ff;border:1px solid #c7d2fe;padding:10px;margin:0;border-radius:0;">
+          <div style="font-size:10px;font-weight:700;color:#4F46E5;margin-bottom:6px;">GET STARTED — 2 of 4 complete</div>
+          <div style="display:flex;gap:8px;">
+            <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:10px;font-size:9px;">✓ Profile</span>
+            <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:10px;font-size:9px;">✓ Category</span>
+            <span style="background:#4F46E5;color:#fff;padding:2px 8px;border-radius:10px;font-size:9px;">→ Add dish</span>
+            <span style="background:#e5e7eb;color:#6b7280;padding:2px 8px;border-radius:10px;font-size:9px;">○ Share QR</span>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;padding:10px;height:60px;color:#9ca3af;font-size:10px;">Restaurant form below...</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Top Banner (horizontal pills)</h3>
+      <p>Compact progress bar above the restaurant form. Steps shown as horizontal pills. Minimal vertical space. Always visible on /panel.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="side-card" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-family:sans-serif;font-size:11px;display:flex;gap:8px;">
+        <div style="flex:1;">
+          <div style="background:#1e1b4b;color:#fff;padding:6px 10px;border-radius:4px 4px 0 0;font-size:10px;">Dineqrs</div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;padding:8px;height:80px;color:#9ca3af;font-size:10px;">Restaurant form...</div>
+        </div>
+        <div style="width:110px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;padding:8px;">
+          <div style="font-size:9px;font-weight:700;color:#4F46E5;margin-bottom:6px;">GET STARTED</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;align-items:center;gap:4px;"><span style="color:#22c55e;font-size:10px;">✓</span><span style="font-size:9px;color:#6b7280;text-decoration:line-through;">Profile</span></div>
+            <div style="display:flex;align-items:center;gap:4px;"><span style="color:#22c55e;font-size:10px;">✓</span><span style="font-size:9px;color:#6b7280;text-decoration:line-through;">Category</span></div>
+            <div style="display:flex;align-items:center;gap:4px;font-weight:600;"><span style="color:#4F46E5;font-size:10px;">→</span><span style="font-size:9px;color:#111;">Add dish</span></div>
+            <div style="display:flex;align-items:center;gap:4px;opacity:0.4;"><span style="font-size:10px;">○</span><span style="font-size:9px;">Share QR</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Side Card (right column)</h3>
+      <p>Checklist card floats to the right of the restaurant form. Steps listed vertically. More space for detail. Disappears when complete.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="bottom-card" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-family:sans-serif;font-size:11px;">
+        <div style="background:#1e1b4b;color:#fff;padding:6px 10px;border-radius:4px 4px 0 0;font-size:10px;">Dineqrs Panel</div>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;padding:8px;height:40px;color:#9ca3af;font-size:10px;">Restaurant form...</div>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-top:none;padding:10px;">
+          <div style="font-size:10px;font-weight:700;color:#4F46E5;margin-bottom:6px;">NEXT STEPS</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:4px;padding:5px;display:flex;gap:4px;align-items:center;">
+              <span style="color:#22c55e;font-size:10px;">✓</span><span style="font-size:9px;color:#6b7280;text-decoration:line-through;">Profile</span>
+            </div>
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:4px;padding:5px;display:flex;gap:4px;align-items:center;">
+              <span style="color:#22c55e;font-size:10px;">✓</span><span style="font-size:9px;color:#6b7280;text-decoration:line-through;">Category</span>
+            </div>
+            <div style="background:#eef2ff;border:1px solid #4F46E5;border-radius:4px;padding:5px;display:flex;gap:4px;align-items:center;font-weight:600;">
+              <span style="color:#4F46E5;font-size:10px;">→</span><span style="font-size:9px;color:#111;">Add dish</span>
+            </div>
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:4px;padding:5px;display:flex;gap:4px;align-items:center;opacity:0.4;">
+              <span style="font-size:10px;">○</span><span style="font-size:9px;">Share QR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Below Form (2×2 grid)</h3>
+      <p>Progress section appears below the restaurant config form, above the QR code. 2×2 grid of step cards. Natural scroll order matches the workflow.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">Click or reply in terminal.</p>

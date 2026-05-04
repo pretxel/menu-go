@@ -1,29 +1,19 @@
-import { InformationCircleIcon } from '@heroicons/react/20/solid';
-
 export default function InfoAlert({ path }) {
   return (
-    <div className="rounded-md bg-blue-50 p-4">
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <InformationCircleIcon
-            className="h-5 w-5 text-blue-400"
-            aria-hidden="true"
-          />
-        </div>
-        <div className="ml-3 flex-1 md:flex md:justify-between">
-          <p className="text-sm text-blue-700">
-            You can create a new catalog by clicking on the button below.
-          </p>
-          <p className="mt-3 text-sm md:ml-6 md:mt-0">
-            <a
-              href={`${path}/dishes`}
-              className="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600"
-            >
-              Details
-              <span aria-hidden="true"> &rarr;</span>
-            </a>
-          </p>
-        </div>
+    <div className="flex items-start gap-3 border-3 border-ink bg-sky/40 p-4 shadow-brut-sm">
+      <span className="grid h-7 w-7 flex-shrink-0 place-items-center border-3 border-ink bg-paper font-display text-sm font-extrabold">
+        i
+      </span>
+      <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-mono text-sm">
+          Create a new catalog to start adding dishes.
+        </p>
+        <a
+          href={`${path}/dishes`}
+          className="inline-flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-widest underline-offset-4 hover:underline"
+        >
+          Open catalog <span aria-hidden>→</span>
+        </a>
       </div>
     </div>
   );

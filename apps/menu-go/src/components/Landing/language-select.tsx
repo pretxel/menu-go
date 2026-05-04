@@ -4,26 +4,26 @@ import { useState } from 'react';
 
 import EnglishItem from './english-item';
 import SpanishItem from './spanish-item';
+
 export default function LanguageSelect({ locale }) {
   const [show, setShow] = useState(false);
   const router = useRouter();
 
   return (
-    <div className="z-50 flex items-center space-x-1 md:order-2 md:space-x-0 text-end">
-      <div className="relative font-[sans-serif] w-full px-10">
-        <button
-          type="button"
-          onClick={() => setShow(!show)}
-          className="px-6 py-2.5 rounded text-[#333] text-sm font-semibold border-2 border-blue-600 outline-none hover:bg-blue-50"
-        >
-          <div className="flex items-center">
-            {locale === 'en' ? <EnglishItem /> : <SpanishItem />}
-          </div>
-        </button>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setShow(!show)}
+        className="inline-flex items-center gap-2 border-3 border-ink bg-paper px-3 py-2 font-mono text-xs uppercase tracking-widest shadow-brut-sm transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut"
+      >
+        <div className="flex items-center">
+          {locale === 'en' ? <EnglishItem /> : <SpanishItem />}
+        </div>
+        <span aria-hidden>▾</span>
+      </button>
+      {show && (
         <ul
-          className={`absolute shadow-lg bg-white py-2 px-2 z-[1000]  w-max rounded max-h-96 overflow-auto top-12 right-10 ${
-            !show ? 'hidden' : ''
-          }`}
+          className="absolute right-0 top-12 z-50 w-max border-3 border-ink bg-paper shadow-brut"
           onClick={() => {
             if (locale === 'es') {
               router.push('/', '/', { locale: 'en' });
@@ -32,13 +32,13 @@ export default function LanguageSelect({ locale }) {
             }
           }}
         >
-          <li className="py-2.5 px-4 hover:bg-blue-50 text-black text-sm cursor-pointer">
+          <li className="cursor-pointer border-b-3 border-ink px-4 py-2 font-mono text-xs uppercase tracking-widest hover:bg-lime last:border-b-0">
             <div className="flex items-center">
               {locale === 'en' ? <SpanishItem /> : <EnglishItem />}
             </div>
           </li>
         </ul>
-      </div>
+      )}
     </div>
   );
 }

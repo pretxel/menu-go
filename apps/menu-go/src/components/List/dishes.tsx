@@ -13,86 +13,101 @@ export default function ListDishes({ dishes }) {
   useEffect(() => {
     if (!dishes) {
       const userId = localStorage.getItem('usedIdTemp');
-      getDishes(userId as string).then((res) => {
-        setDishes(res);
-      });
+      getDishes(userId as string).then((res) => setDishes(res));
     } else {
       setDishes(dishes);
     }
   }, [dishes]);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Products
-          </h1>
-          <p className="mt-2 text-sm text-gray-700">A list of all products.</p>
+    <div className="mt-10">
+      <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
+        <div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+            Inventory
+          </span>
+          <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">
+            Dishes
+          </h2>
         </div>
+        <span className="hidden font-mono text-xs uppercase tracking-widest text-ink/50 sm:inline">
+          {dishesD?.length ?? 0} items
+        </span>
       </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
-                    Category
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
-                    Price
-                  </th>
 
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {dishesD &&
-                  dishesD.map((dish) => (
-                    <tr key={dish.id}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+      {dishesD?.length === 0 ? (
+        <EmptyList />
+      ) : (
+        <div className="mt-6 overflow-x-auto">
+          <table className="min-w-full border-3 border-ink">
+            <thead className="bg-ink text-paper">
+              <tr>
+                <Th>Name</Th>
+                <Th>Category</Th>
+                <Th align="right">Price</Th>
+                <Th align="right">Actions</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {dishesD &&
+                dishesD.map((dish, i) => (
+                  <tr
+                    key={dish.id}
+                    className={i % 2 ? 'bg-bone' : 'bg-paper'}
+                  >
+                    <Td>
+                      <span className="font-display font-extrabold">
                         {dish.name}
-                      </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                      </span>
+                    </Td>
+                    <Td>
+                      <span className="font-mono text-xs uppercase tracking-widest text-ink/70">
                         {dish?.category?.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      </span>
+                    </Td>
+                    <Td align="right">
+                      <span className="font-display font-extrabold text-tomato">
                         ${dish.price}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <RemoveButton idType={dish.id} type="dish" />
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                      </span>
+                    </Td>
+                    <Td align="right">
+                      <div className="flex items-center justify-end gap-3">
                         <a
                           href={`dishes/${dish.categoryId}/edit/${dish.id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="font-mono text-xs font-bold uppercase tracking-widest underline-offset-4 hover:underline"
                         >
-                          Edit<span className="sr-only">, {dish.name}</span>
+                          Edit
                         </a>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            {dishesD?.length === 0 && <EmptyList />}
-          </div>
+                        <RemoveButton idType={dish.id} type="dish" />
+                      </div>
+                    </Td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      )}
     </div>
+  );
+}
+
+function Th({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' }) {
+  return (
+    <th
+      scope="col"
+      className={`px-4 py-3 font-mono text-[10px] uppercase tracking-[0.3em] ${align === 'right' ? 'text-right' : 'text-left'}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' }) {
+  return (
+    <td
+      className={`border-t-2 border-ink px-4 py-3 ${align === 'right' ? 'text-right' : 'text-left'}`}
+    >
+      {children}
+    </td>
   );
 }

@@ -4,8 +4,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { postDish } from '../../app/actions';
@@ -14,9 +13,7 @@ import SuccessMessage from '../Alerts';
 import UserNoAuth from '../Menu/user-no-auth';
 import Uploader from '../Uploader';
 
-const initialState = {
-  message: null,
-};
+const initialState = { message: null };
 
 type IDishesForm = {
   userId: string | undefined;
@@ -25,15 +22,9 @@ type IDishesForm = {
   category?: any;
 };
 
-export default function DishesForm({
-  userId,
-  categoryId,
-  dish,
-  category,
-}: IDishesForm) {
-  const [state, formAction] = useFormState(postDish, initialState);
+export default function DishesForm({ userId, categoryId, dish, category }: IDishesForm) {
+  const [state, formAction] = useActionState(postDish, initialState);
   const [userIdD, setUserDId] = useState<string>('');
-
   const router = useRouter();
 
   useEffect(() => {
@@ -53,129 +44,104 @@ export default function DishesForm({
   }, [userId]);
 
   return (
-    // eslint-disable-next-line react/jsx-no-bind
     <>
       <UserNoAuth />
-      <form action={formAction}>
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              {category.name}
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              {category.description}
-            </p>
+      <form action={formAction} className="mt-6">
+        <div className="card-brut p-6 sm:p-8">
+          <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-tomato">
+                Category / {category?.name}
+              </span>
+              <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                {category?.name}
+              </h2>
+              {category?.description && (
+                <p className="mt-2 font-mono text-sm text-ink/70">
+                  {category.description}
+                </p>
+              )}
+            </div>
+          </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Name
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    defaultValue={dish?.name || ''}
-                    autoComplete="given-name"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-                <div className="mt-2">
-                  <input
-                    type="hidden"
-                    name="categoryId"
-                    id="categoryId"
-                    value={categoryId}
-                    autoComplete="given-name"
-                  />
-                </div>
-                <div className="mt-2">
-                  <input
-                    type="hidden"
-                    name="userId"
-                    id="userId"
-                    value={userIdD}
-                    autoComplete="given-name"
-                  />
-                </div>
-                <div className="mt-2">
-                  <input
-                    type="hidden"
-                    name="dishId"
-                    id="dishId"
-                    value={dish?.id}
-                    autoComplete="given-name"
-                  />
-                </div>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <label htmlFor="name" className="block sm:col-span-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
+                Name <span className="text-tomato">*</span>
+              </span>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                aria-label="Name"
+                required
+                defaultValue={dish?.name || ''}
+                className="input-brut mt-2"
+              />
+            </label>
+
+            <label htmlFor="price" className="block">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
+                Price <span className="text-tomato">*</span>
+              </span>
+              <div className="mt-2 flex items-stretch border-3 border-ink bg-paper">
+                <span className="grid place-items-center border-r-3 border-ink bg-lime px-3 font-display text-base font-extrabold">
+                  $
+                </span>
+                <input
+                  type="text"
+                  id="price"
+                  name="price"
+                  required
+                  defaultValue={dish?.price || ''}
+                  className="block w-full bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-none"
+                />
               </div>
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Price
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="price"
-                    id="price"
-                    required
-                    defaultValue={dish?.price || ''}
-                    autoComplete="given-price"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-6">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Description
-                </label>
-                <div className="mt-2">
-                  <textarea
-                    name="description"
-                    id="description"
-                    required
-                    defaultValue={dish?.description || ''}
-                    autoComplete="given-name"
-                    className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
+            </label>
+
+            <input type="hidden" id="categoryId" name="categoryId" value={categoryId} readOnly />
+            <input type="hidden" id="userId" name="userId" value={userIdD} readOnly />
+            <input type="hidden" id="dishId" name="dishId" value={dish?.id || ''} readOnly />
+
+            <label htmlFor="description" className="block sm:col-span-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
+                Description <span className="text-tomato">*</span>
+              </span>
+              <textarea
+                id="description"
+                name="description"
+                required
+                rows={4}
+                defaultValue={dish?.description || ''}
+                className="input-brut mt-2 resize-y"
+              />
+            </label>
           </div>
         </div>
 
         <p aria-live="polite" className="sr-only" role="status">
           {state?.message && <SuccessMessage message={state?.message} />}
         </p>
-        <div className="mt-6 flex items-center justify-end gap-x-6">
+
+        <div className="mt-8 flex flex-wrap items-center justify-end gap-4">
           <button
             type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="btn-brut text-sm"
             onClick={() => router.back()}
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
+          <button type="submit" className="btn-brut-primary text-sm">
             Save
           </button>
         </div>
       </form>
-      {dish && <Uploader dishId={dish.id} />}
+
+      {dish && (
+        <div className="mt-8">
+          <Uploader dishId={dish.id} />
+        </div>
+      )}
     </>
   );
 }

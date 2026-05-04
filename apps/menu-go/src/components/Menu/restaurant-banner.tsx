@@ -1,45 +1,41 @@
 export default function Banner({ restaurant }) {
   return (
-    <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+    <header className="relative isolate overflow-hidden border-b-3 border-ink">
       <div
-        className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-        aria-hidden="true"
-      >
-        <div
-          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-          style={{
-            clipPath:
-              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
-          }}
-        />
-      </div>
+        aria-hidden
+        className="absolute inset-0 -z-10 stripe-bg opacity-[0.06]"
+      />
       <div
-        className="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-        aria-hidden="true"
-      >
-        <div
-          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-          style={{
-            clipPath:
-              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
-          }}
-        />
-      </div>
-      <section className="text-sm leading-6 text-gray-900">
-        <p className="mt-2 text-4xl font-bold tracking-tight">
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rotate-12 border-3 border-ink shadow-brut-lg"
+        style={{ background: 'var(--color-primary, #FF3B2E)' }}
+      />
+
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <span className="inline-flex w-fit items-center gap-2 border-3 border-ink bg-paper px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] shadow-brut-sm">
+          <span
+            className="h-2 w-2 rounded-full"
+            style={{ background: 'var(--color-primary, #FF3B2E)' }}
+          />
+          Today&apos;s menu
+        </span>
+        <h1 className="font-display text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[0.9] tracking-tight">
           {restaurant.name}
-        </p>
-        <strong className="font-semibold">{restaurant.address}</strong>
-        <svg
-          viewBox="0 0 2 2"
-          className="mx-2 inline h-0.5 w-0.5 fill-current"
-          aria-hidden="true"
-        >
-          <circle cx={1} cy={1} r={1} />
-        </svg>
-        tel: {restaurant.phone}
-      </section>
-      <div className="flex flex-1 justify-end" />
-    </div>
+        </h1>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-widest text-ink/80 sm:text-sm">
+          <span>{restaurant.address}</span>
+          {restaurant.phone && (
+            <>
+              <span aria-hidden className="text-ink/30">
+                ◆
+              </span>
+              <a href={`tel:${restaurant.phone}`} className="hover:underline">
+                {restaurant.phone}
+              </a>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
   );
 }

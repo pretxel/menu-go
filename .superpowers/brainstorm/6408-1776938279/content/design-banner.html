@@ -1,0 +1,75 @@
+<h2>Design: Onboarding Banner</h2>
+<p class="subtitle">Lives at the top of /panel. Disappears once all 4 steps complete.</p>
+
+<div class="section">
+  <h3>State A — Profile done, rest pending (first login)</h3>
+  <div class="mockup">
+    <div class="mockup-header">http://localhost:3000/panel</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="background:#1e1b4b;color:#fff;padding:10px 16px;font-size:12px;font-weight:600;">Dineqrs</div>
+      <div style="background:#eef2ff;border-bottom:2px solid #c7d2fe;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:700;color:#4F46E5;white-space:nowrap;">GET STARTED</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <a style="background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;cursor:default;">✓ Profile</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#4F46E5;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;cursor:pointer;box-shadow:0 1px 4px rgba(79,70,229,0.4);">→ Add category</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#e5e7eb;color:#9ca3af;padding:4px 12px;border-radius:20px;font-size:11px;cursor:default;">Add dishes</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#e5e7eb;color:#9ca3af;padding:4px 12px;border-radius:20px;font-size:11px;cursor:default;">Share QR</a>
+        </div>
+        <span style="margin-left:auto;font-size:10px;color:#818cf8;cursor:pointer;">Dismiss ×</span>
+      </div>
+      <div style="padding:16px;color:#9ca3af;font-size:11px;">Restaurant form content...</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>State B — Category + dishes done, one step left</h3>
+  <div class="mockup">
+    <div class="mockup-header">http://localhost:3000/panel</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="background:#1e1b4b;color:#fff;padding:10px 16px;font-size:12px;font-weight:600;">Dineqrs</div>
+      <div style="background:#eef2ff;border-bottom:2px solid #c7d2fe;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:700;color:#4F46E5;white-space:nowrap;">GET STARTED</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <a style="background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:default;">✓ Profile</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:default;">✓ Category</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:default;">✓ Dishes</a>
+          <span style="color:#c7d2fe;font-size:11px;">›</span>
+          <a style="background:#4F46E5;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;box-shadow:0 1px 4px rgba(79,70,229,0.4);cursor:pointer;">→ Share QR</a>
+        </div>
+        <span style="margin-left:auto;font-size:10px;color:#818cf8;cursor:pointer;">Dismiss ×</span>
+      </div>
+      <div style="padding:16px;color:#9ca3af;font-size:11px;">Restaurant form content...</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>State C — All done (banner hidden, replaced by nothing)</h3>
+  <div class="mockup">
+    <div class="mockup-header">http://localhost:3000/panel</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="background:#1e1b4b;color:#fff;padding:10px 16px;font-size:12px;font-weight:600;">Dineqrs</div>
+      <div style="padding:16px;color:#9ca3af;font-size:11px;">Restaurant form — no banner. Clean.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Behavior notes</h3>
+  <ul style="font-size:12px;color:#374151;padding-left:16px;line-height:1.8;">
+    <li><strong>Profile pill</strong>: always ✓ (user can't reach /panel without it)</li>
+    <li><strong>Category pill</strong>: green when user has ≥1 category; links to /panel/categories</li>
+    <li><strong>Dishes pill</strong>: green when user has ≥1 dish; links to <strong>/panel/onboarding/dishes</strong> (new photo import hero page)</li>
+    <li><strong>Share QR pill</strong>: always last; links to /panel scrolled to QR section</li>
+    <li><strong>Dismiss ×</strong>: hides banner via localStorage flag (not permanent — reappears if they clear storage)</li>
+    <li>Completion check runs server-side — no flicker. Counts fetched alongside existing restaurant data.</li>
+  </ul>
+</div>
+
+<p class="subtitle">Does this banner design look right? Reply in terminal.</p>

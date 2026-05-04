@@ -42,13 +42,13 @@ describe('Dishes', () => {
     expect(productCards.length).toBe(categories.length);
   });
 
-  test('should display images with correct aspect ratio', () => {
+  test('should display images with src and alt for each category', () => {
     render(<Dishes categories={categories} />);
     const images = screen.getAllByRole('img');
+    expect(images.length).toBe(categories.length);
     images.forEach((image) => {
       expect(image).toHaveAttribute('src', expect.stringContaining('.png'));
       expect(image).toHaveAttribute('alt');
-      expect(image).toHaveStyle({ objectFit: 'fill' });
     });
   });
 });
