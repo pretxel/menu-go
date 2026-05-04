@@ -96,7 +96,7 @@ export default function Nav({ navigation, userNavigation }) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <Menu.Items className="absolute right-0 z-20 mt-2 w-48 border-3 border-ink bg-paper shadow-brut focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-20 mt-2 w-48 border-3 border-ink bg-paper shadow-brut focus:outline-hidden">
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (

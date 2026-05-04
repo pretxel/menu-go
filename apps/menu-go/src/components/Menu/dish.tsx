@@ -14,7 +14,7 @@ export default function Dish({ dish }) {
   return (
     <article className="group relative">
       <div className="card-brut flex h-full flex-col overflow-hidden transition-transform duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-brut-lg">
-        <div className="relative aspect-[4/3] w-full overflow-hidden border-b-3 border-ink bg-bone">
+        <div className="relative aspect-4/3 w-full overflow-hidden border-b-3 border-ink bg-bone">
           {dish.image ? (
             <Image
               src={dish.image}

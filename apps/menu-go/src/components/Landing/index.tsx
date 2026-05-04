@@ -140,7 +140,7 @@ export default function Landing({ locale }) {
                     /your-menu.qr
                   </span>
                 </div>
-                <div className="relative aspect-[5/6]">
+                <div className="relative aspect-5/6">
                   <Image
                     fill
                     src="/images/home/home-qr.webp"

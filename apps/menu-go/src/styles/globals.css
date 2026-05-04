@@ -1,6 +1,145 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: #fafaf5;
+  --color-ink: #0f0f0f;
+  --color-bone: #f2efe3;
+  --color-tomato: #ff3b2e;
+  --color-tomato-dark: #d62a1f;
+  --color-lime: #d9f25c;
+  --color-lime-dark: #b5cc3f;
+  --color-mustard: #ffc83d;
+  --color-sky: #7bb7ff;
+
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-sans: var(--font-display), system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  --shadow-brut: 4px 4px 0 0 #0f0f0f;
+  --shadow-brut-sm: 2px 2px 0 0 #0f0f0f;
+  --shadow-brut-lg: 6px 6px 0 0 #0f0f0f;
+  --shadow-brut-xl: 10px 10px 0 0 #0f0f0f;
+  --shadow-brut-tomato: 4px 4px 0 0 #ff3b2e;
+  --shadow-brut-lime: 4px 4px 0 0 #d9f25c;
+  --shadow-brut-press: 1px 1px 0 0 #0f0f0f;
+
+  --border-width-3: 3px;
+
+  --animate-sticker: sticker 3s ease-in-out infinite;
+  --animate-slidein: slidein 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes sticker {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+  @keyframes slidein {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility btn-brut {
+  @apply inline-flex items-center justify-center gap-2 border-3 border-ink bg-paper px-5 py-3 font-display font-bold uppercase tracking-tight text-ink shadow-brut transition-all duration-100;
+  &:hover {
+    @apply -translate-x-0.5 -translate-y-0.5 shadow-brut-lg;
+  }
+  &:active {
+    @apply translate-x-0.5 translate-y-0.5 shadow-brut-press;
+  }
+}
+
+@utility btn-brut-primary {
+  @apply btn-brut bg-tomato text-paper;
+}
+
+@utility btn-brut-lime {
+  @apply btn-brut bg-lime text-ink;
+}
+
+@utility input-brut {
+  @apply block w-full border-3 border-ink bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-hidden focus:shadow-brut focus:-translate-x-0.5 focus:-translate-y-0.5 transition-all duration-100;
+}
+
+@utility card-brut {
+  @apply border-3 border-ink bg-paper shadow-brut;
+}
+
+@utility tape {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 80px;
+    height: 18px;
+    background: var(--mustard);
+    border: 2px solid var(--ink);
+    opacity: 0.95;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+}
+
+@utility grain {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.18;
+  }
+}
+
+@utility stripe-bg {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--ink),
+    var(--ink) 2px,
+    transparent 2px,
+    transparent 12px
+  );
+}
 
 @layer base {
   :root {
@@ -31,69 +170,8 @@
   }
 }
 
-#__next {
-  min-height: 100%;
-}
-
-@layer components {
-  .btn-brut {
-    @apply inline-flex items-center justify-center gap-2 border-3 border-ink bg-paper px-5 py-3 font-display font-bold uppercase tracking-tight text-ink shadow-brut transition-all duration-100;
-  }
-  .btn-brut:hover {
-    @apply -translate-x-0.5 -translate-y-0.5 shadow-brut-lg;
-  }
-  .btn-brut:active {
-    @apply translate-x-0.5 translate-y-0.5 shadow-brut-press;
-  }
-  .btn-brut-primary {
-    @apply btn-brut bg-tomato text-paper;
-  }
-  .btn-brut-lime {
-    @apply btn-brut bg-lime text-ink;
-  }
-
-  .input-brut {
-    @apply block w-full border-3 border-ink bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-none focus:shadow-brut focus:-translate-x-0.5 focus:-translate-y-0.5 transition-all duration-100;
-  }
-
-  .card-brut {
-    @apply border-3 border-ink bg-paper shadow-brut;
-  }
-
-  .tape {
-    position: relative;
-  }
-  .tape::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 80px;
-    height: 18px;
-    background: var(--mustard);
-    border: 2px solid var(--ink);
-    opacity: 0.95;
-    box-shadow: 2px 2px 0 var(--ink);
-  }
-
-  .grain::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
-    opacity: 0.18;
-  }
-
-  .stripe-bg {
-    background-image: repeating-linear-gradient(
-      45deg,
-      var(--ink),
-      var(--ink) 2px,
-      transparent 2px,
-      transparent 12px
-    );
+@layer utilities {
+  #__next {
+    min-height: 100%;
   }
 }

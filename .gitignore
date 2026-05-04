@@ -48,3 +48,6 @@ package-lock
 db-data
 
 dist
+
+# prisma generated client
+packages/db/generated

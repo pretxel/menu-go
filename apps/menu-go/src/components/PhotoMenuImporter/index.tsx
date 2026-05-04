@@ -236,7 +236,7 @@ export default function PhotoMenuImporter({
                           data-field="name"
                           value={dish.name}
                           onChange={(e) => updateDish(catIdx, dishIdx, 'name', e.target.value)}
-                          className="flex-1 border-2 border-ink bg-paper px-2 py-1.5 font-mono text-sm focus:outline-none focus:bg-lime"
+                          className="flex-1 border-2 border-ink bg-paper px-2 py-1.5 font-mono text-sm focus:outline-hidden focus:bg-lime"
                         />
                         <div className="flex items-stretch border-2 border-ink">
                           <span className="grid place-items-center bg-ink px-2 font-display text-xs font-extrabold text-paper">
@@ -249,7 +249,7 @@ export default function PhotoMenuImporter({
                             min={0}
                             step={0.01}
                             onChange={(e) => updateDish(catIdx, dishIdx, 'price', e.target.value)}
-                            className="w-20 bg-paper px-2 py-1.5 text-right font-mono text-sm focus:bg-lime focus:outline-none"
+                            className="w-20 bg-paper px-2 py-1.5 text-right font-mono text-sm focus:bg-lime focus:outline-hidden"
                           />
                         </div>
                       </li>

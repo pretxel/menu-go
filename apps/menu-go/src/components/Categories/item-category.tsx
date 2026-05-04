@@ -29,7 +29,7 @@ export default function ItemCategory({ category }) {
         className="flex flex-1 items-stretch text-left"
       >
         <div
-          className={`grid w-20 flex-shrink-0 place-items-center border-r-3 border-ink font-display text-2xl font-extrabold ${swatch}`}
+          className={`grid w-20 shrink-0 place-items-center border-r-3 border-ink font-display text-2xl font-extrabold ${swatch}`}
         >
           {generateInitials(category.name)}
         </div>

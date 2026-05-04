@@ -1,7 +1,7 @@
 export default function InfoAlert({ path }) {
   return (
     <div className="flex items-start gap-3 border-3 border-ink bg-sky/40 p-4 shadow-brut-sm">
-      <span className="grid h-7 w-7 flex-shrink-0 place-items-center border-3 border-ink bg-paper font-display text-sm font-extrabold">
+      <span className="grid h-7 w-7 shrink-0 place-items-center border-3 border-ink bg-paper font-display text-sm font-extrabold">
         i
       </span>
       <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

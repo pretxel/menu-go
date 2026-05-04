@@ -67,12 +67,12 @@ export default function Uploader({ dishId }) {
 
       <label
         htmlFor="image-upload"
-        className={`relative mt-6 block aspect-[16/9] cursor-pointer overflow-hidden border-3 transition-all ${
+        className={`relative mt-6 block aspect-video cursor-pointer overflow-hidden border-3 transition-all ${
           dragActive ? 'border-tomato shadow-brut-tomato' : 'border-ink'
         } bg-bone`}
       >
         <div
-          className="absolute inset-0 z-[5]"
+          className="absolute inset-0 z-5"
           onDragOver={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -104,7 +104,7 @@ export default function Uploader({ dishId }) {
           }}
         />
         <div
-          className={`absolute inset-0 z-[3] flex flex-col items-center justify-center gap-2 px-10 transition-all ${
+          className={`absolute inset-0 z-3 flex flex-col items-center justify-center gap-2 px-10 transition-all ${
             data.image ? 'bg-paper/0 opacity-0 hover:bg-paper/85 hover:opacity-100' : 'opacity-100'
           }`}
         >

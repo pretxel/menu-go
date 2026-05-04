@@ -345,6 +345,7 @@ export async function addCategory(prevState: any, formData: FormData) {
 
   const blob = await put(name, blobImage, {
     access: 'public',
+    addRandomSuffix: true,
   });
 
   await prisma.category.create({

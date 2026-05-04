@@ -94,7 +94,7 @@ export default function DishesForm({ userId, categoryId, dish, category }: IDish
                   name="price"
                   required
                   defaultValue={dish?.price || ''}
-                  className="block w-full bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-none"
+                  className="block w-full bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-hidden"
                 />
               </div>
             </label>

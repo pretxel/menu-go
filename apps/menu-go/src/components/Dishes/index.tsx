@@ -33,7 +33,7 @@ export default function Dishes({ categories }) {
             className="group relative block text-left"
           >
             <div className="card-brut overflow-hidden transition-transform duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-brut-lg">
-              <div className="relative aspect-[4/3] w-full overflow-hidden border-b-3 border-ink bg-bone">
+              <div className="relative aspect-4/3 w-full overflow-hidden border-b-3 border-ink bg-bone">
                 {product.image ? (
                   <img
                     src={product.image}
