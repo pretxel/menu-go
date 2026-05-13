@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Menu-GO** (branded as "Dineqrs") is a QR-based digital menu management SaaS platform for restaurants. Restaurants create menus, generate QR codes, and customers scan the QR to view the menu. Built as a Next.js 15 full-stack monorepo.
+**Menu-GO** (branded as "Dineqrs") is a QR-based digital menu management SaaS platform for restaurants. Restaurants create menus, generate QR codes, and customers scan the QR to view the menu. Built as a Next.js 16 full-stack monorepo.
 
 ## Commands
 
@@ -39,7 +39,7 @@ The app is available at `http://localhost:3000`.
 
 ```
 menu-go-frontend/
-├── apps/menu-go/          # Main Next.js 15 app
+├── apps/menu-go/          # Main Next.js 16 app
 ├── packages/
 │   ├── db/                # Prisma schema + client (shared database layer)
 │   ├── ui/                # Shared React UI components (bundled via Rollup)

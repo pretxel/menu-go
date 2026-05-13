@@ -1,23 +1,39 @@
 # Menu-GO (Dineqrs)
 
-QR-based digital menu management SaaS for restaurants. Restaurants create menus, generate QR codes, and customers scan to view the menu in the browser. Built as a Next.js 15 full-stack monorepo.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma)](https://www.prisma.io)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Turborepo](https://img.shields.io/badge/Turborepo-2-EF4444?logo=turborepo&logoColor=white)](https://turbo.build)
+[![pnpm](https://img.shields.io/badge/pnpm-8.15.4-F69220?logo=pnpm&logoColor=white)](https://pnpm.io)
+
+QR-based digital menu management SaaS for restaurants. Restaurants create menus, generate QR codes, and customers scan to view the menu in the browser. Built as a Next.js 16 full-stack monorepo.
+
+## Screenshots
+
+<p align="center">
+  <img src="apps/menu-go/public/images/home/home-qr.webp" alt="Dineqrs landing — QR menu preview" width="640" />
+</p>
+
+> Drop additional captures under `apps/menu-go/public/images/` and reference them here (panel, public menu, QR flow).
 
 ## Stack
 
-- **Framework:** Next.js 15 (Pages Router + App Router hybrid)
-- **Auth:** NextAuth.js (Google, Facebook, Credentials) with Prisma adapter
-- **Database:** PostgreSQL via Prisma 5
+- **Framework:** Next.js 16 (Pages Router + App Router hybrid), React 19
+- **Auth:** NextAuth.js 4 (Google, Facebook, Credentials) with Prisma adapter
+- **Database:** PostgreSQL via Prisma 7
 - **Storage:** Vercel Blob (dish images), base64 in DB (QR codes — see `IMPROVEMENTS.md`)
 - **AI:** Anthropic Claude for photo menu parsing
-- **Tooling:** Turborepo, pnpm workspaces, Jest, ESLint, Tailwind
+- **Tooling:** Turborepo 2, pnpm workspaces, Jest 30, ESLint, Tailwind 4, TypeScript 6
 - **i18n:** `next-i18next` (translations under `public/locales/`)
 
 ## Requirements
 
-- Node.js >= 18
+- Node.js >= 20
 - pnpm 8.15.4 (see `packageManager` in `package.json`)
 - Docker + Docker Compose (for local Postgres)
-- Prisma >= 5
+- Prisma >= 7
 
 ## Monorepo Layout
 
@@ -36,13 +52,20 @@ Path alias `@/*` → `apps/menu-go/src/*`.
 
 ## Setup
 
-### 1. Install deps
+### 1. Clone
+
+```bash
+git clone git@github.com:pretxel/menu-go.git
+cd menu-go
+```
+
+### 2. Install deps
 
 ```bash
 pnpm install
 ```
 
-### 2. Configure env
+### 3. Configure env
 
 Copy `.env.example` → `.env`, fill values:
 
@@ -60,7 +83,7 @@ ANTHROPIC_API_KEY=        # Photo menu parsing
 OPENAI_API_KEY=
 ```
 
-### 3. Start Postgres
+### 4. Start Postgres
 
 ```bash
 docker compose up -d
@@ -68,14 +91,14 @@ docker compose up -d
 
 Local Postgres runs on `:5432` with `postgres:secrect` (intentional typo retained from original config).
 
-### 4. Push schema + seed
+### 5. Push schema + seed
 
 ```bash
 pnpm db:push
 pnpm db:seed
 ```
 
-### 5. Run dev server
+### 6. Run dev server
 
 ```bash
 pnpm dev
