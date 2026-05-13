@@ -18,7 +18,6 @@ export default async function Page({ params }: { params: Promise<{ index: string
   return (
     <>
       <DishesForm
-        userId={user.id}
         categoryId={index}
         category={category}
       />

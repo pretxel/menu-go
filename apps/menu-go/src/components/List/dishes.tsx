@@ -2,21 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
-import { getDishes } from '../../app/actions';
 import { IDish } from '../../types/dish';
 import EmptyList from './empty-list';
 import RemoveButton from './remove-button';
 
-export default function ListDishes({ dishes }) {
-  const [dishesD, setDishes] = useState<IDish[] | null>([]);
+type Props = { dishes: IDish[] | null };
+
+export default function ListDishes({ dishes }: Props) {
+  const [dishesD, setDishes] = useState<IDish[] | null>(dishes);
 
   useEffect(() => {
-    if (!dishes) {
-      const userId = localStorage.getItem('usedIdTemp');
-      getDishes(userId as string).then((res) => setDishes(res));
-    } else {
-      setDishes(dishes);
-    }
+    setDishes(dishes);
   }, [dishes]);
 
   return (

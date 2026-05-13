@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
 
 import Form from '../../components/Forms';
 import OnboardingBanner from '../../components/OnboardingBanner';
-import { authOptions } from '../../lib/auth';
-import { getOnboardingStatus } from '../actions';
+import { getOnboardingStatus, getRestaurant } from '../actions';
 
 export const metadata: Metadata = {
   title: 'Panel',
@@ -12,17 +10,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user.id;
-
-  const { hasCategory, hasDish } = userId
-    ? await getOnboardingStatus(userId)
-    : { hasCategory: false, hasDish: false };
+  const [{ hasCategory, hasDish }, initialRestaurant] = await Promise.all([
+    getOnboardingStatus(),
+    getRestaurant(),
+  ]);
 
   return (
     <>
       <OnboardingBanner hasCategory={hasCategory} hasDish={hasDish} />
-      <Form userId={userId} />
+      <Form initialRestaurant={initialRestaurant} />
     </>
   );
 }

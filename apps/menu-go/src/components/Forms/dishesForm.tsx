@@ -1,51 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useRouter } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { postDish } from '../../app/actions';
 import { IDish } from '../../types/dish';
 import SuccessMessage from '../Alerts';
-import UserNoAuth from '../Menu/user-no-auth';
 import Uploader from '../Uploader';
 
-const initialState = { message: null };
-
-type IDishesForm = {
-  userId: string | undefined;
-  categoryId: string;
-  dish?: IDish | null;
-  category?: any;
+type FormState = {
+  message: string | null;
+  fieldErrors?: Record<string, string[]>;
+  requiresAuth?: boolean;
 };
 
-export default function DishesForm({ userId, categoryId, dish, category }: IDishesForm) {
+const initialState: FormState = { message: null };
+
+type CategoryLite = { name: string; description?: string | null };
+
+type IDishesForm = {
+  categoryId: string;
+  dish?: IDish | null;
+  category?: CategoryLite | null;
+};
+
+export default function DishesForm({ categoryId, dish, category }: IDishesForm) {
   const [state, formAction] = useActionState(postDish, initialState);
-  const [userIdD, setUserDId] = useState<string>('');
   const router = useRouter();
 
   useEffect(() => {
+    if (state?.requiresAuth) {
+      router.push('/login');
+      return;
+    }
     if (state?.message) {
-      toast.success(state?.message);
+      toast.success(state.message);
       router.back();
     }
   }, [state, router]);
 
-  useEffect(() => {
-    if (!userId) {
-      const userIdd = localStorage.getItem('usedIdTemp');
-      setUserDId(userIdd as string);
-    } else {
-      setUserDId(userId);
-    }
-  }, [userId]);
-
   return (
     <>
-      <UserNoAuth />
       <form action={formAction} className="mt-6">
         <div className="card-brut p-6 sm:p-8">
           <div className="flex items-baseline justify-between border-b-3 border-ink pb-4">
@@ -74,10 +72,16 @@ export default function DishesForm({ userId, categoryId, dish, category }: IDish
                 id="name"
                 name="name"
                 aria-label="Name"
+                aria-invalid={Boolean(state?.fieldErrors?.name?.[0])}
                 required
                 defaultValue={dish?.name || ''}
                 className="input-brut mt-2"
               />
+              {state?.fieldErrors?.name?.[0] && (
+                <span className="mt-1 block font-mono text-xs text-tomato">
+                  {state.fieldErrors.name[0]}
+                </span>
+              )}
             </label>
 
             <label htmlFor="price" className="block">
@@ -93,14 +97,19 @@ export default function DishesForm({ userId, categoryId, dish, category }: IDish
                   id="price"
                   name="price"
                   required
+                  aria-invalid={Boolean(state?.fieldErrors?.price?.[0])}
                   defaultValue={dish?.price || ''}
                   className="block w-full bg-paper px-4 py-3 font-mono text-ink placeholder:text-ink/40 focus:outline-hidden"
                 />
               </div>
+              {state?.fieldErrors?.price?.[0] && (
+                <span className="mt-1 block font-mono text-xs text-tomato">
+                  {state.fieldErrors.price[0]}
+                </span>
+              )}
             </label>
 
             <input type="hidden" id="categoryId" name="categoryId" value={categoryId} readOnly />
-            <input type="hidden" id="userId" name="userId" value={userIdD} readOnly />
             <input type="hidden" id="dishId" name="dishId" value={dish?.id || ''} readOnly />
 
             <label htmlFor="description" className="block sm:col-span-3">
@@ -120,7 +129,7 @@ export default function DishesForm({ userId, categoryId, dish, category }: IDish
         </div>
 
         <p aria-live="polite" className="sr-only" role="status">
-          {state?.message && <SuccessMessage message={state?.message} />}
+          {state?.message && <SuccessMessage message={state.message} />}
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-end gap-4">

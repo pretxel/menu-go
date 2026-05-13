@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
 
-import { getAllCategories, getCategory, getRestaurant } from '../../../app/actions';
+import { getAllCategories, getCategory } from '../../../app/actions';
 import Categories from '../../../components/Categories';
-import { authOptions } from '../../../lib/auth';
 
 export const metadata: Metadata = {
   title: 'Categories',
@@ -16,9 +14,7 @@ type Props = {
 };
 
 export default async function Page(props: Props) {
-  const session = await getServerSession(authOptions);
-  const restaurant = await getRestaurant(session?.user.id);
-  const categories = await getAllCategories(restaurant?.id ?? undefined);
+  const categories = await getAllCategories();
   const searchParams = await props.searchParams;
   const categoryId = searchParams.category;
   const category = categoryId ? await getCategory(categoryId as string) : null;

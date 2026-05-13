@@ -22,7 +22,7 @@ const parsedCategories = [
 describe('PhotoMenuImporter — editable preview', () => {
   it('renders name and price inputs after parse', () => {
     const { container } = render(
-      <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
+      <PhotoMenuImporter initialCategories={parsedCategories} />
     );
     fireEvent.click(screen.getByText(/import from photo/i));
 
@@ -37,7 +37,7 @@ describe('PhotoMenuImporter — editable preview', () => {
 
   it('editing name updates state before import', async () => {
     render(
-      <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
+      <PhotoMenuImporter initialCategories={parsedCategories} />
     );
     fireEvent.click(screen.getByText(/import from photo/i));
 
@@ -52,7 +52,6 @@ describe('PhotoMenuImporter — editable preview', () => {
     });
 
     expect(mockPostBulkDishes).toHaveBeenCalledWith(
-      'user-1',
       expect.arrayContaining([
         expect.objectContaining({
           dishes: expect.arrayContaining([
@@ -65,7 +64,7 @@ describe('PhotoMenuImporter — editable preview', () => {
 
   it('editing price updates state before import', async () => {
     render(
-      <PhotoMenuImporter userId="user-1" initialCategories={parsedCategories} />
+      <PhotoMenuImporter initialCategories={parsedCategories} />
     );
     fireEvent.click(screen.getByText(/import from photo/i));
 
@@ -80,7 +79,6 @@ describe('PhotoMenuImporter — editable preview', () => {
     });
 
     expect(mockPostBulkDishes).toHaveBeenCalledWith(
-      'user-1',
       expect.arrayContaining([
         expect.objectContaining({
           dishes: expect.arrayContaining([
@@ -92,7 +90,7 @@ describe('PhotoMenuImporter — editable preview', () => {
   });
 
   it('renders upload zone immediately when alwaysOpen is true (no toggle click needed)', () => {
-    render(<PhotoMenuImporter userId="user-1" alwaysOpen />);
+    render(<PhotoMenuImporter alwaysOpen />);
     expect(screen.queryByText(/import from photo/i)).not.toBeInTheDocument();
     expect(screen.getByText(/drop menu photo/i)).toBeInTheDocument();
   });
@@ -105,7 +103,6 @@ describe('PhotoMenuImporter — editable preview', () => {
 
     render(
       <PhotoMenuImporter
-        userId="user-1"
         initialCategories={parsedCategories}
         alwaysOpen
         onImportSuccess={onImportSuccess}

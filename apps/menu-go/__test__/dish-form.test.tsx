@@ -27,13 +27,6 @@ jest.mock('../src/components/Uploader', () => {
   };
 });
 
-// Mock the UserNoAuth component
-jest.mock('../src/components/Menu/user-no-auth', () => {
-  return function MockUserNoAuth() {
-    return null;
-  };
-});
-
 // Mock the Alerts component
 jest.mock('../src/components/Alerts', () => {
   return function MockAlerts() {
@@ -48,7 +41,6 @@ jest.mock('../src/app/actions', () => ({
 
 describe('DishesForm Component', () => {
   const defaultProps = {
-    userId: 'user-123',
     categoryId: 'cat-1',
     category: { name: 'Appetizers', description: 'Starters and small plates' },
   };
@@ -96,7 +88,7 @@ describe('DishesForm Component', () => {
     expect(screen.getByText('Cancel')).toBeInTheDocument();
   });
 
-  test('renders hidden fields for categoryId and userId', () => {
+  test('renders hidden field for categoryId', () => {
     render(<DishesForm {...defaultProps} />);
 
     const categoryInput = document.getElementById('categoryId') as HTMLInputElement;
@@ -104,9 +96,8 @@ describe('DishesForm Component', () => {
     expect(categoryInput).toHaveAttribute('type', 'hidden');
     expect(categoryInput).toHaveValue('cat-1');
 
-    const userInput = document.getElementById('userId') as HTMLInputElement;
-    expect(userInput).toBeInTheDocument();
-    expect(userInput).toHaveAttribute('type', 'hidden');
+    const userInput = document.getElementById('userId') as HTMLInputElement | null;
+    expect(userInput).toBeNull();
   });
 
   test('populates fields when editing an existing dish', () => {
@@ -116,7 +107,7 @@ describe('DishesForm Component', () => {
       price: 9.5,
       description: 'Romaine lettuce with caesar dressing',
       categoryId: 'cat-1',
-      category: { id: 'cat-1', name: 'Appetizers' },
+      category: { id: 'cat-1', name: 'Appetizers', description: '' },
     };
 
     render(<DishesForm {...defaultProps} dish={dish} />);
@@ -133,7 +124,7 @@ describe('DishesForm Component', () => {
       price: 9.5,
       description: 'A salad',
       categoryId: 'cat-1',
-      category: { id: 'cat-1', name: 'Appetizers' },
+      category: { id: 'cat-1', name: 'Appetizers', description: '' },
     };
 
     render(<DishesForm {...defaultProps} dish={dish} />);

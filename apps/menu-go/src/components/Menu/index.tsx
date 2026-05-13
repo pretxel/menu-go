@@ -1,6 +1,5 @@
 import Category from './category';
 import Banner from './restaurant-banner';
-import UserNoAuth from './user-no-auth';
 
 export default function Menu({ dishes, restaurant }) {
   const groupByCategory = dishes.reduce((acumulador, elemento) => {
@@ -26,7 +25,6 @@ export default function Menu({ dishes, restaurant }) {
       }
       className="min-h-screen text-ink"
     >
-      <UserNoAuth />
       <Banner restaurant={restaurant} />
 
       <div className="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">

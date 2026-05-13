@@ -8,14 +8,12 @@ type ParsedDish = { name: string; description: string; price: number | string; t
 type ParsedCategory = { name: string; dishes: ParsedDish[] };
 
 type PhotoMenuImporterProps = {
-  userId: string;
   initialCategories?: ParsedCategory[];
   alwaysOpen?: boolean;
   onImportSuccess?: () => void;
 };
 
 export default function PhotoMenuImporter({
-  userId,
   initialCategories,
   alwaysOpen,
   onImportSuccess,
@@ -94,7 +92,7 @@ export default function PhotoMenuImporter({
           price: typeof d.price === 'string' ? parseFloat(d.price) || 0 : d.price,
         })),
       }));
-      await postBulkDishes(userId, sanitized);
+      await postBulkDishes(sanitized);
       setCategories(null);
       if (onImportSuccess) onImportSuccess();
       else setIsOpen(false);

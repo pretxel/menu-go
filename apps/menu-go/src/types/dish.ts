@@ -1,9 +1,15 @@
+export type CategoryLite = {
+  id: string;
+  name: string;
+  description: string;
+  image?: string | null;
+};
+
 export type IDish = {
   id: string;
   name: string;
   description: string | null;
   price: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  category: any;
+  category: CategoryLite | null;
   categoryId: string;
 };

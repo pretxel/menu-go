@@ -24,7 +24,6 @@ export default async function Page({
   return (
     <>
       <DishesForm
-        userId={user.id}
         categoryId={index}
         dish={dish}
         category={category}

@@ -1,22 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { getRestaurant, Restaurant } from '../../app/actions';
+import type { Restaurant } from '../../app/actions';
 import DialogDish from './dialog-dish';
 
-export default function DishHeader({ restaurant }) {
-  const [open, setOpen] = useState(false);
-  const [restaurantD, setRestaurantD] = useState<Restaurant | null>();
+type Props = { restaurant: Restaurant | null };
 
-  useEffect(() => {
-    if (!restaurant) {
-      const userId = localStorage.getItem('usedIdTemp') ?? '';
-      getRestaurant(userId).then((res) => setRestaurantD(res));
-    } else {
-      setRestaurantD(restaurant);
-    }
-  }, [restaurant]);
+export default function DishHeader({ restaurant }: Props) {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -29,7 +21,7 @@ export default function DishHeader({ restaurant }) {
           ◧ QR Code
         </button>
       </div>
-      <DialogDish open={open} setOpen={setOpen} restaurant={restaurantD} />
+      <DialogDish open={open} setOpen={setOpen} restaurant={restaurant} />
     </>
   );
 }

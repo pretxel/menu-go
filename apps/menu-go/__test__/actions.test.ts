@@ -25,6 +25,17 @@ jest.mock('qrcode', () => ({
   toDataURL: jest.fn(),
 }));
 
+// Mock next-auth so the real package (which transitively imports ESM `jose`) is never resolved
+jest.mock('next-auth', () => ({
+  __esModule: true,
+  getServerSession: jest.fn(),
+}));
+
+// Mock the local auth module so its imports (which would pull next-auth providers) are bypassed
+jest.mock('../src/lib/auth', () => ({
+  authOptions: {},
+}));
+
 // Mock zod to control safeParse behavior and avoid ESM/CJS interop issues in Jest
 jest.mock('zod', () => {
   const createChainable = (): any => {
@@ -39,6 +50,10 @@ jest.mock('zod', () => {
     chain.split = () => chain;
     chain.filter = () => chain;
     chain.nullable = () => chain;
+    chain.uuid = () => chain;
+    chain.email = () => chain;
+    chain.url = () => chain;
+    chain.regex = () => chain;
     return chain;
   };
 
@@ -51,6 +66,7 @@ jest.mock('zod', () => {
     boolean: createChainable,
     array: createChainable,
     enum: createChainable,
+    preprocess: (_fn: any, _schema: any) => createChainable(),
   };
 
   return { z };
@@ -62,26 +78,52 @@ jest.mock('../src/lib/prisma', () => ({
   default: {
     configRestaurant: {
       findFirst: jest.fn(),
+      findUnique: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
     },
     category: {
+      findFirst: jest.fn(),
       findMany: jest.fn(),
+      create: jest.fn(),
       count: jest.fn(),
     },
     dishes: {
+      findFirst: jest.fn(),
+      findMany: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
       count: jest.fn(),
     },
     menuView: {
       create: jest.fn(),
+      count: jest.fn(),
     },
+    user: {
+      findUnique: jest.fn(),
+      create: jest.fn(),
+    },
+    $transaction: jest.fn(),
   },
 }));
 
-import { getMenu, getMenuBySlug, getAllCategories, trackMenuView, parseMenuFromPhoto, getOnboardingStatus } from '../src/app/actions';
-import prisma from '../src/lib/prisma';
 import Anthropic from '@anthropic-ai/sdk';
+import { getServerSession } from 'next-auth';
+
+import {
+  getAllCategories,
+  getMenu,
+  getMenuBySlug,
+  getOnboardingStatus,
+  parseMenuFromPhoto,
+  postDish,
+  trackMenuView,
+} from '../src/app/actions';
+import prisma from '../src/lib/prisma';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma = prisma as any;
+const mockSession = getServerSession as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -167,29 +209,23 @@ describe('getMenuBySlug', () => {
 });
 
 describe('getAllCategories', () => {
-  it('returns all categories when no configRestaurantId provided', async () => {
-    const mockCategories = [
-      { id: 'c1', name: 'Mains', description: 'Main dishes' },
-      { id: 'c2', name: 'Desserts', description: 'Sweet treats' },
-    ];
-
-    mockPrisma.category.findMany.mockResolvedValue(mockCategories);
-
+  it('returns [] when no session', async () => {
+    mockSession.mockResolvedValue(null);
     const result = await getAllCategories();
-
-    expect(mockPrisma.category.findMany).toHaveBeenCalledWith();
-    expect(result).toEqual(mockCategories);
+    expect(result).toEqual([]);
+    expect(mockPrisma.category.findMany).not.toHaveBeenCalled();
   });
 
-  it('filters by configRestaurantId when provided (includes global categories)', async () => {
+  it('queries with restaurant + global OR clause when session+restaurant exist', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
     const mockCategories = [
       { id: 'c1', name: 'Mains', configRestaurantId: 'rest-1' },
       { id: 'c2', name: 'Global', configRestaurantId: null },
     ];
-
     mockPrisma.category.findMany.mockResolvedValue(mockCategories);
 
-    const result = await getAllCategories('rest-1');
+    const result = await getAllCategories();
 
     expect(mockPrisma.category.findMany).toHaveBeenCalledWith({
       where: {
@@ -200,6 +236,18 @@ describe('getAllCategories', () => {
       },
     });
     expect(result).toEqual(mockCategories);
+  });
+
+  it('queries with global-only OR clause when session has no restaurant', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue(null);
+    mockPrisma.category.findMany.mockResolvedValue([]);
+
+    await getAllCategories();
+
+    expect(mockPrisma.category.findMany).toHaveBeenCalledWith({
+      where: { OR: [{ configRestaurantId: null }] },
+    });
   });
 });
 
@@ -238,6 +286,7 @@ describe('parseMenuFromPhoto', () => {
 
   beforeEach(() => {
     mockCreate.mockReset();
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
   });
 
   it('returns parsed categories from tool_use response', async () => {
@@ -280,56 +329,129 @@ describe('parseMenuFromPhoto', () => {
 });
 
 describe('getOnboardingStatus', () => {
-  it('returns false/false when no restaurant found for user', async () => {
+  it('returns false/false when no session', async () => {
+    mockSession.mockResolvedValue(null);
+    const result = await getOnboardingStatus();
+    expect(result).toEqual({ hasCategory: false, hasDish: false });
+  });
+
+  it('returns false/false when session has no restaurant', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-no-restaurant' } });
     mockPrisma.configRestaurant.findFirst.mockResolvedValue(null);
 
-    const result = await getOnboardingStatus('user-no-restaurant');
-
+    const result = await getOnboardingStatus();
     expect(result).toEqual({ hasCategory: false, hasDish: false });
   });
 
   it('returns hasCategory:false and hasDish:false when counts are 0', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
     mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
     mockPrisma.category.count.mockResolvedValue(0);
     mockPrisma.dishes.count.mockResolvedValue(0);
 
-    const result = await getOnboardingStatus('user-1');
-
+    const result = await getOnboardingStatus();
     expect(result).toEqual({ hasCategory: false, hasDish: false });
   });
 
   it('returns hasCategory:true when category count > 0', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
     mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
     mockPrisma.category.count.mockResolvedValue(2);
     mockPrisma.dishes.count.mockResolvedValue(0);
 
-    const result = await getOnboardingStatus('user-1');
-
+    const result = await getOnboardingStatus();
     expect(result).toEqual({ hasCategory: true, hasDish: false });
   });
 
   it('returns hasDish:true when dish count > 0', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
     mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
     mockPrisma.category.count.mockResolvedValue(1);
     mockPrisma.dishes.count.mockResolvedValue(5);
 
-    const result = await getOnboardingStatus('user-1');
-
+    const result = await getOnboardingStatus();
     expect(result).toEqual({ hasCategory: true, hasDish: true });
   });
 
   it('queries category count scoped to the restaurant', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
     mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-42' });
     mockPrisma.category.count.mockResolvedValue(0);
     mockPrisma.dishes.count.mockResolvedValue(0);
 
-    await getOnboardingStatus('user-1');
+    await getOnboardingStatus();
 
     expect(mockPrisma.category.count).toHaveBeenCalledWith({
       where: { configRestaurantId: 'rest-42' },
     });
     expect(mockPrisma.dishes.count).toHaveBeenCalledWith({
       where: { configRestaurantId: 'rest-42' },
+    });
+  });
+});
+
+describe('postDish auth boundary', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  function makeFormData(entries: Record<string, string>): FormData {
+    const fd = new FormData();
+    for (const [k, v] of Object.entries(entries)) fd.append(k, v);
+    return fd;
+  }
+
+  it('returns requiresAuth when no session', async () => {
+    mockSession.mockResolvedValue(null);
+    const fd = makeFormData({
+      name: 'Pizza',
+      price: '10',
+      categoryId: 'c1',
+    });
+    const res = await postDish({ message: null }, fd);
+    expect(res.requiresAuth).toBe(true);
+    expect(res.message).toBe('Sign in required.');
+    expect(mockPrisma.dishes.create).not.toHaveBeenCalled();
+  });
+
+  it('ignores form-supplied userId and uses session.user.id', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'real-user' } });
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-real' });
+    mockPrisma.dishes.create.mockResolvedValue({ id: 'new-dish' });
+
+    const fd = makeFormData({
+      name: 'Burger',
+      price: '12',
+      categoryId: 'c1',
+      userId: 'attacker',
+    });
+    await postDish({ message: null }, fd);
+
+    expect(mockPrisma.configRestaurant.findFirst).toHaveBeenCalledWith({
+      where: { userId: 'real-user' },
+    });
+    expect(mockPrisma.configRestaurant.findFirst).not.toHaveBeenCalledWith({
+      where: { userId: 'attacker' },
+    });
+  });
+
+  it('rejects cross-tenant dishId on update', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
+    mockPrisma.configRestaurant.findFirst.mockResolvedValue({ id: 'rest-1' });
+    mockPrisma.dishes.findFirst.mockResolvedValue(null); // not found scoped to rest-1
+
+    const fd = makeFormData({
+      name: 'Hijack',
+      price: '5',
+      categoryId: 'c1',
+      dishId: 'someone-elses-dish',
+    });
+    const res = await postDish({ message: null }, fd);
+
+    expect(res.message).toBe('Dish not found.');
+    expect(mockPrisma.dishes.update).not.toHaveBeenCalled();
+    expect(mockPrisma.dishes.findFirst).toHaveBeenCalledWith({
+      where: { id: 'someone-elses-dish', configRestaurantId: 'rest-1' },
     });
   });
 });

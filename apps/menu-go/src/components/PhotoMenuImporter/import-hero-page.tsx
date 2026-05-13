@@ -5,11 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import PhotoMenuImporter from './index';
 
-type Props = {
-  userId: string;
-};
-
-export default function ImportHeroPage({ userId }: Props) {
+export default function ImportHeroPage() {
   const router = useRouter();
 
   return (
@@ -41,7 +37,6 @@ export default function ImportHeroPage({ userId }: Props) {
 
         <div className="mt-10">
           <PhotoMenuImporter
-            userId={userId}
             alwaysOpen
             onImportSuccess={() => router.push('/panel/dishes')}
           />

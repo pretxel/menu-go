@@ -9,8 +9,8 @@ export default async function Page() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect('/panel');
 
-  const restaurant = await getRestaurant(session.user.id);
+  const restaurant = await getRestaurant();
   if (!restaurant) redirect('/panel');
 
-  return <ImportHeroPage userId={session.user.id} />;
+  return <ImportHeroPage />;
 }
