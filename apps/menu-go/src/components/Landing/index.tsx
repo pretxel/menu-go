@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next/pages';
@@ -145,6 +144,8 @@ export default function Landing({ locale }) {
                     fill
                     src="/images/home/home-qr.webp"
                     alt="home-qr-image"
+                    sizes="(max-width: 1024px) 100vw, 42vw"
+                    priority
                     className="object-cover"
                   />
                 </div>

@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function Dishes({ categories }) {
@@ -35,10 +35,12 @@ export default function Dishes({ categories }) {
             <div className="card-brut overflow-hidden transition-transform duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:shadow-brut-lg">
               <div className="relative aspect-4/3 w-full overflow-hidden border-b-3 border-ink bg-bone">
                 {product.image ? (
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.imageAlt || product.name}
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center font-display text-5xl">

@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -79,10 +79,12 @@ export default function Nav({ navigation, userNavigation }) {
               {status === 'authenticated' && session?.user?.image && (
                 <Menu as="div" className="relative">
                   <Menu.Button className="flex items-center gap-2 border-3 border-ink bg-paper p-1 pr-3 shadow-brut-sm transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut">
-                    <img
-                      className="h-7 w-7 border-2 border-ink object-cover"
+                    <Image
+                      className="border-2 border-ink object-cover"
                       src={session.user.image}
                       alt={session.user.name || 'user'}
+                      width={28}
+                      height={28}
                     />
                     <span className="hidden font-mono text-xs uppercase tracking-widest md:block">
                       {session.user.name?.split(' ')[0]}

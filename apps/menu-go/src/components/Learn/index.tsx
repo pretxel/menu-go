@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -74,17 +73,15 @@ export default function Learn() {
 
               <figure className="mt-8">
                 <div className="card-brut overflow-hidden">
-                  {idx === 0 ? (
-                    <Image
-                      src={s.img}
-                      alt={s.key}
-                      width={800}
-                      height={500}
-                      className="block w-full object-cover"
-                    />
-                  ) : (
-                    <img src={s.img} alt={s.key} className="block w-full object-cover" />
-                  )}
+                  <Image
+                    src={s.img}
+                    alt={s.key}
+                    width={800}
+                    height={500}
+                    sizes="(max-width: 768px) 100vw, 768px"
+                    priority={idx === 0}
+                    className="block w-full object-cover"
+                  />
                 </div>
                 <figcaption className="mt-3 flex items-start gap-2 font-mono text-xs leading-relaxed text-ink/60" suppressHydrationWarning>
                   <InformationCircleIcon className="mt-0.5 h-4 w-4 flex-none text-tomato" aria-hidden="true" />

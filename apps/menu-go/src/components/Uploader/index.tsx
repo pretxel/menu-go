@@ -132,6 +132,7 @@ export default function Uploader({ dishId }) {
           </p>
         </div>
         {data.image && (
+          // Preview is a FileReader base64 data URL — next/image cannot optimize
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={data.image}

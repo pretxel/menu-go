@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Fragment } from 'react';
@@ -65,6 +64,8 @@ export default function DialogDish({ open, setOpen, restaurant }) {
                   <div className="flex-1 space-y-5 px-6 py-6">
                     <div className="border-3 border-ink bg-paper p-3 shadow-brut">
                       {restaurant?.qrCode ? (
+                        // QR is a base64 data URL — next/image cannot optimize
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={restaurant.qrCode}
                           alt="qr"

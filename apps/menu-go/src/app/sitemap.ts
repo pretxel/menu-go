@@ -1,24 +1,40 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+import prisma from '../lib/prisma';
+import { SITE_URL } from '../lib/site';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const restaurants = await prisma.configRestaurant.findMany({
+    where: { slug: { not: null } },
+    select: { slug: true, updatedAt: true },
+  });
+
+  const restaurantRoutes: MetadataRoute.Sitemap = restaurants.map((r) => ({
+    url: `${SITE_URL}/r/${r.slug}`,
+    lastModified: r.updatedAt,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
   return [
     {
-      url: 'https://www.dineqrs.com/',
+      url: `${SITE_URL}/`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.dineqrs.com/learn',
+      url: `${SITE_URL}/learn`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: 'https://www.dineqrs.com/privacy',
+      url: `${SITE_URL}/privacy`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    ...restaurantRoutes,
   ];
 }

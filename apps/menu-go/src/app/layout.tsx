@@ -1,5 +1,8 @@
 // eslint-disable-next-line camelcase
 import { Bricolage_Grotesque, DM_Mono } from 'next/font/google';
+import type { Metadata } from 'next';
+
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../lib/site';
 
 const display = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -15,9 +18,26 @@ const mono = DM_Mono({
   display: 'swap',
 });
 
-export const metadata = {
-  title: 'Dineqrs',
-  description: 'QR menus that actually look like something.',
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  icons: { icon: '/favicon.ico' },
 };
 
 export default function RootLayout({

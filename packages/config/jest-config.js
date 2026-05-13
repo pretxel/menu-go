@@ -23,6 +23,9 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/public/$1',
     '^.+\\.(svg)$': '<rootDir>/src/__mocks__/svg.tsx',
+    // SWC rewrites `import { after } from 'next/server'` to this path under jest,
+    // but Next 16 only ships `after` at `next/dist/server/after`.
+    '^next/dist/server/web/exports/after$': 'next/dist/server/after',
   },
 };
 
