@@ -101,7 +101,8 @@ i18n uses `next-i18next` (configured in `next-i18next.config.js`). Translation J
 Required in `.env` (see `.env.example`):
 
 ```
-DATABASE_URL=             # PostgreSQL connection string
+DATABASE_URL=             # PostgreSQL connection string (Supabase transaction pooler, port 6543)
+DIRECT_URL=               # Prisma CLI connection (Supabase session pooler, port 5432); optional with Docker
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FACEBOOK_CLIENT_ID=
@@ -111,7 +112,9 @@ EMAIL_FROM=
 SECRET=                   # NextAuth secret
 ```
 
-Docker Compose provides PostgreSQL locally on port 5432 with credentials `postgres:secrect` (note: intentional typo in original config).
+The primary database is Supabase Postgres (project `menu-go`, region `eu-west-1`). The runtime connects through the Supavisor transaction pooler (`DATABASE_URL`); Prisma CLI commands (`db:push`/`migrate`/`seed`) use the session pooler via `DIRECT_URL` (configured in `packages/db/prisma.config.ts`, falls back to `DATABASE_URL`). Free-tier Supabase projects pause after ~1 week of inactivity — resume from the dashboard.
+
+Docker Compose remains a local fallback: PostgreSQL on port 5432 with credentials `postgres:secrect` (note: intentional typo in original config).
 
 ## Known Issues
 

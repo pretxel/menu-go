@@ -11,6 +11,8 @@ export default defineConfig({
     path: './prisma/migrations',
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    // CLI commands (push/migrate/seed) need a session-mode connection;
+    // DIRECT_URL points at it, falling back to DATABASE_URL for local Docker.
+    url: process.env.DIRECT_URL ? env('DIRECT_URL') : env('DATABASE_URL'),
   },
 });

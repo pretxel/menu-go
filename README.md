@@ -70,7 +70,8 @@ pnpm install
 Copy `.env.example` → `.env`, fill values:
 
 ```
-DATABASE_URL=             # Postgres connection string
+DATABASE_URL=             # Postgres connection string (Supabase pooled URL, port 6543)
+DIRECT_URL=               # Prisma CLI connection (Supabase session pooler, port 5432); optional with Docker
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FACEBOOK_CLIENT_ID=
@@ -83,13 +84,17 @@ ANTHROPIC_API_KEY=        # Photo menu parsing
 OPENAI_API_KEY=
 ```
 
-### 4. Start Postgres
+### 4. Database
+
+**Supabase (primary).** The project uses a Supabase Postgres (project `menu-go`, region `eu-west-1`). Set `DATABASE_URL` to the Supavisor transaction pooler (port 6543) and `DIRECT_URL` to the session pooler (port 5432). Note: free-tier projects pause after ~1 week of inactivity — resume from the Supabase dashboard.
+
+**Docker (local fallback).**
 
 ```bash
 docker compose up -d
 ```
 
-Local Postgres runs on `:5432` with `postgres:secrect` (intentional typo retained from original config).
+Local Postgres runs on `:5432` with `postgres:secrect` (intentional typo retained from original config). With Docker, point `DATABASE_URL` at it and omit `DIRECT_URL`.
 
 ### 5. Push schema + seed
 
