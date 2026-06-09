@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+
 import MenuJsonLd from '../src/components/Menu/json-ld';
 
 describe('MenuJsonLd', () => {

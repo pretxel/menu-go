@@ -1,12 +1,12 @@
+import sitemap from '../src/app/sitemap';
+import prisma from '../src/lib/prisma';
+
 jest.mock('../src/lib/prisma', () => ({
   __esModule: true,
   default: {
     configRestaurant: { findMany: jest.fn() },
   },
 }));
-
-import prisma from '../src/lib/prisma';
-import sitemap from '../src/app/sitemap';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma = prisma as any;

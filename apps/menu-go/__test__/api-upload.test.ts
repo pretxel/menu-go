@@ -6,8 +6,6 @@
  * provide the Edge Runtime. We test the core logic by mocking @vercel/blob.
  */
 
-import { NextResponse } from 'next/server';
-
 // Mock @vercel/blob
 const mockPut = jest.fn();
 jest.mock('@vercel/blob', () => ({

@@ -1,3 +1,6 @@
+import { generateMetadata } from '../src/app/r/[slug]/page';
+import prisma from '../src/lib/prisma';
+
 jest.mock('next/cache', () => ({ revalidatePath: jest.fn() }));
 
 jest.mock('next/server', () => ({ after: jest.fn() }));
@@ -30,9 +33,6 @@ jest.mock('../src/lib/prisma', () => ({
     configRestaurant: { findFirst: jest.fn() },
   },
 }));
-
-import prisma from '../src/lib/prisma';
-import { generateMetadata } from '../src/app/r/[slug]/page';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma = prisma as any;

@@ -1,4 +1,18 @@
 // Mock 'use server' directive dependencies
+import Anthropic from '@anthropic-ai/sdk';
+import { getServerSession } from 'next-auth';
+
+import {
+  getAllCategories,
+  getMenu,
+  getMenuBySlug,
+  getOnboardingStatus,
+  parseMenuFromPhoto,
+  postDish,
+  trackMenuView,
+} from '../src/app/actions';
+import prisma from '../src/lib/prisma';
+
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }));
@@ -58,7 +72,7 @@ jest.mock('zod', () => {
   };
 
   const z = {
-    object: (shape: any) => ({
+    object: (_shape: any) => ({
       safeParse: (data: any) => ({ success: true, data }),
     }),
     string: createChainable,
@@ -106,20 +120,6 @@ jest.mock('../src/lib/prisma', () => ({
     $transaction: jest.fn(),
   },
 }));
-
-import Anthropic from '@anthropic-ai/sdk';
-import { getServerSession } from 'next-auth';
-
-import {
-  getAllCategories,
-  getMenu,
-  getMenuBySlug,
-  getOnboardingStatus,
-  parseMenuFromPhoto,
-  postDish,
-  trackMenuView,
-} from '../src/app/actions';
-import prisma from '../src/lib/prisma';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma = prisma as any;

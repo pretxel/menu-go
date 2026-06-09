@@ -1,15 +1,15 @@
-jest.unmock('zod');
-
+import { getServerSession } from 'next-auth';
 import { z } from 'zod';
+
+import { authedAction } from '../src/lib/server-action';
+
+jest.unmock('zod');
 
 jest.mock('next-auth', () => ({
   getServerSession: jest.fn(),
 }));
 
 jest.mock('../src/lib/auth', () => ({ authOptions: {} }));
-
-import { getServerSession } from 'next-auth';
-import { authedAction } from '../src/lib/server-action';
 
 const schema = z.object({ name: z.string().min(1) });
 

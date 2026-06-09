@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import OnboardingBanner from '../src/components/OnboardingBanner';
@@ -47,31 +48,31 @@ describe('OnboardingBanner', () => {
   });
 
   it('Category step is done when hasCategory is true', () => {
-    render(<OnboardingBanner hasCategory={true} hasDish={false} />);
+    render(<OnboardingBanner hasCategory hasDish={false} />);
     const item = screen.getByText('Category').closest('li');
     expect(item).toHaveTextContent(/done/i);
   });
 
   it('Dishes step is active when hasCategory is true and hasDish is false', () => {
-    render(<OnboardingBanner hasCategory={true} hasDish={false} />);
+    render(<OnboardingBanner hasCategory hasDish={false} />);
     const item = screen.getByText('Dishes').closest('li');
     expect(item).toHaveTextContent(/now/i);
   });
 
   it('Dishes step is done when hasDish is true', () => {
-    render(<OnboardingBanner hasCategory={true} hasDish={true} />);
+    render(<OnboardingBanner hasCategory hasDish />);
     const item = screen.getByText('Dishes').closest('li');
     expect(item).toHaveTextContent(/done/i);
   });
 
   it('Share QR step is active when all other steps are done', () => {
-    render(<OnboardingBanner hasCategory={true} hasDish={true} />);
+    render(<OnboardingBanner hasCategory hasDish />);
     const item = screen.getByText('Share QR').closest('li');
     expect(item).toHaveTextContent(/now/i);
   });
 
   it('Dishes step links to /panel/onboarding/dishes', () => {
-    render(<OnboardingBanner hasCategory={true} hasDish={false} />);
+    render(<OnboardingBanner hasCategory hasDish={false} />);
     const link = screen.getByText('Dishes').closest('a');
     expect(link).toHaveAttribute('href', '/panel/onboarding/dishes');
   });

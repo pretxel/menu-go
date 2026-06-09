@@ -3,14 +3,13 @@
  */
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
+import { postBulkDishes } from '../src/app/actions';
 import PhotoMenuImporter from '../src/components/PhotoMenuImporter';
 
 jest.mock('../src/app/actions', () => ({
   parseMenuFromPhoto: jest.fn(),
   postBulkDishes: jest.fn(),
 }));
-
-import { postBulkDishes } from '../src/app/actions';
 
 const parsedCategories = [
   {
