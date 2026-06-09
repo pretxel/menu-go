@@ -22,19 +22,21 @@ export default function Banner({ restaurant }) {
         <h1 className="font-display text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[0.9] tracking-tight">
           {restaurant.name}
         </h1>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-widest text-ink/80 sm:text-sm">
-          <span>{restaurant.address}</span>
-          {restaurant.phone && (
-            <>
+        {(restaurant.address || restaurant.phone) && (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-widest text-ink/80 sm:text-sm">
+            {restaurant.address && <span>{restaurant.address}</span>}
+            {restaurant.address && restaurant.phone && (
               <span aria-hidden className="text-ink/30">
                 ◆
               </span>
+            )}
+            {restaurant.phone && (
               <a href={`tel:${restaurant.phone}`} className="hover:underline">
                 {restaurant.phone}
               </a>
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

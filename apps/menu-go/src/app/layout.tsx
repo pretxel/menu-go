@@ -1,6 +1,8 @@
+import '../styles/globals.css';
+
+import type { Metadata } from 'next';
 // eslint-disable-next-line camelcase
 import { Bricolage_Grotesque, DM_Mono } from 'next/font/google';
-import type { Metadata } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../lib/site';
 

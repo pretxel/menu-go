@@ -42,10 +42,10 @@ export default function MenuJsonLd({ restaurant, dishes, url }: Props) {
   const data = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
-    name: restaurant.name ?? undefined,
-    address: restaurant.address ?? undefined,
-    telephone: restaurant.phone ?? undefined,
-    servesCuisine: restaurant.cuisineType ?? undefined,
+    name: restaurant.name || undefined,
+    address: restaurant.address || undefined,
+    telephone: restaurant.phone || undefined,
+    servesCuisine: restaurant.cuisineType || undefined,
     url,
     hasMenu: { '@type': 'Menu', hasMenuSection: sections },
   };

@@ -5,9 +5,16 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { RiFacebookFill } from 'react-icons/ri';
 
+// Only forward relative callback paths — anything absolute could be an open
+// redirect. Default stays the panel.
+function targetCallbackUrl(): string {
+  const raw = new URLSearchParams(window.location.search).get('callbackUrl');
+  return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/panel';
+}
+
 export default function Login() {
-  const handleClick = () => signIn('facebook');
-  const handleClickGmail = () => signIn('google');
+  const handleClick = () => signIn('facebook', { callbackUrl: targetCallbackUrl() });
+  const handleClickGmail = () => signIn('google', { callbackUrl: targetCallbackUrl() });
 
   return (
     <div className="relative flex min-h-screen flex-1 bg-paper text-ink">

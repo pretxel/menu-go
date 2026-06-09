@@ -11,7 +11,8 @@ import { z } from 'zod';
 
 import { authOptions } from '../lib/auth';
 import prisma from '../lib/prisma';
-import { authedAction, requireSession, UnauthorizedError, type ActionState } from '../lib/server-action';
+import { type ActionState,authedAction, requireSession, UnauthorizedError } from '../lib/server-action';
+import { resolveSiteUrl } from '../lib/site';
 import { IDish } from '../types/dish';
 
 const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -33,6 +34,27 @@ const postRestaurantSchema = z.object({
   cuisineType: z.string().optional().default(''),
   primaryColor: z.string().optional().default('#4F46E5'),
   backgroundColor: z.string().optional().default('#FFFFFF'),
+});
+
+const parsedCategorySchema = z.object({
+  name: z.string().min(1).max(80),
+  dishes: z.array(
+    z.object({
+      name: z.string().min(1).max(120),
+      description: z.string().max(500).optional().default(''),
+      price: z.number().min(0).optional().default(0),
+      tags: z.array(z.string()).optional().default([]),
+    }),
+  ),
+});
+
+const publishCatalogSchema = z.object({
+  restaurant: z.object({
+    name: z.string().min(1, 'Name is required').max(120),
+    address: z.string().max(200).optional().default(''),
+    phone: z.string().max(40).optional().default(''),
+  }),
+  categories: z.array(parsedCategorySchema),
 });
 
 const addCategorySchema = z.object({
@@ -143,8 +165,7 @@ export const postRestaurant = authedAction(
         data: { name, userId, address, phone, slug, cuisineType, primaryColor, backgroundColor },
       });
 
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
-      const menuUrl = `${siteUrl}/r/${slug || restaurant.id}`;
+      const menuUrl = `${resolveSiteUrl()}/r/${slug || restaurant.id}`;
       const qrUrl = await QRCode.toDataURL(menuUrl);
 
       restaurantResp = await prisma.configRestaurant.update({
@@ -446,28 +467,7 @@ export async function postBulkDishes(
     if (!config) return { message: 'Create your restaurant profile first.' };
 
     await prisma.$transaction(async (tx) => {
-      for (const cat of categories) {
-        let category = await tx.category.findFirst({
-          where: { name: cat.name, configRestaurantId: config.id },
-        });
-        if (!category) {
-          category = await tx.category.create({
-            data: { name: cat.name, description: cat.name, configRestaurantId: config.id },
-          });
-        }
-        for (const dish of cat.dishes) {
-          await tx.dishes.create({
-            data: {
-              name: dish.name,
-              description: dish.description || '',
-              price: dish.price || 0,
-              tags: dish.tags || [],
-              configRestaurantId: config.id,
-              categoryId: category.id,
-            },
-          });
-        }
-      }
+      await importCategories(tx, config.id, categories);
     });
 
     revalidatePath('/panel/dishes');
@@ -476,6 +476,116 @@ export async function postBulkDishes(
     if (e instanceof UnauthorizedError) return { message: 'Sign in required.', requiresAuth: true };
     console.error(e);
     return { message: 'Bulk import failed.' };
+  }
+}
+
+async function importCategories(
+  tx: Prisma.TransactionClient,
+  configRestaurantId: string,
+  categories: Array<{
+    name: string;
+    dishes: Array<{ name: string; description?: string; price?: number; tags?: string[] }>;
+  }>,
+): Promise<void> {
+  for (const cat of categories) {
+    let category = await tx.category.findFirst({
+      where: { name: cat.name, configRestaurantId },
+    });
+    if (!category) {
+      category = await tx.category.create({
+        data: { name: cat.name, description: cat.name, configRestaurantId },
+      });
+    }
+    for (const dish of cat.dishes) {
+      await tx.dishes.create({
+        data: {
+          name: dish.name,
+          description: dish.description || '',
+          price: dish.price || 0,
+          tags: dish.tags || [],
+          configRestaurantId,
+          categoryId: category.id,
+        },
+      });
+    }
+  }
+}
+
+export type PublishCatalogInput = z.infer<typeof publishCatalogSchema>;
+
+export type PublishCatalogResult = {
+  slug: string;
+  qrCode: string;
+  menuUrl: string;
+};
+
+export async function publishCatalog(
+  input: PublishCatalogInput,
+): Promise<ActionState<PublishCatalogResult>> {
+  try {
+    const session = await requireSession();
+    const parsed = publishCatalogSchema.safeParse(input);
+    if (!parsed.success) {
+      return { message: null, fieldErrors: parsed.error.flatten().fieldErrors };
+    }
+    const { restaurant: details, categories } = parsed.data;
+
+    let config = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+
+    if (!config) {
+      let slug = generateSlug(details.name);
+      const taken = await prisma.configRestaurant.findFirst({ where: { slug } });
+      if (taken) slug = `${slug}-${Date.now()}`;
+
+      const menuUrl = `${resolveSiteUrl()}/r/${slug}`;
+      const qrCode = await QRCode.toDataURL(menuUrl);
+
+      config = await prisma.$transaction(async (tx) => {
+        const created = await tx.configRestaurant.create({
+          data: {
+            name: details.name,
+            userId: session.user.id,
+            address: details.address ?? '',
+            phone: details.phone ?? '',
+            slug,
+            qrCode,
+          },
+        });
+        await importCategories(tx, created.id, categories);
+        return created;
+      });
+    } else {
+      // Existing restaurant: reuse slug + QR, just import. Backfill QR if missing.
+      if (!config.qrCode) {
+        const menuUrl = `${resolveSiteUrl()}/r/${config.slug ?? config.id}`;
+        const qrCode = await QRCode.toDataURL(menuUrl);
+        config = await prisma.configRestaurant.update({
+          where: { id: config.id },
+          data: { qrCode },
+        });
+      }
+      const configId = config.id;
+      await prisma.$transaction(async (tx) => {
+        await importCategories(tx, configId, categories);
+      });
+    }
+
+    revalidatePath('/panel');
+    revalidatePath('/panel/dishes');
+
+    const slugOrId = config.slug ?? config.id;
+    return {
+      message: 'Catalog published!',
+      data: {
+        slug: slugOrId,
+        qrCode: config.qrCode ?? '',
+        menuUrl: `${resolveSiteUrl()}/r/${slugOrId}`,
+      },
+    };
+  } catch (e) {
+    if (e instanceof UnauthorizedError) return { message: 'Sign in required.', requiresAuth: true };
+    console.error(e);
+    return { message: 'Publish failed. Please try again.' };
   }
 }
 

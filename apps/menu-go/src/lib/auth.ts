@@ -1,9 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { NextAuthOptions } from 'next-auth';
-import type { Provider } from 'next-auth/providers/index';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import FacebookProvider from 'next-auth/providers/facebook';
 import GoogleProvider from 'next-auth/providers/google';
+import type { Provider } from 'next-auth/providers/index';
 
 import prisma from './prisma';
 
@@ -50,7 +50,11 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login',
   },
   callbacks: {
-    async redirect({ baseUrl }) {
+    async redirect({ url, baseUrl }) {
+      // Honor relative and same-origin callback URLs (e.g. the /d funnel);
+      // anything else falls back to the panel.
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (url.startsWith(`${baseUrl}/`) || url === baseUrl) return url;
       return `${baseUrl}/panel`;
     },
     async session({ session, user }) {
