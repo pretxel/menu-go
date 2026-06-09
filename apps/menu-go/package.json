@@ -55,12 +55,12 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-test-renderer": "^18.3.0",
     "autoprefixer": "^10.5.0",
-    "config": "*",
+    "config": "workspace:*",
     "next-router-mock": "^0.9.13",
     "postcss": "^8.5.13",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
-    "tsconfig": "*",
+    "tsconfig": "workspace:*",
     "typescript": "^6.0.3"
   }
 }

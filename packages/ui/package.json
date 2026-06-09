@@ -5,7 +5,6 @@
   "types": "./src/index.tsx",
   "license": "MIT",
   "scripts": {
-    "build": "NODE_ENV=production rollup -c rollup.config.js",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
