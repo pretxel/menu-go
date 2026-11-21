@@ -40,7 +40,7 @@
 
 ## 6. Deploy
 
-- [ ] 6.1 Add `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to Vercel `menu-go-menu-go` for Production, Preview and Development, using the values from travel-taste. Verify: `vercel env list --project menu-go-menu-go` shows both in all three environments.
+- [x] 6.1 Add `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to Vercel `menu-go-menu-go` for Production, Preview and Development, using the values from travel-taste. Verify: `vercel env list --project menu-go-menu-go` shows both in all three environments.
 - [ ] 6.2 Deploy a preview and smoke-test: Google sign-in creates one `mg_user` + `mg_account`, the `/d` funnel publishes, `/r/<slug>` renders, `/panel` shows the restaurant, and an anonymous `/panel` visit redirects to `/login`. Verify: each check passes and rows are visible in `mg_*` tables.
 - [ ] 6.3 Merge to `master`, confirm the production deploy is healthy, then remove `DATABASE_URL` / `DIRECT_URL` from Vercel. Verify: production smoke-test passes and `vercel env list` no longer shows the Postgres URLs.
 
