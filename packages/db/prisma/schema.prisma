@@ -24,6 +24,8 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+
+  @@map("mg_account")
 }
 
 model Session {
@@ -32,6 +34,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mg_session")
 }
 
 model User {
@@ -44,6 +48,8 @@ model User {
   accounts         Account[]
   sessions         Session[]
   ConfigRestaurant ConfigRestaurant[]
+
+  @@map("mg_user")
 }
 
 model VerificationToken {
@@ -53,6 +59,8 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+
+  @@map("mg_verification_token")
 }
 
 model ConfigRestaurant {
@@ -74,6 +82,8 @@ model ConfigRestaurant {
   MenuView    MenuView[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  @@map("mg_config_restaurant")
 }
 
 model Category {
@@ -84,6 +94,8 @@ model Category {
   configRestaurantId String?
   configRestaurant   ConfigRestaurant? @relation(fields: [configRestaurantId], references: [id])
   Dishes             Dishes[]
+
+  @@map("mg_category")
 }
 
 model Dishes {
@@ -100,6 +112,8 @@ model Dishes {
   category           Category         @relation(fields: [categoryId], references: [id])
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
+
+  @@map("mg_dishes")
 }
 
 model MenuView {
@@ -108,4 +122,6 @@ model MenuView {
   configRestaurant   ConfigRestaurant @relation(fields: [configRestaurantId], references: [id])
   source             String           @default("direct")
   createdAt          DateTime         @default(now())
+
+  @@map("mg_menu_view")
 }

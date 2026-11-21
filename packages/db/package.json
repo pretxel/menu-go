@@ -7,10 +7,10 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push --accept-data-loss",
+    "db:push": "node scripts/guard-shared-db.mjs && prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma migrate reset --force",
-    "db:migrate:dev": "prisma migrate dev --create-only",
+    "db:reset": "node scripts/guard-shared-db.mjs && prisma migrate reset --force",
+    "db:migrate:dev": "node scripts/guard-shared-db.mjs && prisma migrate dev --create-only",
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio --port 5557",
     "postinstall": "prisma generate"

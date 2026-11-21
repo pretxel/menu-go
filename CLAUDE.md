@@ -112,7 +112,9 @@ EMAIL_FROM=
 SECRET=                   # NextAuth secret
 ```
 
-The primary database is Supabase Postgres (project `menu-go`, region `eu-west-1`). The runtime connects through the Supavisor transaction pooler (`DATABASE_URL`); Prisma CLI commands (`db:push`/`migrate`/`seed`) use the session pooler via `DIRECT_URL` (configured in `packages/db/prisma.config.ts`, falls back to `DATABASE_URL`). Free-tier Supabase projects pause after ~1 week of inactivity — resume from the dashboard.
+The primary database is the shared Supabase project `gridscore` (ref `dfllsojtcwryhkvoetfh`, region `eu-west-1`). Its `public` schema also holds other apps (gridscore core tables, `rb_*`, `tt_*`), so every menu-go table is prefixed `mg_` via `@@map` in `schema.prisma`, with RLS enabled and no policies (only the server-side Prisma connection, which uses the `postgres` role, can read them). The runtime connects through the Supavisor transaction pooler (`DATABASE_URL`); Prisma CLI commands use the session pooler via `DIRECT_URL` (configured in `packages/db/prisma.config.ts`, falls back to `DATABASE_URL`).
+
+**Never run `prisma db push`, `prisma migrate reset` or `prisma migrate dev` against the shared database** — they would drop the other apps' tables. `pnpm db:push`, `db:reset` and `db:migrate:dev` refuse to run when the URL points at Supabase (`packages/db/scripts/guard-shared-db.mjs`). Schema changes go in a new folder under `packages/db/prisma/migrations/` (generate SQL with `prisma migrate diff`, keep only `mg_` objects) and are applied with `pnpm db:migrate`. The old `menu-go` Supabase project (`fbbulaxuwkddxdykilmv`) is paused and no longer used.
 
 Docker Compose remains a local fallback: PostgreSQL on port 5432 with credentials `postgres:secrect` (note: intentional typo in original config).
 
