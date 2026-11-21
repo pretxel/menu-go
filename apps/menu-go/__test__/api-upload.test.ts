@@ -1,71 +1,65 @@
 /**
- * Tests for the upload API route (src/app/api/upload/route.ts).
- *
- * The upload route uses `export const runtime = 'edge'` and relies on Web API
- * Request/Response objects. Jest runs in Node with jsdom, which does not
- * provide the Edge Runtime. We test the core logic by mocking @vercel/blob.
+ * @jest-environment node
  */
+import { put } from '@vercel/blob';
+import { getServerSession } from 'next-auth';
 
-// Mock @vercel/blob
-const mockPut = jest.fn();
-jest.mock('@vercel/blob', () => ({
-  put: mockPut,
-}));
+import { POST } from '../src/app/api/upload/route';
 
-// Mock nanoid
-jest.mock('nanoid', () => ({
-  customAlphabet: () => () => 'abc1234',
-}));
+jest.mock('@vercel/blob', () => ({ put: jest.fn() }));
+jest.mock('nanoid', () => ({ customAlphabet: () => () => 'abc1234' }));
+jest.mock('next-auth', () => ({ getServerSession: jest.fn() }));
+jest.mock('../src/lib/auth', () => ({ authOptions: {} }));
 
-// We cannot directly import the Edge route handler in jsdom, so we
-// replicate the core logic to verify the blob interaction.
-describe('Upload API Route Logic', () => {
+const mockPut = put as jest.Mock;
+const mockSession = getServerSession as jest.Mock;
+
+function upload(contentType: string) {
+  return POST(
+    new Request('http://x/api/upload', {
+      method: 'POST',
+      headers: { 'content-type': contentType },
+      body: 'bytes',
+    }),
+    undefined,
+  );
+}
+
+describe('POST /api/upload', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSession.mockResolvedValue({ user: { id: 'u1' } });
   });
 
-  test('put is called with correct parameters for image upload', async () => {
-    const mockBlob = {
-      url: 'https://blob.vercel-storage.com/abc1234.png',
-      pathname: 'abc1234.png',
-    };
-    mockPut.mockResolvedValue(mockBlob);
+  test('401 without a session, nothing stored', async () => {
+    mockSession.mockResolvedValue(null);
+    const res = await upload('image/png');
+    expect(res.status).toBe(401);
+    expect(mockPut).not.toHaveBeenCalled();
+  });
 
-    const { put } = require('@vercel/blob');
-    const { customAlphabet } = require('nanoid');
-    const nanoid = customAlphabet();
+  test('415 for a non-image content type, nothing stored', async () => {
+    const res = await upload('text/plain');
+    expect(res.status).toBe(415);
+    expect(await res.json()).toEqual({ error: 'Only image uploads are allowed.' });
+    expect(mockPut).not.toHaveBeenCalled();
+  });
 
-    const contentType = 'image/png';
-    const filename = `${nanoid()}.${contentType.split('/')[1]}`;
-    const body = Buffer.from('fake-image-data');
+  test('415 when the content type is missing', async () => {
+    const res = await POST(new Request('http://x/api/upload', { method: 'POST' }), undefined);
+    expect(res.status).toBe(415);
+    expect(mockPut).not.toHaveBeenCalled();
+  });
 
-    const result = await put(filename, body, {
-      contentType,
-      access: 'public',
-    });
-
-    expect(put).toHaveBeenCalledWith('abc1234.png', body, {
+  test('stores an image and returns the blob', async () => {
+    const blob = { url: 'https://blob.vercel-storage.com/abc1234.png', pathname: 'abc1234.png' };
+    mockPut.mockResolvedValue(blob);
+    const res = await upload('image/png');
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual(blob);
+    expect(mockPut).toHaveBeenCalledWith('abc1234.png', expect.anything(), {
       contentType: 'image/png',
       access: 'public',
     });
-    expect(result.url).toBe('https://blob.vercel-storage.com/abc1234.png');
-  });
-
-  test('filename is generated from content type', () => {
-    const { customAlphabet } = require('nanoid');
-    const nanoid = customAlphabet();
-
-    const contentType = 'image/jpeg';
-    const filename = `${nanoid()}.${contentType.split('/')[1]}`;
-
-    expect(filename).toBe('abc1234.jpeg');
-  });
-
-  test('defaults content type to text/plain when not provided', () => {
-    const contentType: string | undefined = undefined;
-    const resolvedType = contentType ?? 'text/plain';
-    const filename = `abc1234.${resolvedType.split('/')[1]}`;
-
-    expect(filename).toBe('abc1234.plain');
   });
 });

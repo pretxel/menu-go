@@ -11,24 +11,17 @@ export default function RemoveModal({ open, setOpen, idType, type }) {
   const cancelButtonRef = useRef(null);
   const router = useRouter();
 
-  const removeDish = async (id) => {
-    const res = await fetch(`/api/dishes/${id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (res.status === 200 && data.id === id) toast.success('Dish removed');
-    else toast.error('Error removing dish');
-    router.refresh();
-  };
-
-  const removeCategory = async (id) => {
+  // The API answers { id } on success and { error } otherwise (401/404/409).
+  const remove = async (path, id, label) => {
     try {
-      const res = await fetch(`/api/category/${id}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (res.status === 200 && data.id === id) toast.success('Category removed');
-      else toast.error('Error removing category');
+      const res = await fetch(`/api/${path}/${id}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.id === id) toast.success(`${label} removed`);
+      else toast.error(data.error ?? `Error removing ${label.toLowerCase()}`);
       router.refresh();
     } catch (error) {
-      console.log(error);
-      toast.error('Error removing category');
+      console.error(error);
+      toast.error(`Error removing ${label.toLowerCase()}`);
     }
   };
 
@@ -94,8 +87,8 @@ export default function RemoveModal({ open, setOpen, idType, type }) {
                     className="btn-brut-primary text-xs"
                     onClick={() => {
                       setOpen(false);
-                      if (type === 'category') removeCategory(idType);
-                      else removeDish(idType);
+                      if (type === 'category') remove('category', idType, 'Category');
+                      else remove('dishes', idType, 'Dish');
                     }}
                   >
                     Remove →

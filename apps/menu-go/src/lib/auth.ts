@@ -4,6 +4,7 @@ import FacebookProvider from 'next-auth/providers/facebook';
 import GoogleProvider from 'next-auth/providers/google';
 import type { Provider } from 'next-auth/providers/index';
 
+import { findOwnedRestaurantId } from './owned-restaurant';
 import { getSupabase, unwrap } from './supabase';
 
 function envPair(idKey: string, secretKey: string): { id: string; secret: string } | null {
@@ -92,18 +93,6 @@ async function findUserIdByEmail(email: string): Promise<string | null> {
   return row?.id ?? null;
 }
 
-async function findRestaurantId(userId: string): Promise<string | null> {
-  const row = unwrap(
-    await getSupabase()
-      .from('mg_config_restaurant')
-      .select('id')
-      .eq('userId', userId)
-      .limit(1)
-      .maybeSingle(),
-  );
-  return row?.id ?? null;
-}
-
 export const authOptions: NextAuthOptions = {
   // JWT sessions: no session table. Users and accounts are persisted in signIn.
   session: { strategy: 'jwt' },
@@ -139,7 +128,7 @@ export const authOptions: NextAuthOptions = {
       // Until the user owns a restaurant, look it up on every read so one
       // created mid-session (e.g. the /d funnel publish) shows up right away.
       if (token.uid && !token.configRestaurantId) {
-        token.configRestaurantId = await findRestaurantId(token.uid);
+        token.configRestaurantId = await findOwnedRestaurantId(token.uid);
       }
       return token;
     },

@@ -97,8 +97,8 @@ function takeFailure(name: string): boolean {
   return false;
 }
 
-function dbError(message: string) {
-  return { message, code: 'XX000', details: null, hint: null };
+function dbError(message: string, code = 'XX000') {
+  return { message, code, details: null, hint: null };
 }
 
 function checkConstraints(table: string, row: Row, others: Row[]) {
@@ -314,6 +314,21 @@ class Query implements PromiseLike<any> {
         }
       } else if (this.op === 'delete') {
         result = rows.filter((r) => this.rowMatches(r));
+        // ON DELETE RESTRICT foreign keys (0_init_mg_prefix.sql). The other two
+        // (mg_account.userId CASCADE, mg_category.configRestaurantId SET NULL)
+        // are not exercised by deletes in the app.
+        const notRestrict = ['mg_account.userId', 'mg_category.configRestaurantId'];
+        for (const [child, cols] of Object.entries(FKS)) {
+          for (const [col, parent] of Object.entries(cols)) {
+            if (parent !== this.table || notRestrict.includes(`${child}.${col}`)) continue;
+            if (db.tables[child].some((c) => result.some((r) => r.id === c[col]))) {
+              throw dbError(
+                `update or delete on table "${this.table}" violates foreign key constraint on table "${child}"`,
+                '23503',
+              );
+            }
+          }
+        }
         db.tables[this.table] = rows.filter((r) => !result.includes(r));
       }
     } catch (e: any) {
