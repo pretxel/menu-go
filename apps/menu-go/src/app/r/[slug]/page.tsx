@@ -3,8 +3,8 @@ import { after } from 'next/server';
 
 import Menu from '../../../components/Menu';
 import MenuJsonLd from '../../../components/Menu/json-ld';
-import prisma from '../../../lib/prisma';
 import { SITE_URL } from '../../../lib/site';
+import { getSupabase, unwrap } from '../../../lib/supabase';
 import { getMenuBySlug, trackMenuView } from '../../actions';
 
 export const revalidate = 60;
@@ -13,10 +13,14 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
   const { slug } = await params;
-  const restaurant = await prisma.configRestaurant.findFirst({
-    where: { slug },
-    select: { name: true, address: true, cuisineType: true, logoUrl: true, slug: true, id: true },
-  });
+  const restaurant = unwrap(
+    await getSupabase()
+      .from('mg_config_restaurant')
+      .select('name, address, cuisineType, logoUrl, slug, id')
+      .eq('slug', slug)
+      .limit(1)
+      .maybeSingle(),
+  );
   if (!restaurant) return { title: 'Menu not found' };
 
   const title = restaurant.name ?? 'Menu';

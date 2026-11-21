@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import QRCode from 'qrcode';
 
 import { publishCatalog } from '../src/app/actions';
-import prisma from '../src/lib/prisma';
+import { db, resetDb } from './helpers/supabase-fake';
 
 jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
@@ -74,27 +74,8 @@ jest.mock('zod', () => {
   return { z };
 });
 
-jest.mock('../src/lib/prisma', () => ({
-  __esModule: true,
-  default: {
-    configRestaurant: {
-      findFirst: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-    },
-    category: {
-      findFirst: jest.fn(),
-      create: jest.fn(),
-    },
-    dishes: {
-      create: jest.fn(),
-    },
-    $transaction: jest.fn(),
-  },
-}));
+jest.mock('../src/lib/supabase', () => require('./helpers/supabase-fake').moduleMock());
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockPrisma = prisma as any;
 const mockSession = getServerSession as jest.Mock;
 const mockToDataURL = QRCode.toDataURL as jest.Mock;
 
@@ -108,10 +89,17 @@ const sampleCategories = [
   },
 ];
 
+const existingRestaurant = {
+  id: 'rest-1',
+  userId: 'user-1',
+  name: 'Existing',
+  slug: 'existing-slug',
+  qrCode: 'data:image/png;base64,EXISTING',
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
-  // tx client is the same mock — run transaction callbacks against it
-  mockPrisma.$transaction.mockImplementation(async (fn: any) => fn(mockPrisma));
+  resetDb({ mg_user: [{ id: 'user-1', email: 'u1@example.com' }] });
   mockToDataURL.mockResolvedValue('data:image/png;base64,QR');
 });
 
@@ -126,21 +114,12 @@ describe('publishCatalog', () => {
 
     expect(res.requiresAuth).toBe(true);
     expect(res.message).toBe('Sign in required.');
-    expect(mockPrisma.configRestaurant.create).not.toHaveBeenCalled();
-    expect(mockPrisma.dishes.create).not.toHaveBeenCalled();
+    expect(db.tables.mg_config_restaurant).toHaveLength(0);
+    expect(db.tables.mg_dishes).toHaveLength(0);
   });
 
   it('first-time publish creates restaurant with slug + QR and imports dishes', async () => {
     mockSession.mockResolvedValue({ user: { id: 'user-1' } });
-    mockPrisma.configRestaurant.findFirst
-      .mockResolvedValueOnce(null) // no restaurant for user
-      .mockResolvedValueOnce(null); // slug not taken
-    mockPrisma.configRestaurant.create.mockImplementation(({ data }: any) =>
-      Promise.resolve({ id: 'rest-1', ...data }),
-    );
-    mockPrisma.category.findFirst.mockResolvedValue(null);
-    mockPrisma.category.create.mockResolvedValue({ id: 'cat-1', name: 'Starters' });
-    mockPrisma.dishes.create.mockResolvedValue({ id: 'dish-x' });
 
     const res = await publishCatalog({
       restaurant: { name: 'Casa Edsel', address: '123 Main St', phone: '555-1234' },
@@ -149,15 +128,24 @@ describe('publishCatalog', () => {
 
     // QR encodes an absolute URL to the public page
     expect(mockToDataURL).toHaveBeenCalledWith('http://localhost:3000/r/casa-edsel');
-    expect(mockPrisma.configRestaurant.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({
+    expect(db.tables.mg_config_restaurant).toEqual([
+      expect.objectContaining({
         name: 'Casa Edsel',
         userId: 'user-1',
+        address: '123 Main St',
+        phone: '555-1234',
         slug: 'casa-edsel',
         qrCode: 'data:image/png;base64,QR',
       }),
-    });
-    expect(mockPrisma.dishes.create).toHaveBeenCalledTimes(2);
+    ]);
+    const restaurantId = db.tables.mg_config_restaurant[0].id;
+    expect(db.tables.mg_category).toEqual([
+      expect.objectContaining({ name: 'Starters', configRestaurantId: restaurantId }),
+    ]);
+    expect(db.tables.mg_dishes).toHaveLength(2);
+    expect(db.tables.mg_dishes[0]).toEqual(
+      expect.objectContaining({ name: 'Nachos', price: 8.5, tags: ['vegetarian'], configRestaurantId: restaurantId }),
+    );
     expect(res.data).toEqual({
       slug: 'casa-edsel',
       qrCode: 'data:image/png;base64,QR',
@@ -165,45 +153,61 @@ describe('publishCatalog', () => {
     });
   });
 
+  it('suffixes the slug when another restaurant already uses it', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
+    db.tables.mg_config_restaurant.push({ id: 'other', userId: 'user-2', slug: 'casa-edsel' });
+
+    const res = await publishCatalog({
+      restaurant: { name: 'Casa Edsel', address: '', phone: '' },
+      categories: [],
+    });
+
+    expect(res.data?.slug).toMatch(/^casa-edsel-\d+$/);
+  });
+
   it('publishes with name only — address and phone default to empty strings', async () => {
     mockSession.mockResolvedValue({ user: { id: 'user-1' } });
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue(null);
-    mockPrisma.configRestaurant.create.mockImplementation(({ data }: any) =>
-      Promise.resolve({ id: 'rest-1', ...data }),
-    );
-    mockPrisma.category.findFirst.mockResolvedValue(null);
-    mockPrisma.category.create.mockResolvedValue({ id: 'cat-1' });
 
     const res = await publishCatalog({
       restaurant: { name: 'Solo Name' },
       categories: [],
     } as any);
 
-    expect(mockPrisma.configRestaurant.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ name: 'Solo Name', address: '', phone: '' }),
-    });
+    expect(db.tables.mg_config_restaurant[0]).toEqual(
+      expect.objectContaining({ name: 'Solo Name', address: '', phone: '' }),
+    );
     expect(res.message).toBe('Catalog published!');
+  });
+
+  it('is atomic: a failure mid-import leaves no restaurant, category or dish', async () => {
+    mockSession.mockResolvedValue({ user: { id: 'user-1' } });
+
+    const res = await publishCatalog({
+      restaurant: { name: 'Broken', address: '', phone: '' },
+      categories: [
+        { name: 'Starters', dishes: [{ name: 'ok', price: 1 }, { name: null as any, price: 2 }] },
+      ] as any,
+    });
+
+    expect(res.message).toBe('Publish failed. Please try again.');
+    expect(db.tables.mg_config_restaurant).toHaveLength(0);
+    expect(db.tables.mg_category).toHaveLength(0);
+    expect(db.tables.mg_dishes).toHaveLength(0);
   });
 
   it('reuses an existing restaurant — no duplicate slug/QR, dishes imported into it', async () => {
     mockSession.mockResolvedValue({ user: { id: 'user-1' } });
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue({
-      id: 'rest-1',
-      slug: 'existing-slug',
-      qrCode: 'data:image/png;base64,EXISTING',
-    });
-    mockPrisma.category.findFirst.mockResolvedValue(null);
-    mockPrisma.category.create.mockResolvedValue({ id: 'cat-1' });
-    mockPrisma.dishes.create.mockResolvedValue({ id: 'dish-x' });
+    db.tables.mg_config_restaurant.push({ ...existingRestaurant });
 
     const res = await publishCatalog({
       restaurant: { name: 'Ignored New Name', address: '', phone: '' },
       categories: sampleCategories,
     });
 
-    expect(mockPrisma.configRestaurant.create).not.toHaveBeenCalled();
+    expect(db.tables.mg_config_restaurant).toHaveLength(1);
     expect(mockToDataURL).not.toHaveBeenCalled();
-    expect(mockPrisma.dishes.create).toHaveBeenCalledTimes(2);
+    expect(db.tables.mg_dishes).toHaveLength(2);
+    expect(db.tables.mg_dishes.every((d) => d.configRestaurantId === 'rest-1')).toBe(true);
     expect(res.data).toEqual({
       slug: 'existing-slug',
       qrCode: 'data:image/png;base64,EXISTING',
@@ -213,39 +217,26 @@ describe('publishCatalog', () => {
 
   it('reuses same-name categories instead of duplicating them', async () => {
     mockSession.mockResolvedValue({ user: { id: 'user-1' } });
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue({
-      id: 'rest-1',
-      slug: 'existing-slug',
-      qrCode: 'data:image/png;base64,EXISTING',
+    db.tables.mg_config_restaurant.push({ ...existingRestaurant });
+    db.tables.mg_category.push({
+      id: 'cat-existing',
+      name: 'Starters',
+      description: 'Starters',
+      configRestaurantId: 'rest-1',
     });
-    mockPrisma.category.findFirst.mockResolvedValue({ id: 'cat-existing', name: 'Starters' });
 
     await publishCatalog({
       restaurant: { name: 'X', address: '', phone: '' },
       categories: sampleCategories,
     });
 
-    expect(mockPrisma.category.create).not.toHaveBeenCalled();
-    expect(mockPrisma.dishes.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ categoryId: 'cat-existing' }),
-      }),
-    );
+    expect(db.tables.mg_category).toHaveLength(1);
+    expect(db.tables.mg_dishes.every((d) => d.categoryId === 'cat-existing')).toBe(true);
   });
 
   it('backfills a QR code for an existing restaurant that has none', async () => {
     mockSession.mockResolvedValue({ user: { id: 'user-1' } });
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue({
-      id: 'rest-1',
-      slug: 'existing-slug',
-      qrCode: null,
-    });
-    mockPrisma.configRestaurant.update.mockResolvedValue({
-      id: 'rest-1',
-      slug: 'existing-slug',
-      qrCode: 'data:image/png;base64,QR',
-    });
-    mockPrisma.category.findFirst.mockResolvedValue({ id: 'cat-1' });
+    db.tables.mg_config_restaurant.push({ ...existingRestaurant, qrCode: null });
 
     const res = await publishCatalog({
       restaurant: { name: 'X', address: '', phone: '' },
@@ -253,10 +244,7 @@ describe('publishCatalog', () => {
     });
 
     expect(mockToDataURL).toHaveBeenCalledWith('http://localhost:3000/r/existing-slug');
-    expect(mockPrisma.configRestaurant.update).toHaveBeenCalledWith({
-      where: { id: 'rest-1' },
-      data: { qrCode: 'data:image/png;base64,QR' },
-    });
+    expect(db.tables.mg_config_restaurant[0].qrCode).toBe('data:image/png;base64,QR');
     expect(res.data?.qrCode).toBe('data:image/png;base64,QR');
   });
 });

@@ -21,7 +21,7 @@ import InfoAlert from './info-alert';
 
 type FormState = {
   message: string | null;
-  data?: Restaurant | null;
+  data?: Restaurant;
   fieldErrors?: Record<string, string[]>;
   requiresAuth?: boolean;
 };

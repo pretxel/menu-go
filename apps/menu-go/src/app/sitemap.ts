@@ -1,19 +1,21 @@
 import type { MetadataRoute } from 'next';
 
-import prisma from '../lib/prisma';
 import { SITE_URL } from '../lib/site';
+import { getSupabase, unwrap } from '../lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const restaurants = await prisma.configRestaurant.findMany({
-    where: { slug: { not: null } },
-    select: { slug: true, updatedAt: true },
-  });
+  const restaurants = unwrap(
+    await getSupabase()
+      .from('mg_config_restaurant')
+      .select('slug, updatedAt')
+      .not('slug', 'is', null),
+  );
 
   const restaurantRoutes: MetadataRoute.Sitemap = restaurants.map((r) => ({
     url: `${SITE_URL}/r/${r.slug}`,
-    lastModified: r.updatedAt,
+    lastModified: new Date(r.updatedAt),
     changeFrequency: 'weekly',
     priority: 0.7,
   }));

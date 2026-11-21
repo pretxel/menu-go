@@ -2,7 +2,7 @@
 'use server';
 import Anthropic from '@anthropic-ai/sdk';
 import { put } from '@vercel/blob';
-import { Prisma } from 'db';
+import type { ConfigRestaurant, TablesUpdate } from 'db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth';
 import OpenAI from 'openai';
@@ -10,9 +10,9 @@ import QRCode from 'qrcode';
 import { z } from 'zod';
 
 import { authOptions } from '../lib/auth';
-import prisma from '../lib/prisma';
 import { type ActionState,authedAction, requireSession, UnauthorizedError } from '../lib/server-action';
 import { resolveSiteUrl } from '../lib/site';
+import { getSupabase, unwrap } from '../lib/supabase';
 import { IDish } from '../types/dish';
 
 const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -89,15 +89,48 @@ function generateSlug(name: string): string {
     .substring(0, 50);
 }
 
+async function findRestaurantByUser(userId: string): Promise<ConfigRestaurant | null> {
+  return unwrap(
+    await getSupabase()
+      .from('mg_config_restaurant')
+      .select('*')
+      .eq('userId', userId)
+      .limit(1)
+      .maybeSingle(),
+  );
+}
+
+async function slugTaken(slug: string, exceptId?: string): Promise<boolean> {
+  let query = getSupabase().from('mg_config_restaurant').select('id').eq('slug', slug);
+  if (exceptId) query = query.neq('id', exceptId);
+  const rows = unwrap(await query.limit(1));
+  return rows.length > 0;
+}
+
+// Owner check for a dish: the dish must belong to a restaurant of this user.
+async function findOwnedDish(dishId: string, userId: string) {
+  return unwrap(
+    await getSupabase()
+      .from('mg_dishes')
+      .select('*, category:mg_category(*), mg_config_restaurant!inner(userId)')
+      .eq('id', dishId)
+      .eq('mg_config_restaurant.userId', userId)
+      .limit(1)
+      .maybeSingle(),
+  );
+}
+
+type ImportCategories = Array<{
+  name: string;
+  dishes: Array<{ name: string; description?: string; price?: number; tags?: string[] }>;
+}>;
+
 export async function updateDish(id: string, image: string): Promise<ActionState> {
   try {
     const session = await requireSession();
-    const own = await prisma.dishes.findFirst({
-      where: { id, configRestaurant: { userId: session.user.id } },
-      select: { id: true },
-    });
+    const own = await findOwnedDish(id, session.user.id);
     if (!own) return { message: 'Dish not found.' };
-    await prisma.dishes.update({ where: { id }, data: { image } });
+    unwrap(await getSupabase().from('mg_dishes').update({ image }).eq('id', id));
     revalidatePath('/panel/dishes');
     return { message: 'Image updated.' };
   } catch (e) {
@@ -113,14 +146,15 @@ export const postDish = authedAction(postDishSchema, async ({ session, input }) 
   const isAvailable = input.isAvailable !== 'false';
   const tags = input.tags ? input.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
 
-  const existConfig = await prisma.configRestaurant.findFirst({ where: { userId } });
+  const existConfig = await findRestaurantByUser(userId);
   if (!existConfig) {
     return { message: 'Create your restaurant profile first.' } as ActionState;
   }
 
+  const supabase = getSupabase();
   if (!dishId) {
-    await prisma.dishes.create({
-      data: {
+    unwrap(
+      await supabase.from('mg_dishes').insert({
         name,
         categoryId,
         configRestaurantId: existConfig.id,
@@ -128,19 +162,27 @@ export const postDish = authedAction(postDishSchema, async ({ session, input }) 
         price: parseFloat(price),
         tags,
         isAvailable,
-      },
-    });
+      }),
+    );
   } else {
-    const existing = await prisma.dishes.findFirst({
-      where: { id: dishId, configRestaurantId: existConfig.id },
-    });
+    const existing = unwrap(
+      await supabase
+        .from('mg_dishes')
+        .select('id')
+        .eq('id', dishId)
+        .eq('configRestaurantId', existConfig.id)
+        .limit(1)
+        .maybeSingle(),
+    );
     if (!existing) {
       return { message: 'Dish not found.' } as ActionState;
     }
-    await prisma.dishes.update({
-      where: { id: dishId },
-      data: { name, price: parseFloat(price), description, tags, isAvailable },
-    });
+    unwrap(
+      await supabase
+        .from('mg_dishes')
+        .update({ name, price: parseFloat(price), description, tags, isAvailable })
+        .eq('id', dishId),
+    );
   }
 
   revalidatePath('/panel/dishes');
@@ -153,39 +195,50 @@ export const postRestaurant = authedAction(
     const userId = session.user.id;
     const { name, address, phone, cuisineType, primaryColor, backgroundColor } = input;
 
-    const existConfig = await prisma.configRestaurant.findFirst({ where: { userId } });
+    const supabase = getSupabase();
+    const existConfig = await findRestaurantByUser(userId);
 
-    let restaurantResp;
+    let restaurantResp: Restaurant;
     if (!existConfig) {
       let slug = generateSlug(name);
-      const existing = await prisma.configRestaurant.findFirst({ where: { slug } });
-      if (existing) slug = `${slug}-${Date.now()}`;
+      if (await slugTaken(slug)) slug = `${slug}-${Date.now()}`;
 
-      const restaurant = await prisma.configRestaurant.create({
-        data: { name, userId, address, phone, slug, cuisineType, primaryColor, backgroundColor },
-      });
+      const restaurant = unwrap(
+        await supabase
+          .from('mg_config_restaurant')
+          .insert({ name, userId, address, phone, slug, cuisineType, primaryColor, backgroundColor })
+          .select()
+          .single(),
+      );
 
       const menuUrl = `${resolveSiteUrl()}/r/${slug || restaurant.id}`;
       const qrUrl = await QRCode.toDataURL(menuUrl);
 
-      restaurantResp = await prisma.configRestaurant.update({
-        where: { id: restaurant.id },
-        data: { qrCode: qrUrl },
-      });
+      restaurantResp = unwrap(
+        await supabase
+          .from('mg_config_restaurant')
+          .update({ qrCode: qrUrl })
+          .eq('id', restaurant.id)
+          .select()
+          .single(),
+      );
     } else {
-      const updateData: Prisma.ConfigRestaurantUpdateInput = { name, address, phone };
+      const updateData: TablesUpdate<'mg_config_restaurant'> = { name, address, phone };
       if (cuisineType) updateData.cuisineType = cuisineType;
       if (primaryColor) updateData.primaryColor = primaryColor;
       if (backgroundColor) updateData.backgroundColor = backgroundColor;
       if (name !== existConfig.name && !existConfig.slug) {
         const slug = generateSlug(name);
-        const dupe = await prisma.configRestaurant.findFirst({ where: { slug, NOT: { id: existConfig.id } } });
-        if (!dupe) updateData.slug = slug;
+        if (!(await slugTaken(slug, existConfig.id))) updateData.slug = slug;
       }
-      restaurantResp = await prisma.configRestaurant.update({
-        where: { id: existConfig.id },
-        data: updateData,
-      });
+      restaurantResp = unwrap(
+        await supabase
+          .from('mg_config_restaurant')
+          .update(updateData)
+          .eq('id', existConfig.id)
+          .select()
+          .single(),
+      );
     }
 
     revalidatePath('/panel');
@@ -200,7 +253,7 @@ export const postRestaurant = authedAction(
 export async function getRestaurant(): Promise<Restaurant | null> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
-  const existConfig = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+  const existConfig = await findRestaurantByUser(session.user.id);
   if (!existConfig) return null;
   return {
     name: existConfig.name,
@@ -219,30 +272,42 @@ export async function getRestaurant(): Promise<Restaurant | null> {
 export async function getDishes(): Promise<IDish[] | null> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
-  const config = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+  const config = await findRestaurantByUser(session.user.id);
   if (!config) return null;
-  const dishes = await prisma.dishes.findMany({
-    where: { configRestaurantId: config.id },
-    include: { category: true },
-  });
-  return dishes;
+  return unwrap(
+    await getSupabase()
+      .from('mg_dishes')
+      .select('*, category:mg_category(*)')
+      .eq('configRestaurantId', config.id),
+  );
 }
 
 export async function getDish(id: string): Promise<IDish | null> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
-  const dish = await prisma.dishes.findFirst({
-    where: { id, configRestaurant: { userId: session.user.id } },
-    include: { category: true },
-  });
-  return dish;
+  const dish = await findOwnedDish(id, session.user.id);
+  if (!dish) return null;
+  const { mg_config_restaurant: _owner, ...rest } = dish;
+  return rest;
+}
+
+// Restaurant with its available dishes (and each dish's category), keeping the
+// `Dishes` property name the menu components were written against.
+async function findMenu(column: 'id' | 'slug', value: string) {
+  const row = unwrap(
+    await getSupabase()
+      .from('mg_config_restaurant')
+      .select('*, Dishes:mg_dishes(*, category:mg_category(*))')
+      .eq(column, value)
+      .limit(1)
+      .maybeSingle(),
+  );
+  if (!row) return null;
+  return { ...row, Dishes: row.Dishes.filter((d) => d.isAvailable) };
 }
 
 export async function getMenu(restaurantId: string) {
-  const restaurantConf = await prisma.configRestaurant.findFirst({
-    where: { id: restaurantId },
-    include: { Dishes: { include: { category: true }, where: { isAvailable: true } } },
-  });
+  const restaurantConf = await findMenu('id', restaurantId);
 
   if (!restaurantConf) throw new Error('No restaurant found');
 
@@ -250,10 +315,7 @@ export async function getMenu(restaurantId: string) {
 }
 
 export async function getMenuBySlug(slug: string) {
-  const restaurantConf = await prisma.configRestaurant.findFirst({
-    where: { slug },
-    include: { Dishes: { include: { category: true }, where: { isAvailable: true } } },
-  });
+  const restaurantConf = await findMenu('slug', slug);
 
   if (!restaurantConf) {
     // Fallback: try by ID for backward compatibility
@@ -265,9 +327,9 @@ export async function getMenuBySlug(slug: string) {
 
 export async function trackMenuView(restaurantId: string, source: string = 'direct') {
   try {
-    await prisma.menuView.create({
-      data: { configRestaurantId: restaurantId, source },
-    });
+    unwrap(
+      await getSupabase().from('mg_menu_view').insert({ configRestaurantId: restaurantId, source }),
+    );
   } catch {
     // Non-critical, don't fail the page load
   }
@@ -276,58 +338,67 @@ export async function trackMenuView(restaurantId: string, source: string = 'dire
 export async function getMenuStats() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return { totalViews: 0, qrScans: 0 };
-  const config = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+  const config = await findRestaurantByUser(session.user.id);
   if (!config) return { totalViews: 0, qrScans: 0 };
-  const [totalViews, qrScans] = await Promise.all([
-    prisma.menuView.count({ where: { configRestaurantId: config.id } }),
-    prisma.menuView.count({ where: { configRestaurantId: config.id, source: 'qr' } }),
+  const supabase = getSupabase();
+  const [total, qr] = await Promise.all([
+    supabase
+      .from('mg_menu_view')
+      .select('id', { count: 'exact', head: true })
+      .eq('configRestaurantId', config.id),
+    supabase
+      .from('mg_menu_view')
+      .select('id', { count: 'exact', head: true })
+      .eq('configRestaurantId', config.id)
+      .eq('source', 'qr'),
   ]);
-  return { totalViews, qrScans };
+  unwrap(total);
+  unwrap(qr);
+  return { totalViews: total.count ?? 0, qrScans: qr.count ?? 0 };
 }
 
 export async function getAllCategories() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return [];
-  const config = await prisma.configRestaurant.findFirst({
-    where: { userId: session.user.id },
-    select: { id: true },
-  });
-  return prisma.category.findMany({
-    where: {
-      OR: [
-        ...(config ? [{ configRestaurantId: config.id }] : []),
-        { configRestaurantId: null },
-      ],
-    },
-  });
+  const config = await findRestaurantByUser(session.user.id);
+  // Own categories plus the global ones (configRestaurantId IS NULL).
+  const scope = config
+    ? `configRestaurantId.eq.${config.id},configRestaurantId.is.null`
+    : 'configRestaurantId.is.null';
+  return unwrap(await getSupabase().from('mg_category').select('*').or(scope));
 }
 
 export async function getCategory(id: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
-  const config = await prisma.configRestaurant.findFirst({
-    where: { userId: session.user.id },
-    select: { id: true },
-  });
-  return prisma.category.findFirst({
-    where: {
-      id,
-      OR: [
-        ...(config ? [{ configRestaurantId: config.id }] : []),
-        { configRestaurantId: null },
-      ],
-    },
-  });
+  const config = await findRestaurantByUser(session.user.id);
+  const scope = config
+    ? `configRestaurantId.eq.${config.id},configRestaurantId.is.null`
+    : 'configRestaurantId.is.null';
+  return unwrap(
+    await getSupabase()
+      .from('mg_category')
+      .select('*')
+      .eq('id', id)
+      .or(scope)
+      .limit(1)
+      .maybeSingle(),
+  );
 }
 
 export const addCategory = authedAction(addCategorySchema, async ({ session, input }) => {
   const { name, description, configRestaurantId } = input;
 
   if (configRestaurantId) {
-    const own = await prisma.configRestaurant.findFirst({
-      where: { id: configRestaurantId, userId: session.user.id },
-      select: { id: true },
-    });
+    const own = unwrap(
+      await getSupabase()
+        .from('mg_config_restaurant')
+        .select('id')
+        .eq('id', configRestaurantId)
+        .eq('userId', session.user.id)
+        .limit(1)
+        .maybeSingle(),
+    );
     if (!own) return { message: 'Restaurant not found.' };
   }
 
@@ -340,14 +411,16 @@ export const addCategory = authedAction(addCategorySchema, async ({ session, inp
   const blobImage = await res.blob();
   const blob = await put(name, blobImage, { access: 'public', addRandomSuffix: true });
 
-  await prisma.category.create({
-    data: {
-      name,
-      description,
-      image: blob.url,
-      ...(configRestaurantId ? { configRestaurantId } : {}),
-    },
-  });
+  unwrap(
+    await getSupabase()
+      .from('mg_category')
+      .insert({
+        name,
+        description,
+        image: blob.url,
+        ...(configRestaurantId ? { configRestaurantId } : {}),
+      }),
+  );
 
   revalidatePath('/panel/categories');
   return { message: 'Category created.' };
@@ -443,16 +516,22 @@ export async function parseMenuFromPhoto(imageBase64: string): Promise<{
 export async function getOnboardingStatus(): Promise<{ hasCategory: boolean; hasDish: boolean }> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return { hasCategory: false, hasDish: false };
-  const restaurant = await prisma.configRestaurant.findFirst({
-    where: { userId: session.user.id },
-    select: { id: true },
-  });
+  const restaurant = await findRestaurantByUser(session.user.id);
   if (!restaurant) return { hasCategory: false, hasDish: false };
-  const [catCount, dishCount] = await Promise.all([
-    prisma.category.count({ where: { configRestaurantId: restaurant.id } }),
-    prisma.dishes.count({ where: { configRestaurantId: restaurant.id } }),
+  const supabase = getSupabase();
+  const [cats, dishes] = await Promise.all([
+    supabase
+      .from('mg_category')
+      .select('id', { count: 'exact', head: true })
+      .eq('configRestaurantId', restaurant.id),
+    supabase
+      .from('mg_dishes')
+      .select('id', { count: 'exact', head: true })
+      .eq('configRestaurantId', restaurant.id),
   ]);
-  return { hasCategory: catCount > 0, hasDish: dishCount > 0 };
+  unwrap(cats);
+  unwrap(dishes);
+  return { hasCategory: (cats.count ?? 0) > 0, hasDish: (dishes.count ?? 0) > 0 };
 }
 
 export async function postBulkDishes(
@@ -463,12 +542,10 @@ export async function postBulkDishes(
 ): Promise<ActionState> {
   try {
     const session = await requireSession();
-    const config = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+    const config = await findRestaurantByUser(session.user.id);
     if (!config) return { message: 'Create your restaurant profile first.' };
 
-    await prisma.$transaction(async (tx) => {
-      await importCategories(tx, config.id, categories);
-    });
+    await importCategories(config.id, categories);
 
     revalidatePath('/panel/dishes');
     return { message: 'Bulk import complete.' };
@@ -479,36 +556,18 @@ export async function postBulkDishes(
   }
 }
 
+// Atomic: mg_import_catalog runs in a single database transaction, reusing
+// same-name categories of the restaurant and inserting every dish.
 async function importCategories(
-  tx: Prisma.TransactionClient,
   configRestaurantId: string,
-  categories: Array<{
-    name: string;
-    dishes: Array<{ name: string; description?: string; price?: number; tags?: string[] }>;
-  }>,
+  categories: ImportCategories,
 ): Promise<void> {
-  for (const cat of categories) {
-    let category = await tx.category.findFirst({
-      where: { name: cat.name, configRestaurantId },
-    });
-    if (!category) {
-      category = await tx.category.create({
-        data: { name: cat.name, description: cat.name, configRestaurantId },
-      });
-    }
-    for (const dish of cat.dishes) {
-      await tx.dishes.create({
-        data: {
-          name: dish.name,
-          description: dish.description || '',
-          price: dish.price || 0,
-          tags: dish.tags || [],
-          configRestaurantId,
-          categoryId: category.id,
-        },
-      });
-    }
-  }
+  unwrap(
+    await getSupabase().rpc('mg_import_catalog', {
+      p_config_restaurant_id: configRestaurantId,
+      p_categories: categories,
+    }),
+  );
 }
 
 export type PublishCatalogInput = z.infer<typeof publishCatalogSchema>;
@@ -530,44 +589,45 @@ export async function publishCatalog(
     }
     const { restaurant: details, categories } = parsed.data;
 
-    let config = await prisma.configRestaurant.findFirst({ where: { userId: session.user.id } });
+    const supabase = getSupabase();
+    let config = await findRestaurantByUser(session.user.id);
 
     if (!config) {
       let slug = generateSlug(details.name);
-      const taken = await prisma.configRestaurant.findFirst({ where: { slug } });
-      if (taken) slug = `${slug}-${Date.now()}`;
+      if (await slugTaken(slug)) slug = `${slug}-${Date.now()}`;
 
       const menuUrl = `${resolveSiteUrl()}/r/${slug}`;
       const qrCode = await QRCode.toDataURL(menuUrl);
 
-      config = await prisma.$transaction(async (tx) => {
-        const created = await tx.configRestaurant.create({
-          data: {
-            name: details.name,
-            userId: session.user.id,
-            address: details.address ?? '',
-            phone: details.phone ?? '',
-            slug,
-            qrCode,
-          },
-        });
-        await importCategories(tx, created.id, categories);
-        return created;
-      });
+      // Restaurant + catalog in one database transaction.
+      config = unwrap(
+        await supabase
+          .rpc('mg_publish_new_catalog', {
+            p_user_id: session.user.id,
+            p_name: details.name,
+            p_address: details.address ?? '',
+            p_phone: details.phone ?? '',
+            p_slug: slug,
+            p_qr_code: qrCode,
+            p_categories: categories,
+          })
+          .single(),
+      );
     } else {
       // Existing restaurant: reuse slug + QR, just import. Backfill QR if missing.
       if (!config.qrCode) {
         const menuUrl = `${resolveSiteUrl()}/r/${config.slug ?? config.id}`;
         const qrCode = await QRCode.toDataURL(menuUrl);
-        config = await prisma.configRestaurant.update({
-          where: { id: config.id },
-          data: { qrCode },
-        });
+        config = unwrap(
+          await supabase
+            .from('mg_config_restaurant')
+            .update({ qrCode })
+            .eq('id', config.id)
+            .select()
+            .single(),
+        );
       }
-      const configId = config.id;
-      await prisma.$transaction(async (tx) => {
-        await importCategories(tx, configId, categories);
-      });
+      await importCategories(config.id, categories);
     }
 
     revalidatePath('/panel');

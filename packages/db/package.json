@@ -6,33 +6,16 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push --accept-data-loss",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma migrate reset --force",
-    "db:migrate:dev": "prisma migrate dev --create-only",
-    "db:migrate": "prisma migrate deploy",
-    "db:studio": "prisma studio --port 5557",
-    "postinstall": "prisma generate"
+    "db:seed": "tsx seed.ts",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.10.1",
-    "@prisma/client": "^7.10.1",
-    "jest": "^30.5.2",
-    "jest-environment-node": "^30.5.2",
-    "pg": "^8.23.1"
+    "@supabase/supabase-js": "^2.119.2"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.19.2",
-    "@types/pg": "^8.23.1",
-    "prisma": "^7.10.1",
-    "ts-jest": "^29.4.15",
     "tsconfig": "workspace:*",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }

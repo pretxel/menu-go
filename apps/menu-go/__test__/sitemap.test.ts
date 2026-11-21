@@ -1,25 +1,17 @@
 import sitemap from '../src/app/sitemap';
-import prisma from '../src/lib/prisma';
+import { resetDb } from './helpers/supabase-fake';
 
-jest.mock('../src/lib/prisma', () => ({
-  __esModule: true,
-  default: {
-    configRestaurant: { findMany: jest.fn() },
-  },
-}));
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockPrisma = prisma as any;
+jest.mock('../src/lib/supabase', () => require('./helpers/supabase-fake').moduleMock());
 
 describe('sitemap', () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it('includes marketing URLs + every restaurant slug', async () => {
-    const updated = new Date('2026-05-01');
-    mockPrisma.configRestaurant.findMany.mockResolvedValue([
-      { slug: 'alpha', updatedAt: updated },
-      { slug: 'beta', updatedAt: updated },
-    ]);
+    const updated = '2026-05-01T00:00:00.000Z';
+    resetDb({
+      mg_config_restaurant: [
+        { userId: 'u1', slug: 'alpha', updatedAt: updated },
+        { userId: 'u2', slug: 'beta', updatedAt: updated },
+      ],
+    });
 
     const result = await sitemap();
     const urls = result.map((r) => r.url);
@@ -35,17 +27,21 @@ describe('sitemap', () => {
     );
 
     const alpha = result.find((r) => r.url.endsWith('/r/alpha'))!;
-    expect(alpha.lastModified).toEqual(updated);
+    expect(alpha.lastModified).toEqual(new Date(updated));
     expect(alpha.changeFrequency).toBe('weekly');
     expect(alpha.priority).toBe(0.7);
   });
 
-  it('queries only slugged restaurants', async () => {
-    mockPrisma.configRestaurant.findMany.mockResolvedValue([]);
-    await sitemap();
-    expect(mockPrisma.configRestaurant.findMany).toHaveBeenCalledWith({
-      where: { slug: { not: null } },
-      select: { slug: true, updatedAt: true },
+  it('lists only slugged restaurants', async () => {
+    resetDb({
+      mg_config_restaurant: [
+        { userId: 'u1', slug: 'alpha' },
+        { userId: 'u2', slug: null },
+      ],
     });
+    const result = await sitemap();
+    const restaurantUrls = result.filter((r) => r.url.includes('/r/'));
+    expect(restaurantUrls).toHaveLength(1);
+    expect(restaurantUrls[0].url).toContain('/r/alpha');
   });
 });

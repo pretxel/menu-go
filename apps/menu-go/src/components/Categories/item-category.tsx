@@ -44,9 +44,12 @@ export default function ItemCategory({ category }) {
           )}
         </div>
       </button>
-      <div className="grid place-items-center border-l-3 border-ink bg-paper px-3">
-        <RemoveButton idType={category.id} type="category" />
-      </div>
+      {/* Global categories (no configRestaurantId) are shared and cannot be removed. */}
+      {category.configRestaurantId && (
+        <div className="grid place-items-center border-l-3 border-ink bg-paper px-3">
+          <RemoveButton idType={category.id} type="category" />
+        </div>
+      )}
     </li>
   );
 }

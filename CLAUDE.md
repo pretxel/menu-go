@@ -21,16 +21,10 @@ pnpm lint:fix         # Auto-fix lint issues
 pnpm test             # Run Jest tests across all packages
 
 # Database
-pnpm db:generate      # Generate Prisma client
-pnpm db:push          # Push schema to DB + regenerate client
-pnpm db:seed          # Seed database
-pnpm db:reset         # Reset database
+pnpm db:seed          # Seed global categories (supabase-js, idempotent)
 
 # Run a single Jest test file
 cd apps/menu-go && pnpm test -- --testPathPattern=<filename>
-
-# Docker (start local PostgreSQL)
-docker compose up -d
 ```
 
 The app is available at `http://localhost:3000`.
@@ -41,7 +35,7 @@ The app is available at `http://localhost:3000`.
 menu-go-frontend/
 ├── apps/menu-go/          # Main Next.js 16 app
 ├── packages/
-│   ├── db/                # Prisma schema + client (shared database layer)
+│   ├── db/                # Supabase types, SQL migrations, seed (mg_* tables)
 │   ├── ui/                # Shared React UI components (bundled via Rollup)
 │   ├── config/            # Shared Next.js, ESLint, Jest configs
 │   ├── tsconfig/          # Shared TypeScript configs
@@ -65,19 +59,19 @@ Middleware at `src/middleware.ts` guards `/panel` routes, checking for a valid `
 
 NextAuth.js (`src/lib/auth.ts`) with:
 - Providers: Google OAuth, Facebook OAuth, Credentials
-- Adapter: Prisma (stores users/sessions in PostgreSQL)
-- Session callback enriches session with `configRestaurantId` from the database
-- JWT strategy with `next-auth.session-token` cookie
+- No adapter: JWT session strategy (`next-auth.session-token` cookie). The `signIn` callback upserts the user into `mg_user` (by email) and OAuth accounts into `mg_account`
+- The `jwt` callback stores the `mg_user` id (`token.uid`) and `configRestaurantId`; while the user has no restaurant it re-checks on every read, so one created mid-session shows up without re-login
 
 ### Data Layer
 
-Prisma client lives in `packages/db/`. Key models:
-- `User` — auth user with linked OAuth accounts
-- `ConfigRestaurant` — restaurant profile (name, address, phone, image, QR code as base64)
-- `Dishes` — menu items linked to a restaurant and category
-- `Category` — globally shared categories (no per-restaurant isolation currently)
+Data access uses **supabase-js** from server code only: `getSupabase()` in `src/lib/supabase.ts` (service role key, guarded by `server-only`; importing it from a client component fails the build). Wrap responses with `unwrap()` to throw on errors. Row types come from `packages/db/types.ts` (`import type { Dishes } from 'db'`). Tables (camelCase quoted columns):
+- `mg_user` / `mg_account` — auth user with linked OAuth accounts
+- `mg_config_restaurant` — restaurant profile (name, address, phone, image, QR code as base64)
+- `mg_dishes` — menu items linked to a restaurant and category
+- `mg_category` — categories; `configRestaurantId IS NULL` means global (shared across restaurants)
+- `mg_menu_view` — menu view tracking (`source`: direct / qr)
 
-Import the shared client: `import { prisma } from 'db'`
+Multi-step writes are Postgres functions called with `rpc()` so they stay atomic: `mg_import_catalog` (find-or-create categories + insert dishes) and `mg_publish_new_catalog` (restaurant + catalog). Tests use the in-memory fake in `apps/menu-go/__test__/helpers/supabase-fake.ts`.
 
 ### Mutations: Server Actions
 
@@ -101,8 +95,8 @@ i18n uses `next-i18next` (configured in `next-i18next.config.js`). Translation J
 Required in `.env` (see `.env.example`):
 
 ```
-DATABASE_URL=             # PostgreSQL connection string (Supabase transaction pooler, port 6543)
-DIRECT_URL=               # Prisma CLI connection (Supabase session pooler, port 5432); optional with Docker
+NEXT_PUBLIC_SUPABASE_URL= # https://dfllsojtcwryhkvoetfh.supabase.co (shared gridscore project)
+SUPABASE_SERVICE_ROLE_KEY= # server-only; same value as gridscore / travel-taste on Vercel
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FACEBOOK_CLIENT_ID=
@@ -112,9 +106,9 @@ EMAIL_FROM=
 SECRET=                   # NextAuth secret
 ```
 
-The primary database is Supabase Postgres (project `menu-go`, region `eu-west-1`). The runtime connects through the Supavisor transaction pooler (`DATABASE_URL`); Prisma CLI commands (`db:push`/`migrate`/`seed`) use the session pooler via `DIRECT_URL` (configured in `packages/db/prisma.config.ts`, falls back to `DATABASE_URL`). Free-tier Supabase projects pause after ~1 week of inactivity — resume from the dashboard.
+The database is the shared Supabase project `gridscore` (ref `dfllsojtcwryhkvoetfh`, region `eu-west-1`). Its `public` schema also holds other apps (gridscore core tables, `rb_*`, `tt_*`), so **every menu-go object is prefixed `mg_`**. The `mg_*` tables have RLS enabled with no policies and no `anon`/`authenticated` grants: only the service role (server) can reach them.
 
-Docker Compose remains a local fallback: PostgreSQL on port 5432 with credentials `postgres:secrect` (note: intentional typo in original config).
+Schema changes are plain SQL files in `packages/db/migrations/`, applied to `gridscore` with the Supabase MCP (`apply_migration`) or the SQL editor. They must create/alter/drop **only `mg_` objects**, and every new table or function needs the same RLS + `REVOKE ... FROM anon, authenticated` treatment. After a schema change, regenerate `packages/db/types.ts` (MCP `generate_typescript_types`, keep only `mg_*`). There is no local database: Docker Postgres cannot serve supabase-js. The old `menu-go` Supabase project (`fbbulaxuwkddxdykilmv`) is paused and no longer used.
 
 ## Known Issues
 
