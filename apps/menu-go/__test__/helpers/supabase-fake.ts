@@ -110,7 +110,7 @@ function checkConstraints(table: string, row: Row, others: Row[]) {
   for (const cols of UNIQUE[table] ?? []) {
     if (cols.some((c) => row[c] === null || row[c] === undefined)) continue;
     if (others.some((o) => o !== row && cols.every((c) => o[c] === row[c]))) {
-      throw dbError(`duplicate key value violates unique constraint on ${table}(${cols.join(',')})`);
+      throw dbError(`duplicate key value violates unique constraint on ${table}(${cols.join(',')})`, '23505');
     }
   }
 }

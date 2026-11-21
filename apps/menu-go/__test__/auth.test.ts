@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { authOptions, persistSignIn } from '../src/lib/auth';
+import {
+  authOptions,
+  authorizeCredentials,
+  LOCKOUT_MS,
+  MAX_FAILED_LOGINS,
+  persistSignIn,
+} from '../src/lib/auth';
+import { hashPassword, verifyPassword } from '../src/lib/password';
 import { db, failNext, resetDb } from './helpers/supabase-fake';
 
 jest.mock('../src/lib/supabase', () => require('./helpers/supabase-fake').moduleMock());
@@ -57,14 +64,20 @@ describe('signIn persistence', () => {
     expect(db.tables.mg_account).toHaveLength(1);
   });
 
-  it('credentials sign-in records the user but no provider account', async () => {
-    await callbacks.signIn({
-      user: { id: '1', email: 'jsmith@example.com', name: 'J Smith' },
-      account: { type: 'credentials', provider: 'credentials', providerAccountId: '1' },
+  it('credentials sign-in does not write to the database', async () => {
+    const ok = await callbacks.signIn({
+      user: { id: 'u1', email: 'pat@example.com' },
+      account: { type: 'credentials', provider: 'credentials', providerAccountId: 'u1' },
     } as any);
 
-    expect(db.tables.mg_user).toHaveLength(1);
-    expect(db.tables.mg_account).toHaveLength(0);
+    expect(ok).toBe(true);
+    expect(db.log).toHaveLength(0);
+  });
+
+  it('stores OAuth emails lowercased and marks them verified', async () => {
+    await persistSignIn({ ...googleUser, email: 'Ana@Example.com' } as any, googleAccount);
+    expect(db.tables.mg_user[0].email).toBe('ana@example.com');
+    expect(db.tables.mg_user[0].emailVerified).toEqual(expect.any(String));
   });
 
   it('blocks sign-in when the user record cannot be written', async () => {
@@ -111,5 +124,93 @@ describe('session contents', () => {
     const session: any = await read();
 
     expect(session.user.configRestaurantId).toBe('rest-new');
+  });
+});
+
+describe('email and password sign-in', () => {
+  let stored: string;
+  beforeAll(async () => {
+    stored = await hashPassword('correct-horse-1');
+  });
+
+  const seedPat = (extra: Record<string, any> = {}) =>
+    resetDb({
+      mg_user: [
+        { id: 'pat', email: 'pat@example.com', name: 'Pat', password: stored, failedLoginCount: 0, lockedUntil: null, ...extra },
+        { id: 'oauth-only', email: 'ana@example.com', password: null, failedLoginCount: 0, lockedUntil: null },
+      ],
+    });
+  const pat = () => db.tables.mg_user.find((u) => u.id === 'pat')!;
+
+  beforeEach(() => seedPat());
+  afterEach(() => jest.useRealTimers());
+
+  it('signs in with the right password, any email case', async () => {
+    const user = await authorizeCredentials({ email: ' Pat@Example.COM ', password: 'correct-horse-1' });
+    expect(user).toEqual({ id: 'pat', email: 'pat@example.com', name: 'Pat', image: undefined });
+  });
+
+  it.each([
+    ['wrong password', { email: 'pat@example.com', password: 'nope-nope-1' }],
+    ['unknown email', { email: 'ghost@example.com', password: 'correct-horse-1' }],
+    ['OAuth-only account', { email: 'ana@example.com', password: 'correct-horse-1' }],
+    ['former dev stub credentials', { username: 'jsmith', password: 'anything' }],
+    ['missing fields', undefined],
+  ])('refuses %s', async (_label, creds) => {
+    await expect(authorizeCredentials(creds as any)).resolves.toBeNull();
+  });
+
+  it('locks the account after repeated failures, even for the right password', async () => {
+    for (let i = 0; i < MAX_FAILED_LOGINS; i++) {
+      await authorizeCredentials({ email: 'pat@example.com', password: 'wrong-wrong-1' });
+    }
+    expect(pat().lockedUntil).toEqual(expect.any(String));
+    await expect(
+      authorizeCredentials({ email: 'pat@example.com', password: 'correct-horse-1' }),
+    ).resolves.toBeNull();
+  });
+
+  it('counts failures and resets them on success', async () => {
+    await authorizeCredentials({ email: 'pat@example.com', password: 'wrong-wrong-1' });
+    expect(pat().failedLoginCount).toBe(1);
+    await authorizeCredentials({ email: 'pat@example.com', password: 'correct-horse-1' });
+    expect(pat().failedLoginCount).toBe(0);
+  });
+
+  it('lets the user in once the lock has expired', async () => {
+    // Stored the way PostgREST returns `timestamp without time zone`: no offset.
+    const expired = new Date(Date.now() - 1000).toISOString().replace('Z', '');
+    const active = new Date(Date.now() + LOCKOUT_MS).toISOString().replace('Z', '');
+
+    seedPat({ lockedUntil: active });
+    await expect(
+      authorizeCredentials({ email: 'pat@example.com', password: 'correct-horse-1' }),
+    ).resolves.toBeNull();
+
+    seedPat({ lockedUntil: expired, failedLoginCount: 3 });
+    await expect(
+      authorizeCredentials({ email: 'pat@example.com', password: 'correct-horse-1' }),
+    ).resolves.toEqual(expect.objectContaining({ id: 'pat' }));
+    expect(pat()).toEqual(expect.objectContaining({ failedLoginCount: 0, lockedUntil: null }));
+  });
+
+  it('Google sign-in reclaims an unverified password account', async () => {
+    const id = await persistSignIn({ ...googleUser, email: 'pat@example.com' } as any, googleAccount);
+
+    expect(id).toBe('pat');
+    expect(db.tables.mg_user.filter((u) => u.email === 'pat@example.com')).toHaveLength(1);
+    expect(pat().password).toBeNull();
+    expect(pat().emailVerified).toEqual(expect.any(String));
+    await expect(
+      authorizeCredentials({ email: 'pat@example.com', password: 'correct-horse-1' }),
+    ).resolves.toBeNull();
+  });
+
+  it('a verified account keeps its password after Google sign-in', async () => {
+    seedPat({ emailVerified: '2026-01-01T00:00:00' });
+    await persistSignIn({ ...googleUser, email: 'pat@example.com' } as any, googleAccount);
+
+    expect(pat().emailVerified).toBe('2026-01-01T00:00:00');
+    await expect(verifyPassword('correct-horse-1', pat().password)).resolves.toBe(true);
   });
 });

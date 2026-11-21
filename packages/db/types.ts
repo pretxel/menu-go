@@ -248,24 +248,30 @@ export type Database = {
         Row: {
           email: string | null;
           emailVerified: string | null;
+          failedLoginCount: number;
           id: string;
           image: string | null;
+          lockedUntil: string | null;
           name: string | null;
           password: string | null;
         };
         Insert: {
           email?: string | null;
           emailVerified?: string | null;
+          failedLoginCount?: number;
           id?: string;
           image?: string | null;
+          lockedUntil?: string | null;
           name?: string | null;
           password?: string | null;
         };
         Update: {
           email?: string | null;
           emailVerified?: string | null;
+          failedLoginCount?: number;
           id?: string;
           image?: string | null;
+          lockedUntil?: string | null;
           name?: string | null;
           password?: string | null;
         };
