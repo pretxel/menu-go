@@ -6,12 +6,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { usePathname, useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import {
-  FacebookIcon,
+  FacebookLegacyIcon,
   FacebookShareButton,
-  TwitterShareButton,
-  WhatsappIcon,
+  WhatsappLegacyIcon,
   WhatsappShareButton,
-  XIcon,
+  XLegacyIcon,
+  XShareButton,
 } from 'react-share';
 import { toast } from 'react-toastify';
 
@@ -131,14 +131,14 @@ export default function Form({ initialRestaurant }: FormProps) {
                 Share →
               </span>
               <FacebookShareButton url={shareUrl}>
-                <FacebookIcon size={36} round />
+                <FacebookLegacyIcon size={36} round />
               </FacebookShareButton>
-              <WhatsappShareButton url={shareUrl} title={`Menu ${restaurantD?.name}`} separator=":: ">
-                <WhatsappIcon size={36} round />
+              <WhatsappShareButton url={shareUrl} message={`Menu ${restaurantD?.name}`} separator=":: ">
+                <WhatsappLegacyIcon size={36} round />
               </WhatsappShareButton>
-              <TwitterShareButton url={shareUrl} title={`Menu ${restaurantD?.name}`}>
-                <XIcon size={36} round />
-              </TwitterShareButton>
+              <XShareButton url={shareUrl} text={`Menu ${restaurantD?.name}`}>
+                <XLegacyIcon size={36} round />
+              </XShareButton>
             </div>
           </div>
 

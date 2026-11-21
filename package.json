@@ -41,7 +41,7 @@
     "@prisma/client": "^7.10.1",
     "clsx": "^2.1.1",
     "dotenv-cli": "^11.1.0",
-    "nanoid": "^5.1.16"
+    "nanoid": "^6.0.2"
   },
   "overrides": {
     "semver": "~7.5.2"
