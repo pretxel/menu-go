@@ -8,8 +8,5 @@
     "nextjs.json",
     "react-library.json",
     "api.json"
-  ],
-  "dependencies": {
-    "@tsconfig/node18": "^1.0.3"
-  }
+  ]
 }
