@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "tailwindcss": "^4.2.4",
-    "@tailwindcss/postcss": "^4.2.4"
+    "@tailwindcss/postcss": "^4.3.5",
+    "tailwindcss": "^4.3.5"
   }
 }
