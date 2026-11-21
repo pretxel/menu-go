@@ -3,13 +3,128 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
+import { type FormEvent, useState } from 'react';
 import { RiFacebookFill } from 'react-icons/ri';
+
+import { navigateTo } from '../../lib/navigate';
 
 // Only forward relative callback paths — anything absolute could be an open
 // redirect. Default stays the panel.
 function targetCallbackUrl(): string {
   const raw = new URLSearchParams(window.location.search).get('callbackUrl');
   return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/panel';
+}
+
+type Mode = 'signin' | 'signup';
+type FieldErrors = Record<string, string[] | undefined>;
+
+const INVALID_CREDENTIALS = 'Invalid email or password.';
+
+function EmailPasswordForm() {
+  const [mode, setMode] = useState<Mode>('signin');
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setPending(true);
+    setMessage(null);
+    setFieldErrors({});
+    const form = new FormData(e.currentTarget);
+    const email = String(form.get('email') ?? '');
+    const password = String(form.get('password') ?? '');
+    const callbackUrl = targetCallbackUrl();
+
+    try {
+      if (mode === 'signup') {
+        const res = await fetch('/api/sign-up', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(form.entries())),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setFieldErrors(data.fieldErrors ?? {});
+          setMessage(data.error ?? (data.fieldErrors ? null : 'Something went wrong.'));
+          return;
+        }
+      }
+      const res = await signIn('credentials', { email, password, redirect: false, callbackUrl });
+      if (!res || res.error) {
+        setMessage(INVALID_CREDENTIALS);
+        return;
+      }
+      navigateTo(callbackUrl);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  const inputClass =
+    'mt-1 w-full border-3 border-ink bg-paper px-3 py-2 font-mono text-sm shadow-brut-sm focus:outline-none focus:ring-2 focus:ring-tomato';
+  const fieldError = (name: string) =>
+    fieldErrors[name]?.[0] && (
+      <p className="mt-1 font-mono text-xs text-tomato">{fieldErrors[name]?.[0]}</p>
+    );
+
+  return (
+    <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
+      {mode === 'signup' && (
+        <label className="block font-mono text-xs uppercase tracking-widest">
+          Name (optional)
+          <input name="name" type="text" autoComplete="name" maxLength={100} className={inputClass} />
+          {fieldError('name')}
+        </label>
+      )}
+      <label className="block font-mono text-xs uppercase tracking-widest">
+        Email
+        <input name="email" type="email" autoComplete="email" required className={inputClass} />
+        {fieldError('email')}
+      </label>
+      <label className="block font-mono text-xs uppercase tracking-widest">
+        Password
+        <input
+          name="password"
+          type="password"
+          autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+          minLength={mode === 'signup' ? 8 : undefined}
+          required
+          className={inputClass}
+        />
+        {fieldError('password')}
+      </label>
+
+      {message && (
+        <p role="alert" className="border-3 border-ink bg-tomato/10 px-3 py-2 font-mono text-xs text-ink">
+          {message}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full border-3 border-ink bg-ink px-4 py-3 font-display text-sm font-extrabold uppercase tracking-tight text-paper shadow-brut transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brut-lg disabled:opacity-60"
+      >
+        {mode === 'signup' ? 'Create account' : 'Sign in with email'}
+      </button>
+
+      <p className="font-mono text-xs text-ink/70">
+        {mode === 'signup' ? 'Already have an account? ' : 'No account yet? '}
+        <button
+          type="button"
+          className="font-bold text-tomato underline-offset-4 hover:underline"
+          onClick={() => {
+            setMode(mode === 'signup' ? 'signin' : 'signup');
+            setMessage(null);
+            setFieldErrors({});
+          }}
+        >
+          {mode === 'signup' ? 'Sign in' : 'Create one'}
+        </button>
+      </p>
+    </form>
+  );
 }
 
 export default function Login() {
@@ -39,7 +154,7 @@ export default function Login() {
               Welcome <span className="bg-lime px-2">back</span>.
             </h2>
             <p className="mt-4 max-w-sm font-mono text-sm leading-relaxed text-ink/70">
-              Pick your provider. We don&apos;t need a password — just a click.
+              Continue with Google or Facebook, or use your email and password.
             </p>
 
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -70,6 +185,14 @@ export default function Login() {
                 </span>
               </button>
             </div>
+
+            <div className="mt-8 flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-ink/50">
+              <span className="h-px flex-1 bg-ink/30" />
+              or
+              <span className="h-px flex-1 bg-ink/30" />
+            </div>
+
+            <EmailPasswordForm />
 
             <div className="mt-10 flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-ink/50">
               <span className="h-px flex-1 bg-ink/30" />

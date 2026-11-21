@@ -58,8 +58,10 @@ Middleware at `src/middleware.ts` guards `/panel` routes, checking for a valid `
 ### Authentication
 
 NextAuth.js (`src/lib/auth.ts`) with:
-- Providers: Google OAuth, Facebook OAuth, Credentials
-- No adapter: JWT session strategy (`next-auth.session-token` cookie). The `signIn` callback upserts the user into `mg_user` (by email) and OAuth accounts into `mg_account`
+- Providers: Google OAuth, Facebook OAuth, Credentials (email + password)
+- No adapter: JWT session strategy (`next-auth.session-token` cookie). The `signIn` callback upserts OAuth users into `mg_user` (by lowercased email) and their accounts into `mg_account`
+- Email/password: `POST /api/sign-up` creates the account (`src/lib/sign-up.ts`); `authorizeCredentials()` checks it. Passwords are scrypt hashes (`src/lib/password.ts`) in `mg_user.password`. 5 failed attempts lock the account for 15 min (`failedLoginCount`, `lockedUntil`). Emails are stored lowercased (DB check constraint)
+- Sign-up does not verify email ownership (no email provider yet), so an OAuth sign-in for an email whose password account is unverified sets `emailVerified` and clears that password
 - The `jwt` callback stores the `mg_user` id (`token.uid`) and `configRestaurantId`; while the user has no restaurant it re-checks on every read, so one created mid-session shows up without re-login
 
 ### Data Layer
