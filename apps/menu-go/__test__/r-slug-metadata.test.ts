@@ -1,5 +1,5 @@
 import { generateMetadata } from '../src/app/r/[slug]/page';
-import prisma from '../src/lib/prisma';
+import { resetDb } from './helpers/supabase-fake';
 
 jest.mock('next/cache', () => ({ revalidatePath: jest.fn() }));
 
@@ -27,33 +27,30 @@ jest.mock('@anthropic-ai/sdk', () => {
 
 jest.mock('qrcode', () => ({ toDataURL: jest.fn() }));
 
-jest.mock('../src/lib/prisma', () => ({
-  __esModule: true,
-  default: {
-    configRestaurant: { findFirst: jest.fn() },
-  },
-}));
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockPrisma = prisma as any;
+jest.mock('../src/lib/supabase', () => require('./helpers/supabase-fake').moduleMock());
 
 describe('/r/[slug] generateMetadata', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('returns not-found title when restaurant missing', async () => {
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue(null);
+    resetDb();
     const result = await generateMetadata({ params: Promise.resolve({ slug: 'gone' }) });
     expect(result.title).toBe('Menu not found');
   });
 
   it('builds canonical and OG from restaurant fields', async () => {
-    mockPrisma.configRestaurant.findFirst.mockResolvedValue({
-      name: "Joe's Pizza",
-      address: '1 Main',
-      cuisineType: 'Italian',
-      logoUrl: 'https://blob/x.jpg',
-      slug: 'joes-pizza',
-      id: 'rest-1',
+    resetDb({
+      mg_config_restaurant: [
+        {
+          id: 'rest-1',
+          userId: 'u1',
+          name: "Joe's Pizza",
+          address: '1 Main',
+          cuisineType: 'Italian',
+          logoUrl: 'https://blob/x.jpg',
+          slug: 'joes-pizza',
+        },
+      ],
     });
 
     const result = await generateMetadata({ params: Promise.resolve({ slug: 'joes-pizza' }) });

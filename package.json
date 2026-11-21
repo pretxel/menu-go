@@ -18,12 +18,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky",
     "clean": "turbo run clean",
-    "db:generate": "dotenv -e .env -- turbo run db:generate",
-    "db:push": "dotenv -e .env -- turbo db:push db:generate",
-    "db:seed": "dotenv -e .env -- turbo db:generate db:seed",
-    "db:reset": "dotenv -e .env -- turbo db:reset",
-    "db:migrate": "dotenv -e .env -- turbo db:migrate",
-    "db:migrate:dev": "dotenv -e .env -- turbo db:migrate:dev",
+    "db:seed": "dotenv -e .env -- turbo db:seed",
     "build:types": "dotenv -e .env -- turbo build:types"
   },
   "devDependencies": {
@@ -38,7 +33,6 @@
     "turbo": "^2.11.13"
   },
   "dependencies": {
-    "@prisma/client": "^7.10.1",
     "clsx": "^2.1.1",
     "dotenv-cli": "^11.1.0",
     "nanoid": "^6.0.2"
